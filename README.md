@@ -1,156 +1,171 @@
-# Mohamad Dib Portfolio
+# Mohamad Dib — Portfolio
 
-A professional single-page portfolio built with React and Vite to showcase Mohamad Dib’s background in Communication Engineering, wireless systems, networking, and frontend development.
+**Live portfolio:** [mohamaddib147.github.io/mohamad-dib-portfolio](https://mohamaddib147.github.io/mohamad-dib-portfolio) *(coming soon)*
 
-The project combines a dark technical design system with wireless-inspired visuals such as signal waves, spectrum patterns, and structured section backgrounds to reflect both engineering depth and frontend craftsmanship.
+A personal engineering portfolio built with **React + Vite**, designed around a dark navy interface with a cyan accent and section-specific wireless-inspired backgrounds. Each section carries its own visual motif drawn from wireless systems concepts — carrier waves, routing grids, spectrum fields, modulation layers, and signal trails — while keeping all content clear, readable, and professional.
+
+---
 
 ## Project Overview
 
-This portfolio is designed to present:
-- Professional background and academic journey
-- Technical tools and engineering skills
-- Selected software and engineering projects
-- A clear contact section for professional opportunities
+This portfolio presents Mohamad Dib's background, technical skills, and engineering projects across wireless systems, network security, and software development.
 
-The website follows a modern single-page structure and is being developed with reusable React components, custom CSS, and motion-based interactions. The visual direction is based on a dark technical UI with section-aware signal motifs that connect the design to communication systems engineering.
+**Site structure:**
+
+| Section | Visual Motif | Purpose |
+|---|---|---|
+| Hero | Carrier wave + antenna pulse | First impression, name, title, CTA |
+| About | Network routing grid | Background, education, engineering story |
+| Tools | Spectrum analyzer / RF scan field | Software tools and environments |
+| Skills | Layered modulation waves | Technical skills grouped by domain |
+| Projects | Per-project wireless motif | Four featured engineering projects |
+| Hire Me | Stable low-noise link | Open to work call-to-action |
+| Contact | Endpoint connection / signal handoff | Email, LinkedIn, GitHub links |
+
+**Design rules applied across all sections:**
+- One dark navy color base (`#0a0e1a`) across the entire site
+- One primary accent: cyan / electric blue (`#00d4ff`)
+- One typography system — modern sans body, stronger display weight for headings
+- One card system — glass cards with subtle border, consistent padding and radius
+- Section-specific wireless background at low visual intensity, never competing with content
+- No magenta overuse, no excessive glowing effects, content always above the visual noise
+
+---
 
 ## Technologies Used
 
-| Technology | Purpose |
-|------------|---------|
-| React | Component-based UI development |
-| Vite | Fast development server and build tooling |
-| Framer Motion | Entrance and scroll-based animations |
-| Lucide React | Lightweight icon library |
-| Custom CSS | Styling, layout, effects, and responsive design |
+| Technology | Role |
+|---|---|
+| **React 18** | Component-based UI architecture |
+| **Vite** | Development server and build tool |
+| **JavaScript (ES6+)** | Application logic and interactivity |
+| **CSS (custom)** | Design system, section backgrounds, animations |
+| **HTML5 Canvas / SVG** | Wireless-inspired animated backgrounds per section |
+| **Framer Motion** | Entrance and scroll-based animations |
+| **Lucide React** | Lightweight icon library |
+| **Git + GitHub** | Version control and repository hosting |
 
-## Design Direction
+**Design system:**
+- Color palette: dark navy base + cyan/electric blue accent
+- Typography: modern geometric sans for body, strong weight contrast for display headings
+- Spacing: 4px base unit system throughout
+- Backgrounds: Canvas/SVG animations unique to each section (carrier wave, routing grid, spectrum field, modulation layers, beamforming arcs, node topology, protocol bars)
 
-The design is based on a wireless engineering theme:
-- Dark navy technical interface
-- Soft cyan and electric-blue accents
-- Reusable signal-inspired visual system
-- Section-based layout with distinct visual identity
-- Responsive structure for mobile and desktop
-
-The goal is to create a portfolio that feels technical, modern, and professional without sacrificing readability.
-
-## Current Progress
-
-### Completed
-- Hero section
-- About section
-- Reusable signal background component
-- Signal variant data structure
-- Global stylesheet and design system foundation
-
-### In Progress
-- Technologies & Tools section
-- Skills section
-- Projects section
-- Hire Me section
-- Contact section
-
-## Folder Structure
-
-```bash
-src/
-├── components/
-│   ├── Header.jsx
-│   ├── Footer.jsx
-│   ├── ProjectCard.jsx
-│   └── SignalBackground.jsx
-├── data/
-│   └── signalVariants.js
-├── pages/
-│   └── Home.jsx
-├── sections/
-│   ├── Hero.jsx
-│   ├── About.jsx
-│   ├── Technologies.jsx
-│   ├── Skills.jsx
-│   ├── Projects.jsx
-│   ├── HireMe.jsx
-│   └── Contact.jsx
-├── styles/
-│   └── main.css
-├── App.jsx
-└── main.jsx
-```
-
-## Features
-
-- Single-page portfolio architecture
-- Reusable section background system using SVG and CSS
-- Framer Motion entrance and scroll reveal animations
-- Engineering-focused content structure
-- Smooth scrolling between sections
-- Responsive layouts for mobile and desktop
-- Reusable project card and section-based composition
+---
 
 ## How to Run the Project Locally
 
-### 1. Clone the repository
+### Prerequisites
+
+Make sure you have the following installed:
+- [Node.js](https://nodejs.org/) (version 18 or higher recommended)
+- npm (comes with Node.js)
+
+### Steps
+
+**1. Clone the repository**
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY-NAME.git
+git clone https://github.com/mohamaddib147/mohamad-dib-portfolio.git
 ```
 
-### 2. Move into the project folder
+**2. Navigate into the project folder**
 
 ```bash
-cd YOUR-REPOSITORY-NAME
+cd mohamad-dib-portfolio
 ```
 
-### 3. Install dependencies
+**3. Install dependencies**
 
 ```bash
 npm install
 ```
 
-### 4. Start the development server
+**4. Start the development server**
 
 ```bash
 npm run dev
 ```
 
-### 5. Open the local development URL
+**5. Open in your browser**
 
-Vite usually runs on:
+The terminal will show the local URL. By default it will be:
 
-```bash
+```
 http://localhost:5173
 ```
 
-## Development Notes
+### Build for production
 
-This project follows a few core conventions:
-- All major sections are built as separate React components.
-- Visual signal effects are reusable and not hardcoded per section.
-- Styling is handled through a global custom stylesheet.
-- Animations are used with purpose, not as decoration only.
-- Section IDs match anchor links for smooth in-page navigation.
-- Responsive behavior is required for both mobile and desktop layouts.
+```bash
+npm run build
+```
 
-## Planned Improvements
+The production-ready files will be output to the `dist/` folder.
 
-- Complete the remaining portfolio sections
-- Add custom background variants for every section
-- Refine project cards with stronger visual identity
-- Improve typography with a custom web font
-- Add optional sticky navigation
-- Add scroll-tracking for active section state
-- Final polish for deployment and presentation
+### Preview the production build locally
+
+```bash
+npm run preview
+```
+
+---
+
+## Project Structure
+
+```
+mohamad-dib-portfolio/
+├── public/
+│   └── favicon.ico
+├── src/
+│   ├── components/
+│   │   ├── Header.jsx
+│   │   ├── Footer.jsx
+│   │   ├── ProjectCard.jsx
+│   │   └── SignalBackground.jsx
+│   ├── data/
+│   │   └── signalVariants.js
+│   ├── sections/
+│   │   ├── Hero.jsx
+│   │   ├── About.jsx
+│   │   ├── Tools.jsx
+│   │   ├── Skills.jsx
+│   │   ├── Projects.jsx
+│   │   ├── HireMe.jsx
+│   │   └── Contact.jsx
+│   ├── styles/
+│   │   └── main.css
+│   ├── App.jsx
+│   └── main.jsx
+├── index.html
+├── package.json
+├── vite.config.js
+└── README.md
+```
+
+---
+
+## Featured Projects
+
+Each project card uses a unique wireless-inspired visual motif that reflects the project's technical domain:
+
+- **Master's Thesis** — Beamforming / RF arc visual (research and wireless systems)
+- **VANET Security** — Packet route / network path visual (vehicular network security)
+- **IoT Air Quality Monitor** — Node topology visual (IoT systems and telemetry)
+- **TCP Protocol Tool** — Signal trail / protocol bars visual (low-level networking)
+
+---
 
 ## Author
 
 **Mohamad Dib**  
-Communication Engineering and Frontend Portfolio
+Master's in Wireless Networking — KTH Royal Institute of Technology  
+Specialization in 5G NR, Network Security, Python, MATLAB
 
-## Contact
-
+- GitHub: [github.com/mohamaddib147](https://github.com/mohamaddib147)
+- LinkedIn: [linkedin.com/in/mohamad-dib](https://www.linkedin.com/in/mohamad-dib)
 - Email: [mohammaddeeb147@gmail.com](mailto:mohammaddeeb147@gmail.com)
 
 ---
 
-This repository contains the source code for an evolving portfolio project focused on combining engineering identity with modern frontend presentation.
+*Actively seeking opportunities in wireless systems, network engineering, and software development.*
