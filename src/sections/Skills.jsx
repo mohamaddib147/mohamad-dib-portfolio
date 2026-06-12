@@ -5,67 +5,38 @@ const skillGroups = [
   {
     title: "Wireless & Networking",
     items: [
-      "5G NR",
-      "LTE",
-      "3GPP Standards",
-      "Beamforming",
-      "MIMO",
-      "RF Planning",
-      "Spectrum Analysis",
-      "Wireless Performance Optimization",
-      "Robust Network Design",
-      "TCP/IP",
-      "DNS",
-      "VPN",
-      "Routing Protocols",
-      "Network Administration",
-      "Troubleshooting",
+      "5G NR", "LTE", "3GPP Standards", "Beamforming", "MIMO", "RF Planning",
+      "Spectrum Analysis", "Wireless Performance Optimization", "Robust Network Design",
+      "TCP/IP", "DNS", "VPN", "Routing Protocols", "Network Administration", "Troubleshooting",
     ],
   },
   {
     title: "Security",
     items: [
-      "Network Security",
-      "Wireless Network Security",
-      "Secure System Design",
-      "Ethical Hacking Principles",
-      "Vulnerability Assessment",
-      "Intrusion Detection / Prevention Concepts",
-      "Security Auditing Fundamentals",
-      "Data Privacy",
+      "Network Security", "Wireless Network Security", "Secure System Design",
+      "Ethical Hacking Principles", "Vulnerability Assessment",
+      "Intrusion Detection / Prevention Concepts", "Security Auditing Fundamentals", "Data Privacy",
     ],
   },
   {
     title: "Programming & Simulation",
     items: [
-      "Python",
-      "Network Simulations",
-      "Data Analysis",
-      "Automation Scripts",
-      "MATLAB",
-      "Signal Processing",
-      "Algorithm Development",
-      "C/C++ Basics",
+      "Python", "Network Simulations", "Data Analysis", "Automation Scripts",
+      "MATLAB", "Signal Processing", "Algorithm Development", "C/C++ Basics",
     ],
   },
   {
     title: "Engineering & Analysis",
     items: [
-      "Systems Engineering Concepts",
-      "Analytical Thinking",
-      "Complex Problem-Solving",
-      "System Design & Modeling",
-      "Technical Analysis",
+      "Systems Engineering Concepts", "Analytical Thinking",
+      "Complex Problem-Solving", "System Design & Modeling", "Technical Analysis",
     ],
   },
   {
     title: "Soft Skills",
     items: [
-      "Teamwork & Collaboration",
-      "Curiosity & Eagerness to Learn",
-      "Adaptability",
-      "Communication",
-      "Problem-Solving",
+      "Teamwork & Collaboration", "Curiosity & Eagerness to Learn",
+      "Adaptability", "Communication", "Problem-Solving",
     ],
   },
 ];
@@ -73,7 +44,8 @@ const skillGroups = [
 function Skills() {
   return (
     <section id="skills" className="portfolio-data-section skills-section">
-      <SignalBackground activeIndex={3} className="signal-skills" />
+      {/* Modulation layers — 3 stacked waves + envelope outline */}
+      <SignalBackground variant="skills" className="signal-skills" />
 
       <motion.div
         className="portfolio-section-shell"

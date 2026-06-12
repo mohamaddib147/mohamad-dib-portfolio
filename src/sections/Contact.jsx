@@ -58,7 +58,8 @@ const snapshotItems = [
 function Contact() {
   return (
     <section id="contact" className="portfolio-data-section contact-section">
-      <SignalBackground activeIndex={6} className="signal-contact" />
+      {/* Endpoint handshake — two arms reaching toward each other and linking */}
+      <SignalBackground variant="contact" className="signal-contact" />
 
       <motion.div
         className="portfolio-section-shell"
@@ -94,7 +95,6 @@ function Contact() {
             <div className="contact-link-list contact-link-list-primary">
               {primaryContacts.map((item, index) => {
                 const Icon = item.icon;
-
                 return (
                   <a
                     key={index}
@@ -119,7 +119,6 @@ function Contact() {
               <div className="contact-link-list">
                 {profileLinks.map((item, index) => {
                   const Icon = item.icon;
-
                   return (
                     <a
                       key={index}
@@ -154,7 +153,6 @@ function Contact() {
             <div className="contact-snapshot-list">
               {snapshotItems.map((item, index) => {
                 const Icon = item.icon;
-
                 return (
                   <div className="contact-snapshot-item" key={index}>
                     <span className="contact-snapshot-icon">

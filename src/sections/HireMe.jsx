@@ -12,7 +12,8 @@ const hireReasons = [
 function HireMe() {
   return (
     <section id="hire-me" className="portfolio-data-section hire-section">
-      <SignalBackground activeIndex={5} className="signal-hire" />
+      {/* Stable flat link — strong horizontal line + traveling pulse */}
+      <SignalBackground variant="hire-me" className="signal-hire" />
 
       <motion.div
         className="portfolio-section-shell"

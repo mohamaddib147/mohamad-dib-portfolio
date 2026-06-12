@@ -28,7 +28,8 @@ const contentItem = {
 function Hero() {
   return (
     <section id="hero" className="hero-section">
-      <SignalBackground activeIndex={0} className="signal-hero" />
+      {/* Carrier wave + antenna pulse */}
+      <SignalBackground variant="hero" className="signal-hero" />
 
       <div className="hero-container">
         <motion.div

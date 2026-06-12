@@ -10,21 +10,23 @@ import {
 } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
 
+// projectType drives the per-card SignalBackground motif inside each card
 const projects = [
   {
     title: "Enhancing Security in Over-the-Air Computation",
     meta: "KTH Royal Institute of Technology · Aug 2022 – Feb 2024",
     role: "Graduate Researcher",
-    badge: "Master’s Thesis",
+    badge: "Master's Thesis",
     accent: "accent-research",
     icon: Radio,
     layout: "layout-research",
+    projectType: "thesis",  // beamforming RF arcs
     summary:
       "A research-driven wireless security project focused on protecting Over-the-Air Computation systems without reducing performance.",
     description:
       "Developed and evaluated a secure OAC framework using uniform input distributions and zero-forced artificial noise, with Python and MATLAB used for signal analysis, RF impairment simulation, and interference-focused evaluation.",
     highlights: [
-      "Authored a full master’s thesis on secure OAC systems.",
+      "Authored a full master's thesis on secure OAC systems.",
       "Evaluated security improvements without compromising performance.",
       "Worked across wireless communication, signal processing, and interference defense.",
     ],
@@ -38,6 +40,7 @@ const projects = [
     accent: "accent-security",
     icon: Shield,
     layout: "layout-security",
+    projectType: "networking",  // packet route path
     summary:
       "A protocol-security project centered on securing vehicle-to-vehicle and wireless communication environments.",
     description:
@@ -57,6 +60,7 @@ const projects = [
     accent: "accent-iot",
     icon: Cpu,
     layout: "layout-iot",
+    projectType: "iot",  // hub-and-spoke node topology
     summary:
       "A practical embedded and telemetry project for real-time environmental monitoring and system validation.",
     description:
@@ -76,6 +80,7 @@ const projects = [
     accent: "accent-systems",
     icon: Network,
     layout: "layout-systems",
+    projectType: "networking",  // packet route path
     summary:
       "A systems-focused networking project built around reliable and efficient TCP-based communication.",
     description:
@@ -95,6 +100,7 @@ const projects = [
     accent: "accent-enterprise",
     icon: Building2,
     layout: "layout-enterprise",
+    projectType: "networking",  // packet route path
     summary:
       "A network design project focused on secure enterprise connectivity, routing, and firewall-backed resilience.",
     description:
@@ -114,6 +120,7 @@ const projects = [
     accent: "accent-software",
     icon: HeartPulse,
     layout: "layout-software",
+    projectType: "software",  // protocol bars / signal trail
     summary:
       "A software application project for managing patient records and administrative workflows in a structured system.",
     description:
@@ -130,7 +137,8 @@ const projects = [
 function Projects() {
   return (
     <section id="projects" className="portfolio-data-section projects-section">
-      <SignalBackground activeIndex={4} className="signal-projects" />
+      {/* Section-level background — generic projects variant */}
+      <SignalBackground variant="projects" projectType="networking" className="signal-projects" />
 
       <motion.div
         className="portfolio-section-shell"
@@ -161,7 +169,14 @@ function Projects() {
                 transition={{ duration: 0.45, delay: index * 0.05 }}
                 whileHover={{ y: -6 }}
               >
-                <div className="project-card-signal" />
+                {/* Per-card signal motif — replaces the static .project-card-signal div */}
+                <div className="project-card-signal">
+                  <SignalBackground
+                    variant="projects"
+                    projectType={project.projectType}
+                    className="signal-card"
+                  />
+                </div>
 
                 <div className="project-top-shell">
                   <div className="project-card-top">

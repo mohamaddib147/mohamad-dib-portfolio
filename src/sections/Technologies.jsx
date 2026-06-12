@@ -24,7 +24,8 @@ function Technologies() {
       id="technologies"
       className="portfolio-data-section technologies-section"
     >
-      <SignalBackground activeIndex={2} className="signal-tech" />
+      {/* RF spectrum field — 48 bars + scan cursor */}
+      <SignalBackground variant="tools" className="signal-tech" />
 
       <motion.div
         className="portfolio-section-shell"
