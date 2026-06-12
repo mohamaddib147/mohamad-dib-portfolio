@@ -1,9 +1,10 @@
 // Home.jsx
-// Main portfolio layout — sections separated by minimalist RF dividers.
+// Main portfolio layout — sections separated by minimalist CSS RF dividers.
+// The .section-divider class (main.css) draws a sky-blue fading line
+// with a centered radial glow halo — a wireless carrier-signal aesthetic.
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import SectionDivider from "../components/SectionDivider";
 import Hero from "../sections/Hero";
 import About from "../sections/About";
 import Technologies from "../sections/Technologies";
@@ -19,22 +20,22 @@ function Home() {
 
       <main>
         <Hero />
-        <SectionDivider />
+        <div className="section-divider" />
 
         <About />
-        <SectionDivider />
+        <div className="section-divider" />
 
         <Technologies />
-        <SectionDivider />
+        <div className="section-divider" />
 
         <Skills />
-        <SectionDivider />
+        <div className="section-divider" />
 
         <Projects />
-        <SectionDivider />
+        <div className="section-divider" />
 
         <HireMe />
-        <SectionDivider />
+        <div className="section-divider" />
 
         <Contact />
       </main>
