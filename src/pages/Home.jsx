@@ -1,9 +1,9 @@
-// Home page container.
-// Main portfolio layout with section dividers,
-// sticky header support, and footer.
+// Home.jsx
+// Main portfolio layout — sections separated by minimalist RF dividers.
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import SectionDivider from "../components/SectionDivider";
 import Hero from "../sections/Hero";
 import About from "../sections/About";
 import Technologies from "../sections/Technologies";
@@ -19,22 +19,22 @@ function Home() {
 
       <main>
         <Hero />
-        <div className="section-divider" />
+        <SectionDivider />
 
         <About />
-        <div className="section-divider" />
+        <SectionDivider />
 
         <Technologies />
-        <div className="section-divider" />
+        <SectionDivider />
 
         <Skills />
-        <div className="section-divider" />
+        <SectionDivider />
 
         <Projects />
-        <div className="section-divider" />
+        <SectionDivider />
 
         <HireMe />
-        <div className="section-divider" />
+        <SectionDivider />
 
         <Contact />
       </main>
