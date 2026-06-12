@@ -8,7 +8,6 @@ import {
   Briefcase,
   Languages,
 } from "lucide-react";
-import SignalBackground from "../components/SignalBackground";
 
 const languages = ["Arabic", "English", "Swedish", "French (Basic)"];
 
@@ -58,8 +57,12 @@ const snapshotItems = [
 function Contact() {
   return (
     <section id="contact" className="portfolio-data-section contact-section">
-      {/* Endpoint handshake — two arms reaching toward each other and linking */}
-      <SignalBackground variant="contact" className="signal-contact" />
+      {/*
+        No canvas background here — intentional.
+        Contact = RX endpoint: clean, low-noise, signal received.
+        The radial gradient in .portfolio-data-section::before provides
+        subtle visual depth without competing with contact card readability.
+      */}
 
       <motion.div
         className="portfolio-section-shell"
