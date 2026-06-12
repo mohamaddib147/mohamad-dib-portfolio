@@ -21,14 +21,14 @@ main { position: relative; z-index: 1; }
 
 /* =========================================================
    CANVAS SIGNAL BACKGROUND
-   Sits at z-index 0 (behind all content).
-   Content wrappers use z-index 1 to stay on top.
+   Sits at z-index 0 behind all content.
+   Content wrappers use z-index 1 to float above it.
    ========================================================= */
 
 .section-signal-canvas {
   position: absolute;
   inset: 0;
-  z-index: 0;           /* behind content */
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
@@ -43,70 +43,71 @@ main { position: relative; z-index: 1; }
 .signal-hero    { opacity: 0.55; }
 .signal-about   { opacity: 0.38; }
 .signal-tech    { opacity: 0.30; }
-.signal-skills  { opacity: 0.30; }
-.signal-projects { opacity: 0.28; }
+.signal-skills  { opacity: 0.28; }
+.signal-projects { opacity: 0.24; }
 .signal-hire    { opacity: 0.42; }
-.signal-contact { opacity: 0.40; }
 .signal-card    { opacity: 0.22; }
 
-/* Small translateY so wave doesn't clip at very top of hero */
+/* Slight vertical nudge so waves don’t clip at the very top edge */
 .signal-hero .signal-canvas-element  { transform: translateY(28px); }
 .signal-about .signal-canvas-element { transform: translateY(48px); }
 
 /* =========================================================
-   RF SECTION DIVIDER
-   Minimalist horizontal line + centered antenna SVG icon.
+   SECTION DIVIDERS + TRANSITIONS
+   Minimalist wireless-themed separator between every section.
+   Sky-blue fading line + centered radial glow halo.
    ========================================================= */
 
-.rf-divider {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 0 8%;
-  height: 72px;
-  color: rgba(125, 211, 252, 0.55);
-  background: transparent;
+.section-divider {
+  position: relative;
+  height: 94px;
+  overflow: hidden;
   pointer-events: none;
-  user-select: none;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(7, 18, 36, 0),
+      rgba(10, 30, 58, 0.42) 45%,
+      rgba(7, 18, 36, 0)
+    );
 }
 
-.rf-divider-line {
-  flex: 1;
+/* Carrier-signal line — fades in from edges like a transmitted wave */
+.section-divider::before {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 50%;
   height: 1px;
+  transform: translateY(-50%);
   background: linear-gradient(
     to right,
-    transparent,
-    rgba(125, 211, 252, 0.28) 30%,
-    rgba(125, 211, 252, 0.42) 50%,
-    rgba(125, 211, 252, 0.28) 70%,
-    transparent
+    rgba(56, 189, 248, 0),
+    rgba(125, 211, 252, 0.45),
+    rgba(56, 189, 248, 0)
   );
+  box-shadow:
+    0 0 16px rgba(56, 189, 248, 0.12),
+    0 0 28px rgba(56, 189, 248, 0.06);
 }
 
-.rf-divider-line:first-child {
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(125, 211, 252, 0.28) 60%,
-    rgba(125, 211, 252, 0.42)
+/* Radial glow at line center — like a carrier frequency peak */
+.section-divider::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120px;
+  height: 120px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.12),
+    rgba(56, 189, 248, 0.03) 45%,
+    transparent 72%
   );
-}
-
-.rf-divider-line:last-child {
-  background: linear-gradient(
-    to right,
-    rgba(125, 211, 252, 0.42),
-    rgba(125, 211, 252, 0.28) 40%,
-    transparent
-  );
-}
-
-.rf-divider-icon {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.85;
 }
 
 /* =========================================================
@@ -196,6 +197,7 @@ main { position: relative; z-index: 1; }
 
 /* =========================================================
    HERO SECTION
+   Canvas background shows through — no opaque bg layer.
    ========================================================= */
 
 .hero-section {
@@ -205,10 +207,11 @@ main { position: relative; z-index: 1; }
   padding: 132px 8% 92px;
   display: flex;
   align-items: center;
+  /* Semi-transparent so canvas signal bleeds through */
   background:
-    radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 30%),
-    radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.08), transparent 30%),
-    #081120;
+    radial-gradient(circle at top right, rgba(56, 189, 248, 0.09), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.06), transparent 30%),
+    rgba(8, 17, 32, 0.82);
 }
 
 .hero-section::before {
@@ -216,11 +219,12 @@ main { position: relative; z-index: 1; }
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 60px 60px;
-  opacity: 0.2;
+  opacity: 0.18;
   z-index: 0;
+  pointer-events: none;
 }
 
 .hero-container {
@@ -362,13 +366,20 @@ main { position: relative; z-index: 1; }
 
 /* =========================================================
    ABOUT SECTION
+   Canvas bleeds through semi-transparent background.
    ========================================================= */
 
 .about-section {
   position: relative;
   overflow: hidden;
   padding: 136px 8%;
-  background: linear-gradient(to bottom, #081322, #0a1828 50%, #091525);
+  /* Semi-transparent so routing-grid canvas is visible beneath */
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 19, 34, 0.88),
+    rgba(10, 24, 40, 0.92) 50%,
+    rgba(9, 21, 37, 0.88)
+  );
 }
 
 .about-container {
@@ -540,12 +551,19 @@ main { position: relative; z-index: 1; }
 
 /* =========================================================
    DATA SECTIONS (Technologies, Skills, Projects, HireMe, Contact)
+   Semi-transparent so canvas bleeds through in each section.
    ========================================================= */
 
 .portfolio-data-section {
   position: relative;
   padding: 118px 8%;
-  background: linear-gradient(to bottom, #081426, #091729 55%, #081322);
+  /* Semi-transparent gradient — canvas signal visible beneath */
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 20, 38, 0.90),
+    rgba(9, 23, 41, 0.92) 55%,
+    rgba(8, 19, 34, 0.90)
+  );
   overflow: hidden;
 }
 
@@ -553,7 +571,7 @@ main { position: relative; z-index: 1; }
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top center, rgba(56,189,248,0.05), transparent 35%);
+  background: radial-gradient(circle at top center, rgba(56,189,248,0.04), transparent 35%);
   pointer-events: none;
   z-index: 0;
 }
@@ -583,7 +601,126 @@ main { position: relative; z-index: 1; }
   line-height: 1.88;
 }
 
-/* Technologies */
+/* =========================================================
+   TECHNOLOGIES — Frequency Spectrograph layout
+   Tool cards sit above the canvas spectrum animation.
+   ========================================================= */
+
+.tech-spectrograph {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+/* Canvas overlay for the scan-cursor and spectrum bars —
+   sits behind the tool-band cards via z-index layering */
+.tech-canvas-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tech-bands-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 24px 0;
+}
+
+/* Each tool = one frequency band */
+.tech-band {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 10px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(56,189,248,0.10);
+  cursor: default;
+  transition: transform 0.22s ease, border-color 0.22s ease,
+              background 0.22s ease, box-shadow 0.22s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.tech-band:hover {
+  transform: translateY(-6px);
+  border-color: rgba(56,189,248,0.38);
+  background: rgba(56,189,248,0.07);
+  box-shadow: 0 0 24px rgba(56,189,248,0.14), 0 8px 22px rgba(0,0,0,0.18);
+}
+
+/* Animated frequency-bar indicator at base of each card */
+.tech-band::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 16%;
+  right: 16%;
+  height: 3px;
+  border-radius: 2px 2px 0 0;
+  background: rgba(56,189,248,0.22);
+  transition: background 0.22s ease, height 0.22s ease;
+}
+
+.tech-band:hover::after {
+  height: 5px;
+  background: rgba(56,189,248,0.65);
+  box-shadow: 0 0 8px rgba(56,189,248,0.4);
+}
+
+.tech-band-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.75;
+  transition: opacity 0.22s ease, filter 0.22s ease;
+}
+
+.tech-band:hover .tech-band-logo {
+  opacity: 1;
+  filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(170deg);
+}
+
+/* Fallback icon for tools without Simple Icons */
+.tech-band-icon-fallback {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(56,189,248,0.08);
+  border: 1px solid rgba(56,189,248,0.15);
+  color: #7fd4ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: -0.03em;
+  transition: background 0.22s ease, border-color 0.22s ease;
+}
+
+.tech-band:hover .tech-band-icon-fallback {
+  background: rgba(56,189,248,0.14);
+  border-color: rgba(56,189,248,0.32);
+}
+
+.tech-band-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #a8c5de;
+  text-align: center;
+  letter-spacing: 0.02em;
+  transition: color 0.22s ease;
+}
+
+.tech-band:hover .tech-band-label { color: #d7f2ff; }
+
+/* Legacy .tech-grid + .tech-card kept for fallback */
 .tech-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -610,7 +747,10 @@ main { position: relative; z-index: 1; }
   background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
 }
 
-/* Skills section */
+/* =========================================================
+   SKILLS SECTION
+   ========================================================= */
+
 .skill-section-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -642,7 +782,10 @@ main { position: relative; z-index: 1; }
   color: #c7e6fb;
 }
 
-/* Projects */
+/* =========================================================
+   PROJECTS SECTION
+   ========================================================= */
+
 .project-data-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -744,19 +887,18 @@ main { position: relative; z-index: 1; }
   margin-bottom: 4px;
 }
 
-/* project-card-signal is now a canvas container, not a decorative bar */
+/* Project card signal strip at top */
 .project-card-signal {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 72px;           /* small strip at top of card */
+  height: 72px;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
 }
 
-/* The inner canvas wrapper inside the card */
 .signal-card {
   position: absolute;
   inset: 0;
@@ -843,7 +985,110 @@ main { position: relative; z-index: 1; }
 .accent-enterprise .project-icon-wrap { color: #f0e2ff; border-color: rgba(168,85,247,0.14); }
 .accent-software  .project-icon-wrap { color: #ffe0ef; border-color: rgba(244,114,182,0.14); }
 
-/* Hire me */
+/* =========================================================
+   HIRE ME — RSSI Signal-Strength Bars
+   Each reason shown as a wireless signal bar reading.
+   Bars animate in on scroll via Framer Motion in HireMe.jsx.
+   ========================================================= */
+
+.hire-rssi-list {
+  display: grid;
+  gap: 20px;
+  max-width: 940px;
+}
+
+.hire-rssi-item {
+  position: relative;
+  z-index: 1;
+  padding: 20px 22px 20px 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.018));
+  border: 1px solid rgba(255,255,255,0.07);
+  overflow: hidden;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.hire-rssi-item:hover {
+  transform: translateX(4px);
+  border-color: rgba(56,189,248,0.22);
+}
+
+/* Animated fill bar behind content */
+.hire-rssi-fill {
+  position: absolute;
+  inset: 0;
+  width: 0;
+  background: linear-gradient(
+    to right,
+    rgba(56,189,248,0.09),
+    rgba(56,189,248,0.03)
+  );
+  transition: width 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.hire-rssi-item.in-view .hire-rssi-fill {
+  width: var(--fill-width, 85%);
+}
+
+.hire-rssi-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* RSSI bars icon group: 5 bars of increasing height */
+.hire-rssi-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.hire-rssi-bar {
+  width: 4px;
+  border-radius: 2px 2px 0 0;
+  background: rgba(56,189,248,0.20);
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Bar heights: 6/9/12/16/20px */
+.hire-rssi-bar:nth-child(1) { height: 6px; }
+.hire-rssi-bar:nth-child(2) { height: 9px; }
+.hire-rssi-bar:nth-child(3) { height: 12px; }
+.hire-rssi-bar:nth-child(4) { height: 16px; }
+.hire-rssi-bar:nth-child(5) { height: 20px; }
+
+/* Lit bars when in view — activated via .bar-lit class from HireMe.jsx */
+.hire-rssi-bar.bar-lit {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56,189,248,0.45);
+}
+
+.hire-rssi-text {
+  flex: 1;
+}
+
+.hire-rssi-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #7fd4ff;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+}
+
+.hire-rssi-text p {
+  color: #c6d9ea;
+  line-height: 1.8;
+  font-size: 0.97rem;
+}
+
+/* Legacy .hire-list + .hire-item kept for safety */
 .hire-list { display: grid; gap: 18px; max-width: 920px; }
 
 .hire-item {
@@ -869,7 +1114,10 @@ main { position: relative; z-index: 1; }
 
 .hire-item p { color: #c6d9ea; line-height: 1.8; font-size: 0.98rem; }
 
-/* Contact */
+/* =========================================================
+   CONTACT SECTION
+   ========================================================= */
+
 .contact-grid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -990,7 +1238,12 @@ main { position: relative; z-index: 1; }
 section:not(.hero-section):not(.about-section):not(.portfolio-data-section) {
   position: relative;
   padding: 110px 8%;
-  background: linear-gradient(to bottom, #081426, #091729 55%, #081322);
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 20, 38, 0.90),
+    rgba(9, 23, 41, 0.92) 55%,
+    rgba(8, 19, 34, 0.90)
+  );
   border-top: 1px solid rgba(255,255,255,0.04);
   overflow: hidden;
 }
@@ -1041,7 +1294,7 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   .site-header { padding: 14px 6% 0; }
   .site-header-inner { flex-wrap: wrap; justify-content: center; }
   .site-nav { width: 100%; }
-  .rf-divider { padding: 0 6%; height: 60px; }
+  .tech-bands-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
 }
 
 @media (max-width: 600px) {
@@ -1058,5 +1311,6 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   .site-nav a { font-size: 0.9rem; }
   .site-header-cta { width: 100%; }
   .project-card-top, .project-role-line, .project-card-footer { align-items: flex-start; flex-direction: column; }
-  .rf-divider { padding: 0 4%; height: 52px; gap: 10px; }
+  .tech-bands-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+  .hire-rssi-bars { display: none; }
 }
