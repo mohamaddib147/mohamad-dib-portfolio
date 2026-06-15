@@ -1,6 +1,9 @@
 // About.jsx
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 import SignalBackground from "../components/SignalBackground";
+
+// ── Animation variants ────────────────────────────────────────────────────
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -15,9 +18,30 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
 };
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 24, scale: 0.97 },
+  show: (i) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.55, ease: "easeOut", delay: i * 0.15 },
+  }),
+};
+
+const tagVariants = {
+  hidden: { opacity: 0, scale: 0.82 },
+  show: (j) => ({
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.3, ease: "easeOut", delay: j * 0.05 },
+  }),
+};
+
+// ── Data ─────────────────────────────────────────────────────────────────
+
 const education = [
   {
-    flag: "🇱🇧",
+    flagCode: "lb",
     country: "Lebanon",
     school: "Lebanese International University",
     degree: "Bachelor of Science in Communication Engineering",
@@ -25,13 +49,13 @@ const education = [
     highlight: "Top grades in Advanced Digital Logic, Linux Lab & Analog Communication",
   },
   {
-    flag: "🇸🇪",
+    flagCode: "se",
     country: "Sweden",
     school: "KTH Royal Institute of Technology, Stockholm",
     degree: "Master of Science in Communication Systems",
     specialization: "Wireless Networking Track",
     period: "Aug 2022 – Jan 2025",
-    highlight: "Highest grade (A) in Communication Systems Design · Passed Ethical Hacking",
+    highlight: "Highest grade (A) in Communication Systems Design · Internet Security and Privacy",
   },
 ];
 
@@ -54,10 +78,69 @@ const skillGroups = [
   },
 ];
 
+// ── Stat counter hook ─────────────────────────────────────────────────────
+
+function useCounter(target, duration = 1200, startOnView = false) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!inView) return;
+    let start = null;
+    const step = (ts) => {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      setCount(Math.floor(progress * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [inView, target, duration]);
+
+  return { count, ref };
+}
+
+// ── Flag image ────────────────────────────────────────────────────────────
+
+function FlagImg({ code, label }) {
+  return (
+    <img
+      src={`https://flagcdn.com/w40/${code}.png`}
+      srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
+      width={28}
+      height={20}
+      alt={`${label} flag`}
+      loading="lazy"
+      style={{
+        borderRadius: 3,
+        objectFit: "cover",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.35)",
+        flexShrink: 0,
+      }}
+    />
+  );
+}
+
+// ── Profile stats ─────────────────────────────────────────────────────────
+
+function StatCounter({ target, label, suffix = "+" }) {
+  const { count, ref } = useCounter(target);
+  return (
+    <div ref={ref} className="about-stat">
+      <span className="about-stat-number">
+        {count}
+        {suffix}
+      </span>
+      <span className="about-stat-label">{label}</span>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────
+
 function About() {
   return (
     <section id="about" className="about-section">
-      {/* Routing grid — nodes + animated packet travel */}
       <SignalBackground variant="about" className="signal-about" />
 
       <motion.div
@@ -67,11 +150,13 @@ function About() {
         whileInView="show"
         viewport={{ once: true, amount: 0.1 }}
       >
+        {/* Header */}
         <motion.div className="about-header" variants={itemVariants}>
           <p className="section-kicker">About Me</p>
           <h2>Engineering mindset, frontend direction.</h2>
         </motion.div>
 
+        {/* Profile card with animated stats */}
         <motion.div className="about-summary-card" variants={itemVariants}>
           <p className="about-summary-label">Profile</p>
           <p>
@@ -81,22 +166,53 @@ function About() {
             Now growing into frontend development to build clean, responsive, and technically
             disciplined web interfaces.
           </p>
+
+          
         </motion.div>
 
+        {/* Education timeline */}
         <motion.div className="about-education" variants={itemVariants}>
           <h3 className="about-sub-heading">Education</h3>
 
           <div className="education-timeline">
             {education.map((edu, i) => (
-              <div className="education-item" key={i}>
+              <motion.div
+                className="education-item"
+                key={i}
+                custom={i}
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.3 }}
+                whileHover={{
+                  y: -4,
+                  boxShadow: "0 12px 32px rgba(56,189,248,0.12)",
+                  transition: { duration: 0.22 },
+                }}
+              >
                 <div className="edu-timeline-col">
-                  <div className="edu-dot" />
-                  {i < education.length - 1 && <div className="edu-line" />}
+                  <motion.div
+                    className="edu-dot"
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.15 + 0.2, type: "spring", stiffness: 300 }}
+                  />
+                  {i < education.length - 1 && (
+                    <motion.div
+                      className="edu-line"
+                      initial={{ scaleY: 0 }}
+                      whileInView={{ scaleY: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.15 + 0.35, duration: 0.5, ease: "easeOut" }}
+                      style={{ transformOrigin: "top" }}
+                    />
+                  )}
                 </div>
 
                 <div className="edu-content-card">
                   <div className="edu-header">
-                    <span className="edu-flag">{edu.flag}</span>
+                    <FlagImg code={edu.flagCode} label={edu.country} />
                     <div>
                       <p className="edu-school">{edu.school}</p>
                       <p className="edu-country-label">{edu.country}</p>
@@ -110,26 +226,58 @@ function About() {
                     <p className="edu-spec">Specialization: {edu.specialization}</p>
                   )}
 
-                  <p className="edu-highlight">✦ {edu.highlight}</p>
+                  <motion.p
+                    className="edu-highlight"
+                    initial={{ opacity: 0, x: -8 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.15 + 0.45, duration: 0.4 }}
+                  >
+                    ✦ {edu.highlight}
+                  </motion.p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
 
+        {/* Skills */}
         <motion.div className="about-skills" variants={itemVariants}>
           <h3 className="about-sub-heading">Technical Skills</h3>
 
           <div className="skills-group-grid">
             {skillGroups.map((group, i) => (
-              <div className="skill-group-card" key={i}>
+              <motion.div
+                className="skill-group-card"
+                key={i}
+                custom={i}
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.2 }}
+              >
                 <p className="skill-group-label">{group.category}</p>
                 <div className="skill-tags">
                   {group.skills.map((skill, j) => (
-                    <span className="skill-tag" key={j}>{skill}</span>
+                    <motion.span
+                      className="skill-tag"
+                      key={j}
+                      custom={j}
+                      variants={tagVariants}
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true }}
+                      whileHover={{
+                        scale: 1.08,
+                        boxShadow: "0 0 10px rgba(56,189,248,0.3)",
+                        transition: { duration: 0.15 },
+                      }}
+                    >
+                      {skill}
+                    </motion.span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>

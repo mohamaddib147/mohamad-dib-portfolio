@@ -39,7 +39,7 @@ function Hero() {
           animate="show"
         >
           <motion.span className="hero-badge" variants={contentItem}>
-            Communication Engineer → Frontend Developer
+            Communication Engineer → Wireless Networking
           </motion.span>
 
           <motion.h1 className="hero-title" variants={contentItem}>
@@ -107,7 +107,7 @@ function Hero() {
             <Cpu size={18} />
             <div>
               <h3>Background</h3>
-              <p>Communication Systems, Software, Embedded Thinking</p>
+              <p>Communication Systems, Software, Embedded Systems</p>
             </div>
           </div>
 
@@ -115,7 +115,7 @@ function Hero() {
             <MapPin size={18} />
             <div>
               <h3>Location</h3>
-              <p>Beirut, Lebanon · Open to relocation</p>
+              <p>Beirut/Sidon, Lebanon · Open to relocation</p>
             </div>
           </div>
         </motion.aside>
