@@ -28,7 +28,6 @@ const contentItem = {
 function Hero() {
   return (
     <section id="hero" className="hero-section">
-      {/* Carrier wave + antenna pulse */}
       <SignalBackground variant="hero" className="signal-hero" />
 
       <div className="hero-container">
@@ -107,15 +106,15 @@ function Hero() {
             <Cpu size={18} />
             <div>
               <h3>Background</h3>
-              <p>Communication Systems, Software, Embedded Systems</p>
+              <p>Communication Systems, Software, Embedded</p>
             </div>
           </div>
 
-          <div className="info-item">
+          <div className="info-item info-item-last">
             <MapPin size={18} />
             <div>
               <h3>Location</h3>
-              <p>Beirut/Sidon, Lebanon · Open to relocation</p>
+              <p>Beirut / Sidon, Lebanon · Open to relocation</p>
             </div>
           </div>
         </motion.aside>

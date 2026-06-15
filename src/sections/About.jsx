@@ -1,6 +1,6 @@
-// About.jsx
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { GraduationCap, Sparkles } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
 
 // ── Animation variants ────────────────────────────────────────────────────
@@ -40,14 +40,7 @@ const tagVariants = {
 // ── Data ─────────────────────────────────────────────────────────────────
 
 const education = [
-  {
-    flagCode: "lb",
-    country: "Lebanon",
-    school: "Lebanese International University",
-    degree: "Bachelor of Science in Communication Engineering",
-    period: "Sep 2018 – Jul 2021",
-    highlight: "Top grades in Advanced Digital Logic, Linux Lab & Analog Communication",
-  },
+ 
   {
     flagCode: "se",
     country: "Sweden",
@@ -57,30 +50,42 @@ const education = [
     period: "Aug 2022 – Jan 2025",
     highlight: "Highest grade (A) in Communication Systems Design · Internet Security and Privacy",
   },
+   {
+    flagCode: "lb",
+    country: "Lebanon",
+    school: "Lebanese International University",
+    degree: "Bachelor of Science in Communication Engineering",
+    period: "Sep 2018 – Jul 2021",
+    highlight: "Top grades in Advanced Digital Logic, Linux Lab & Analog Communication",
+  },
 ];
 
 const skillGroups = [
   {
     category: "Wireless & Networks",
+    description: "Networked systems, radio fundamentals, and communication infrastructure.",
     skills: ["5G NR", "LTE", "MIMO", "Beamforming", "TCP/IP", "VPN", "RF Planning"],
   },
   {
     category: "Security",
+    description: "Security-focused analysis, resilient architecture, and system protection.",
     skills: ["Network Security", "Secure System Design", "Ethical Hacking", "Vulnerability Assessment"],
   },
   {
     category: "Programming",
+    description: "Engineering-oriented programming across scripting, systems, and analysis tools.",
     skills: ["Python", "MATLAB", "C/C++", "Java", "Bash", "SQL"],
   },
   {
     category: "Frontend",
+    description: "Modern UI implementation with responsive, structured, maintainable interfaces.",
     skills: ["React", "JavaScript", "HTML", "CSS", "Responsive Design"],
   },
 ];
 
 // ── Stat counter hook ─────────────────────────────────────────────────────
 
-function useCounter(target, duration = 1200, startOnView = false) {
+function useCounter(target, duration = 1200) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
@@ -88,12 +93,14 @@ function useCounter(target, duration = 1200, startOnView = false) {
   useEffect(() => {
     if (!inView) return;
     let start = null;
+
     const step = (ts) => {
       if (!start) start = ts;
       const progress = Math.min((ts - start) / duration, 1);
       setCount(Math.floor(progress * target));
       if (progress < 1) requestAnimationFrame(step);
     };
+
     requestAnimationFrame(step);
   }, [inView, target, duration]);
 
@@ -125,6 +132,7 @@ function FlagImg({ code, label }) {
 
 function StatCounter({ target, label, suffix = "+" }) {
   const { count, ref } = useCounter(target);
+
   return (
     <div ref={ref} className="about-stat">
       <span className="about-stat-number">
@@ -150,27 +158,43 @@ function About() {
         whileInView="show"
         viewport={{ once: true, amount: 0.1 }}
       >
-        {/* Header */}
         <motion.div className="about-header" variants={itemVariants}>
           <p className="section-kicker">About Me</p>
-          <h2>Engineering mindset, frontend direction.</h2>
+          <h2>Engineering mindset</h2>
         </motion.div>
 
-        {/* Profile card with animated stats */}
-        <motion.div className="about-summary-card" variants={itemVariants}>
-          <p className="about-summary-label">Profile</p>
-          <p>
-            Master's graduate in Communication Systems (Wireless Networking) from KTH,
-            with a strong foundation in Electrical Engineering and Computer Science principles.
-            Experienced in wireless networks, network security, and Python programming.
-            Now growing into frontend development to build clean, responsive, and technically
-            disciplined web interfaces.
+        <motion.div
+          className="about-summary-card"
+          variants={itemVariants}
+          whileHover={{
+            y: -4,
+            boxShadow: "0 18px 42px rgba(0,0,0,0.18)",
+            transition: { duration: 0.22 },
+          }}
+        >
+          <div className="about-summary-top">
+            <div>
+              <p className="about-summary-label">Profile</p>
+              <h3 className="about-summary-heading">Bridging engineering systems and frontend execution</h3>
+            </div>
+
+            
+          </div>
+
+          <p className="about-summary-text">
+            Master&apos;s graduate in Communication Systems (Wireless Networking) from KTH,
+            with a strong foundation in electrical engineering and computer science principles.
+            Experienced in wireless networks, network security, and Python programming, and now
+            growing into frontend development to build clean, responsive, and technically disciplined web interfaces.
           </p>
 
-          
+          <div className="about-stats-grid">
+            <StatCounter target={2} label="Degrees" />
+            <StatCounter target={6} label="Core domains" />
+            <StatCounter target={3} label="Technical tracks" />
+          </div>
         </motion.div>
 
-        {/* Education timeline */}
         <motion.div className="about-education" variants={itemVariants}>
           <h3 className="about-sub-heading">Education</h3>
 
@@ -197,7 +221,10 @@ function About() {
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.15 + 0.2, type: "spring", stiffness: 300 }}
-                  />
+                  >
+                    <GraduationCap size={10} strokeWidth={2.2} />
+                  </motion.div>
+
                   {i < education.length - 1 && (
                     <motion.div
                       className="edu-line"
@@ -241,7 +268,6 @@ function About() {
           </div>
         </motion.div>
 
-        {/* Skills */}
         <motion.div className="about-skills" variants={itemVariants}>
           <h3 className="about-sub-heading">Technical Skills</h3>
 
@@ -255,8 +281,14 @@ function About() {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
+                whileHover={{
+                  y: -4,
+                  transition: { duration: 0.2 },
+                }}
               >
                 <p className="skill-group-label">{group.category}</p>
+                <p className="skill-group-description">{group.description}</p>
+
                 <div className="skill-tags">
                   {group.skills.map((skill, j) => (
                     <motion.span
@@ -268,8 +300,8 @@ function About() {
                       whileInView="show"
                       viewport={{ once: true }}
                       whileHover={{
-                        scale: 1.08,
-                        boxShadow: "0 0 10px rgba(56,189,248,0.3)",
+                        scale: 1.05,
+                        boxShadow: "0 0 10px rgba(56,189,248,0.24)",
                         transition: { duration: 0.15 },
                       }}
                     >
