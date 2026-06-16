@@ -1,0 +1,165 @@
+/* =========================================================
+   CONTACT SECTION — MOBILE RESPONSIVE FIX
+   Addresses clipping, overflow, and invisible content
+   on screens ≤ 768px.
+   ========================================================= */
+
+/* ── Base: prevent any horizontal overflow ── */
+.contact-section {
+  overflow-x: hidden;
+}
+
+.holo-card {
+  min-width: 0;
+  width: 100%;
+}
+
+.holo-card-inner {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Contact link cards: allow value to wrap ── */
+.contact-link-value {
+  white-space: normal;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+/* ── Establish Link: stack vertically on small screens ── */
+.establish-link-wrapper {
+  flex-wrap: wrap;
+}
+
+.establish-link-wrapper > div {
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
+.establish-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Status bar: allow wrapping ── */
+.status-bar-container {
+  flex-wrap: wrap;
+  row-gap: 6px;
+  word-break: break-word;
+}
+
+/* ── Connection nodes: hide on very small screens ── */
+@media (max-width: 480px) {
+  .connection-nodes {
+    display: none;
+  }
+}
+
+/* ── Telemetry grid: already handled in main.css at 640px,
+      but fix value alignment here ── */
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .holo-card-inner {
+    padding: 22px 18px;
+  }
+
+  .contact-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  .contact-support-text {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+
+  .contact-link-card.holo-link {
+    padding: 14px 16px;
+  }
+
+  .contact-link-value {
+    font-size: 0.95rem;
+  }
+
+  .establish-link-wrapper {
+    margin-top: 24px;
+  }
+
+  .establish-btn {
+    font-size: 0.82rem;
+    padding: 11px 20px;
+  }
+
+  .contact-snapshot-list {
+    gap: 16px;
+  }
+
+  .language-tags {
+    gap: 8px;
+  }
+
+  .language-tag {
+    padding: 7px 14px;
+  }
+
+  .telemetry-grid {
+    padding: 14px;
+  }
+
+  .telemetry-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .telemetry-value,
+  .status-active,
+  .live-clock {
+    justify-self: start;
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .current-operations {
+    padding: 14px 14px 14px 16px;
+  }
+
+  .operations-text {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .holo-card-inner {
+    padding: 18px 14px;
+  }
+
+  .contact-link-label {
+    font-size: 0.7rem;
+  }
+
+  .contact-link-value {
+    font-size: 0.88rem;
+  }
+
+  .contact-mini-label {
+    font-size: 0.7rem;
+  }
+
+  .tx-endpoint-text {
+    font-size: 0.68rem;
+  }
+
+  .telemetry-badge {
+    font-size: 0.62rem;
+  }
+
+  .status-bar-container {
+    font-size: 0.68rem;
+    padding: 6px 12px 6px 8px;
+  }
+}
