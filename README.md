@@ -2,22 +2,22 @@
 
 **Live portfolio:** [mohamaddib147.github.io/mohamad-dib-portfolio](https://mohamaddib147.github.io/mohamad-dib-portfolio) *(coming soon)*
 
-A professional personal portfolio website built with **React + Vite** to present my background, technical skills, engineering projects, and professional value in a clear, modern, and structured format. The site combines a clean component-based architecture with a custom dark navy visual system and section-specific wireless-inspired animated backgrounds. [file:772]
+A professional personal portfolio website built with **React + Vite** to present my background, technical skills, engineering projects, and professional value in a clear, modern, and structured format. The site combines a clean component-based architecture with a custom dark navy visual system and section-specific wireless-inspired animated backgrounds. 
 
 ---
 
 ## Project Overview
 
-This project was developed as a **React personal portfolio website** focused on clean UI structure, good project organization, responsive layout, and professional presentation. It showcases my profile across communication systems, wireless networking, network security, software development, and frontend engineering. [file:772]
+This project was developed as a **React personal portfolio website** focused on clean UI structure, good project organization, responsive layout, and professional presentation. It showcases my profile across communication systems, wireless networking, network security, software development, and frontend engineering. 
 
-Unlike a generic portfolio template, this version uses a custom technical art direction inspired by wireless systems concepts such as carrier waves, routing grids, spectrum fields, modulation layers, and signal paths. Each section has its own visual motif while preserving readability, hierarchy, and a professional tone. [file:772]
+Unlike a generic portfolio template, this version uses a custom technical art direction inspired by wireless systems concepts such as carrier waves, routing grids, spectrum fields, modulation layers, and signal paths. Each section has its own visual motif while preserving readability, hierarchy, and a professional tone.
 
 ### Purpose
 
-- Present my academic and technical background clearly. [file:772]
-- Highlight engineering and software-oriented projects in a structured way. [file:772]
-- Show technical skills, tools, and professional strengths. [file:772]
-- Provide recruiters, hiring teams, and collaborators with a clean contact point. [file:772]
+- Present my academic and technical background clearly. 
+- Highlight engineering and software-oriented projects in a structured way. 
+- Show technical skills, tools, and professional strengths.
+- Provide recruiters, hiring teams, and collaborators with a clean contact point. 
 
 ---
 
@@ -33,7 +33,7 @@ Unlike a generic portfolio template, this version uses a custom technical art di
 | Hire Me | Stable low-noise link | Professional value proposition |
 | Contact | Endpoint handoff / signal receiver | Contact details and professional links |
 
-The project brief requires sections for a hero/introduction, about, technologies and tools, skills, projects, a professional value section, contact, and footer, and this portfolio implements that structure in a customized one-page format. [file:772]
+The project brief requires sections for a hero/introduction, about, technologies and tools, skills, projects, a professional value section, contact, and footer, and this portfolio implements that structure in a customized one-page format. 
 
 ---
 
@@ -48,11 +48,11 @@ The interface is built around a technical dark-theme design language with restra
 - Consistent card system with glass-style panels, soft borders, and controlled glow.
 - One typography system with strong heading hierarchy and readable body text.
 - Section-specific animated backgrounds that support the content without overpowering it.
-- Responsive layout for desktop, tablet, and mobile. [file:772]
+- Responsive layout for desktop, tablet, and mobile. 
 
 ### Visual direction
 
-The design intentionally avoids generic portfolio styling and instead reflects my communication engineering background through wireless-inspired motion and signal-based visuals. This keeps the project aligned with both a frontend developer portfolio and an engineering identity. [file:772]
+The design intentionally avoids generic portfolio styling and instead reflects my communication engineering background through wireless-inspired motion and signal-based visuals. This keeps the project aligned with both a frontend developer portfolio and an engineering identity. 
 
 ---
 
@@ -69,19 +69,19 @@ The design intentionally avoids generic portfolio styling and instead reflects m
 | **Lucide React** | Lightweight icon system |
 | **Git + GitHub** | Version control and repository hosting |
 
-The project brief specifies React, JavaScript, React hooks where appropriate, no backend, and responsive design, all of which are reflected in this implementation. [file:772]
+The project brief specifies React, JavaScript, React hooks where appropriate, no backend, and responsive design, all of which are reflected in this implementation.
 
 ---
 
 ## Features
 
-- Built with reusable React components. [file:772]
-- Organized one-page portfolio structure with clearly separated sections. [file:772]
-- Responsive layout for desktop, tablet, and mobile. [file:772]
+- Built with reusable React components. 
+- Organized one-page portfolio structure with clearly separated sections. 
+- Responsive layout for desktop, tablet, and mobile. 
 - Custom animated section backgrounds using wireless systems motifs.
 - Professional project cards with engineering-focused descriptions.
 - Contact section with email and professional profile links.
-- Clean and modern UI with consistent spacing and typography, which the project brief explicitly requires. [file:772]
+- Clean and modern UI with consistent spacing and typography, which the project brief explicitly requires. 
 
 ---
 
@@ -140,7 +140,7 @@ This generates the optimized production build in the `dist/` folder.
 npm run preview
 ```
 
-The project brief specifically asks for a README that explains the overview, technologies used, and how to run the project locally, so these instructions should remain in the final version. [file:772]
+The project brief specifically asks for a README that explains the overview, technologies used, and how to run the project locally, so these instructions should remain in the final version. 
 
 ---
 
@@ -176,13 +176,13 @@ mohamad-dib-portfolio/
 └── README.md
 ```
 
-The provided project brief suggests a React structure with reusable components, section-based organization, and clean separation of concerns, which this structure follows closely. [file:772]
+The provided project brief suggests a React structure with reusable components, section-based organization, and clean separation of concerns, which this structure follows closely. 
 
 ---
 
 ## Featured Projects
 
-Each featured project is presented in card format with a short description, technologies used, and repository or supporting links, matching the portfolio project requirements described in the brief. [file:772]
+Each featured project is presented in card format with a short description, technologies used, and repository or supporting links, matching the portfolio project requirements described in the brief.
 
 Current featured project directions include:
 
@@ -191,7 +191,7 @@ Current featured project directions include:
 - **IoT Air Quality Monitor** — sensor systems, telemetry, and IoT implementation.
 - **TCP Protocol Tool** — protocol logic, networking fundamentals, and software development.
 
-The original brief requires at least 2–3 projects with name, description, technologies used, and GitHub links, and this portfolio is structured around that requirement. [file:772]
+The original brief requires at least 2–3 projects with name, description, technologies used, and GitHub links, and this portfolio is structured around that requirement. 
 
 ---
 
@@ -199,14 +199,14 @@ The original brief requires at least 2–3 projects with name, description, tech
 
 This project was designed with the following goals in mind:
 
-- Clean and modern presentation. [file:772]
-- Consistent spacing and typography. [file:772]
-- Clear section separation. [file:772]
-- Accessible contrast and readable content. [file:772]
-- Mobile responsiveness. [file:772]
+- Clean and modern presentation. 
+- Consistent spacing and typography. 
+- Clear section separation. 
+- Accessible contrast and readable content. 
+- Mobile responsiveness. 
 - A distinctive technical visual identity tied to engineering and wireless systems.
 
-These goals directly align with the UI/UX guidelines defined in the project PDF. [file:772]
+These goals directly align with the UI/UX guidelines defined in the project PDF. 
 
 ---
 
