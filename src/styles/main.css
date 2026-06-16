@@ -40,76 +40,443 @@ main { position: relative; z-index: 1; }
 }
 
 /* Per-section opacity — visible but never overpowering text */
-.signal-hero    { opacity: 0.55; }
-.signal-about   { opacity: 0.38; }
-.signal-tech    { opacity: 0.30; }
-.signal-skills  { opacity: 0.28; }
+.signal-hero { opacity: 0.55; }
+.signal-about { opacity: 0.38; }
+.signal-tech { opacity: 0.30; }
+.signal-skills { opacity: 0.28; }
 .signal-projects { opacity: 0.24; }
-.signal-hire    { opacity: 0.42; }
-.signal-card    { opacity: 0.22; }
+.signal-hire { opacity: 0.42; }
+.signal-card { opacity: 0.22; }
 
 /* Slight vertical nudge so waves don’t clip at the very top edge */
-.signal-hero .signal-canvas-element  { transform: translateY(28px); }
+.signal-hero .signal-canvas-element { transform: translateY(28px); }
 .signal-about .signal-canvas-element { transform: translateY(48px); }
 
 /* =========================================================
-   SECTION DIVIDERS + TRANSITIONS
-   Minimalist wireless-themed separator between every section.
-   Sky-blue fading line + centered radial glow halo.
+   FULL BLEED DIVIDER
    ========================================================= */
 
-.section-divider {
+.section-divider.section-divider--full {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+.section-divider.divider {
+  --divider-accent: rgba(0, 212, 255, 0.9);
+  --divider-soft: rgba(0, 212, 255, 0.18);
+  --divider-fade-top: rgba(0, 170, 255, 0.04);
+  --divider-fade-bottom: rgba(0, 170, 255, 0.03);
+  --divider-line-opacity: 0.88;
+  --divider-core-size: 14px;
+  --divider-glow-size: 84px;
+
   position: relative;
-  height: 94px;
+  min-height: clamp(92px, 10vw, 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  pointer-events: none;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(7, 18, 36, 0),
-      rgba(10, 30, 58, 0.42) 45%,
-      rgba(7, 18, 36, 0)
-    );
+  isolation: isolate;
 }
 
-/* Carrier-signal line — fades in from edges like a transmitted wave */
-.section-divider::before {
-  content: "";
+.divider__inner {
+  width: min(100%, 1800px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.8vw, 18px);
+  padding-inline: clamp(12px, 3vw, 32px);
+  position: relative;
+  z-index: 1;
+}
+
+.divider__blend {
   position: absolute;
-  left: 8%;
-  right: 8%;
-  top: 50%;
-  height: 1px;
-  transform: translateY(-50%);
-  background: linear-gradient(
-    to right,
-    rgba(56, 189, 248, 0),
-    rgba(125, 211, 252, 0.45),
-    rgba(56, 189, 248, 0)
-  );
-  box-shadow:
-    0 0 16px rgba(56, 189, 248, 0.12),
-    0 0 28px rgba(56, 189, 248, 0.06);
+  inset-inline: 0;
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* Radial glow at line center — like a carrier frequency peak */
-.section-divider::after {
-  content: "";
+.divider__blend--top {
+  top: 0;
+  height: clamp(36px, 5vw, 56px);
+  background: linear-gradient(to bottom, transparent 0%, var(--divider-fade-top) 100%);
+}
+
+.divider__blend--bottom {
+  bottom: 0;
+  height: clamp(36px, 5vw, 56px);
+  background: linear-gradient(to top, transparent 0%, var(--divider-fade-bottom) 100%);
+}
+
+.divider__line {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 1px;
+  opacity: var(--divider-line-opacity);
+  z-index: 1;
+}
+
+.divider__line--left {
+  margin-right: clamp(8px, 1vw, 14px);
+  background: linear-gradient(to left, var(--divider-accent), var(--divider-soft), transparent);
+}
+
+.divider__line--right {
+  margin-left: clamp(8px, 1vw, 14px);
+  background: linear-gradient(to right, var(--divider-accent), var(--divider-soft), transparent);
+}
+
+/* =========================================================
+   RF INTERCONNECTED MATRIX CONSOLE
+   ========================================================= */
+
+.divider__matrix-container {
+  position: relative;
+  width: clamp(240px, 52vw, 720px);
+  height: clamp(56px, 9vw, 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  z-index: 2;
+}
+
+.divider__rf-matrix {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  overflow: visible;
+}
+
+.matrix-wave {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.wave-carrier {
+  stroke: rgba(0, 212, 255, 0.15);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.wave-harmonic {
+  stroke: rgba(0, 170, 255, 0.08);
+  stroke-width: 1;
+}
+
+.wave-primary-path {
+  stroke: rgba(0, 212, 255, 0.4);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 4px rgba(0, 212, 255, 0.15));
+}
+
+.matrix-packet-node {
+  fill: #f0ffff;
+  stroke: #00d4ff;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 6px #00d4ff) drop-shadow(0 0 12px rgba(0, 212, 255, 0.8));
+  offset-rotate: 0deg;
+  animation: packet-pulse 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes packet-pulse {
+  0% { r: 4.5; filter: drop-shadow(0 0 4px #00d4ff); }
+  100% { r: 6; filter: drop-shadow(0 0 8px #00d4ff) drop-shadow(0 0 16px #00d4ff); }
+}
+
+/* Legacy motif alignments within core wrapper framework */
+.divider__center-motifs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.divider__motif {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 120px;
-  height: 120px;
   transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(56, 189, 248, 0.12),
-    rgba(56, 189, 248, 0.03) 45%,
-    transparent 72%
-  );
+  pointer-events: none;
 }
 
+/* HERO -> ABOUT : signature arc */
+.divider--hero-about {
+  --divider-fade-top: rgba(120, 190, 255, 0.05);
+  --divider-fade-bottom: rgba(0, 212, 255, 0.04);
+}
+
+.divider--hero-about .divider__motif--a {
+  width: clamp(48px, 8vw, 70px);
+  height: clamp(48px, 8vw, 70px);
+  border-radius: 50%;
+  border-top: 1px solid rgba(180, 230, 255, 0.5);
+  border-left: 1px solid rgba(0, 212, 255, 0.22);
+  transform: translate(-50%, -50%) rotate(18deg);
+}
+
+.divider--hero-about .divider__motif--b {
+  width: clamp(24px, 4vw, 34px);
+  height: clamp(6px, 1vw, 10px);
+  border-radius: 999px;
+  background: linear-gradient(to right, transparent, rgba(190, 245, 255, 0.9), transparent);
+  top: 58%;
+  animation: heroSweep 2.8s ease-in-out infinite;
+}
+
+.divider--hero-about .divider__motif--c {
+  width: clamp(62px, 11vw, 92px);
+  height: clamp(62px, 11vw, 92px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, transparent 68%);
+}
+
+/* ABOUT -> TECHNOLOGIES : circuit nodes */
+.divider--about-tools .divider__motif--a {
+  width: clamp(46px, 7vw, 68px);
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.65), transparent);
+}
+
+.divider--about-tools .divider__motif--b,
+.divider--about-tools .divider__motif--c {
+  width: clamp(5px, 1vw, 8px);
+  height: clamp(5px, 1vw, 8px);
+  border-radius: 50%;
+  background: rgba(170, 245, 255, 0.95);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.35);
+}
+
+.divider--about-tools .divider__motif--b {
+  left: 28%;
+  top: 40%;
+}
+
+.divider--about-tools .divider__motif--c {
+  left: 72%;
+  top: 60%;
+}
+
+/* TOOLS -> SKILLS : equalizer bars */
+.divider--tools-skills .divider__motif--a,
+.divider--tools-skills .divider__motif--b,
+.divider--tools-skills .divider__motif--c {
+  bottom: 22px;
+  top: auto;
+  width: clamp(4px, 0.9vw, 6px);
+  border-radius: 999px;
+  background: linear-gradient(to top, rgba(0, 212, 255, 0.2), rgba(170, 245, 255, 0.95));
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.22);
+}
+
+.divider--tools-skills .divider__motif--a {
+  left: 38%;
+  height: clamp(14px, 2.5vw, 18px);
+  animation: skillBarA 1.8s ease-in-out infinite;
+}
+
+.divider--tools-skills .divider__motif--b {
+  left: 50%;
+  height: clamp(22px, 4vw, 30px);
+  animation: skillBarB 1.8s ease-in-out infinite;
+}
+
+.divider--tools-skills .divider__motif--c {
+  left: 62%;
+  height: clamp(16px, 3vw, 22px);
+  animation: skillBarC 1.8s ease-in-out infinite;
+}
+
+/* SKILLS -> PROJECTS : spotlight beam */
+.divider--skills-projects .divider__motif--a {
+  width: clamp(52px, 9vw, 74px);
+  height: clamp(52px, 9vw, 74px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(180, 245, 255, 0.1) 0%, rgba(0, 212, 255, 0.06) 36%, transparent 72%);
+}
+
+.divider--skills-projects .divider__motif--b {
+  width: clamp(66px, 11vw, 96px);
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(190, 245, 255, 0.9), transparent);
+  animation: projectSweep 2.6s linear infinite;
+}
+
+.divider--skills-projects .divider__motif--c {
+  width: clamp(12px, 2vw, 18px);
+  height: clamp(12px, 2vw, 18px);
+  border: 1px solid rgba(170, 245, 255, 0.55);
+  border-radius: 50%;
+}
+
+/* PROJECTS -> HIRE : trust wave */
+.divider--projects-hire {
+  --divider-line-opacity: 0.76;
+}
+
+.divider--projects-hire .divider__motif--a {
+  width: clamp(52px, 9vw, 74px);
+  height: clamp(18px, 3vw, 24px);
+  border-bottom: 1px solid rgba(170, 245, 255, 0.46);
+  border-radius: 0 0 40px 40px;
+  top: 48%;
+}
+
+.divider--projects-hire .divider__motif--b {
+  width: clamp(10px, 2vw, 16px);
+  height: clamp(10px, 2vw, 16px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(220,255,255,1) 0%, rgba(0,212,255,0.85) 70%, transparent 100%);
+  animation: trustPulse 2.4s ease-in-out infinite;
+}
+
+.divider--projects-hire .divider__motif--c {
+  width: clamp(62px, 12vw, 92px);
+  height: clamp(62px, 12vw, 92px);
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 212, 255, 0.14);
+}
+
+/* HIRE -> CONTACT : endpoint beacon */
+.divider--hire-contact {
+  --divider-fade-top: rgba(0, 212, 255, 0.03);
+  --divider-fade-bottom: rgba(160, 220, 255, 0.05);
+  --divider-line-opacity: 0.7;
+}
+
+.divider--hire-contact .divider__motif--a {
+  width: clamp(36px, 7vw, 50px);
+  height: clamp(36px, 7vw, 50px);
+  border-radius: 50%;
+  border: 1px solid rgba(180, 245, 255, 0.28);
+}
+
+.divider--hire-contact .divider__motif--b {
+  width: clamp(7px, 1.5vw, 10px);
+  height: clamp(7px, 1.5vw, 10px);
+  border-radius: 50%;
+  background: rgba(190, 245, 255, 1);
+  box-shadow: 0 0 12px rgba(190, 245, 255, 0.9), 0 0 24px rgba(0, 212, 255, 0.24);
+  animation: contactBeacon 2.2s ease-in-out infinite;
+}
+
+.divider--hire-contact .divider__motif--c {
+  width: clamp(58px, 11vw, 88px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(180, 245, 255, 0.65), transparent);
+  top: 58%;
+}
+
+/* default */
+.divider--default .divider__motif--a {
+  width: clamp(38px, 8vw, 56px);
+  height: clamp(38px, 8vw, 56px);
+  border-radius: 50%;
+  border: 1px solid rgba(0, 212, 255, 0.18);
+}
+
+/* animations */
+@keyframes divider-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+@keyframes divider-ring {
+  0% { width: 24px; height: 24px; opacity: 0.5; }
+  100% { width: 86px; height: 86px; opacity: 0; }
+}
+
+@keyframes heroSweep {
+  0%, 100% { transform: translate(-50%, -50%) translateX(-8px); opacity: 0.55; }
+  50% { transform: translate(-50%, -50%) translateX(8px); opacity: 1; }
+}
+
+@keyframes skillBarA {
+  0%, 100% { height: clamp(14px, 2.5vw, 18px); }
+  50% { height: clamp(22px, 4vw, 28px); }
+}
+
+@keyframes skillBarB {
+  0%, 100% { height: clamp(22px, 4vw, 30px); }
+  50% { height: clamp(14px, 2.5vw, 18px); }
+}
+
+@keyframes skillBarC {
+  0%, 100% { height: clamp(16px, 3vw, 22px); }
+  50% { height: clamp(24px, 4.4vw, 32px); }
+}
+
+@keyframes projectSweep {
+  0% { opacity: 0.35; transform: translate(-50%, -50%) scaleX(0.75); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scaleX(1); }
+  100% { opacity: 0.35; transform: translate(-50%, -50%) scaleX(0.75); }
+}
+
+@keyframes trustPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 rgba(0,0,0,0); }
+  50% { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 18px rgba(0, 212, 255, 0.28); }
+}
+
+@keyframes contactBeacon {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.65; }
+  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .divider__inner {
+    padding-inline: 12px;
+    gap: 10px;
+  }
+
+  .divider__matrix-container {
+    width: clamp(220px, 58vw, 520px);
+    height: clamp(52px, 10vw, 72px);
+  }
+
+  .divider__line {
+    opacity: 0.74;
+  }
+
+  .wave-carrier {
+    stroke-dasharray: 3 4;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-divider.divider {
+    min-height: 84px;
+  }
+
+  .divider__inner {
+    padding-inline: 10px;
+    gap: 8px;
+  }
+
+  .divider__matrix-container {
+    width: clamp(180px, 62vw, 340px);
+    height: clamp(44px, 12vw, 60px);
+  }
+
+  .matrix-packet-node {
+    stroke-width: 1.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .divider__core,
+  .divider__ring,
+  .divider__motif,
+  .matrix-packet-node {
+    animation: none !important;
+  }
+}
 /* =========================================================
    STICKY HEADER
    ========================================================= */

@@ -1,57 +1,110 @@
-// SectionDivider.jsx
-// Minimalist wireless-engineering divider between every section.
-// Shows a fading horizontal line with a centered antenna/RF icon.
+import { useMemo, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-function SectionDivider() {
+function SectionDivider({ variant = "default" }) {
+  const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const nodeProgress = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  const paths = useMemo(() => {
+    const width = 720;
+    const baseline = 40;
+    const segments = 6;
+    const segmentWidth = width / segments;
+
+    let carrier = `M 0 ${baseline}`;
+    let harmonic = `M 0 ${baseline}`;
+    let primary = `M 0 ${baseline}`;
+
+    for (let i = 0; i < segments; i += 1) {
+      const startX = i * segmentWidth;
+      const midX = startX + segmentWidth / 2;
+      const endX = startX + segmentWidth;
+
+      carrier += ` Q ${startX + segmentWidth * 0.25} ${baseline - 14} ${midX} ${baseline}
+                   Q ${startX + segmentWidth * 0.75} ${baseline + 14} ${endX} ${baseline}`;
+
+      harmonic += ` Q ${startX + segmentWidth * 0.25} ${baseline + 10} ${midX} ${baseline}
+                    Q ${startX + segmentWidth * 0.75} ${baseline - 10} ${endX} ${baseline}`;
+
+      primary += ` C ${startX + segmentWidth * 0.18} ${baseline - 26},
+                   ${startX + segmentWidth * 0.32} ${baseline - 26},
+                   ${midX} ${baseline}
+                   C ${startX + segmentWidth * 0.68} ${baseline + 26},
+                   ${startX + segmentWidth * 0.82} ${baseline + 26},
+                   ${endX} ${baseline}`;
+    }
+
+    return { carrier, harmonic, primary };
+  }, []);
+
   return (
-    <div className="rf-divider" role="separator" aria-hidden="true">
-      {/* Fading line left */}
-      <span className="rf-divider-line" />
+    <motion.div
+      ref={containerRef}
+      className={`section-divider section-divider--full divider divider--${variant}`}
+      role="separator"
+      aria-hidden="true"
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="divider__blend divider__blend--top" />
+      <div className="divider__blend divider__blend--bottom" />
 
-      {/* Centered wireless icon: antenna with 3 radiating arcs */}
-      <span className="rf-divider-icon">
-        <svg
-          width="28"
-          height="22"
-          viewBox="0 0 28 22"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          {/* Outer arc */}
-          <path
-            d="M3 16 C3 8.268 8.268 2 14 2 C19.732 2 25 8.268 25 16"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            opacity="0.35"
-          />
-          {/* Middle arc */}
-          <path
-            d="M7 16 C7 10.477 10.134 6 14 6 C17.866 6 21 10.477 21 16"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            opacity="0.60"
-          />
-          {/* Inner arc */}
-          <path
-            d="M10.5 16 C10.5 13.015 12.015 11 14 11 C15.985 11 17.5 13.015 17.5 16"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            opacity="0.90"
-          />
-          {/* Mast */}
-          <line x1="14" y1="16" x2="14" y2="21" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.80" />
-          {/* Tip dot */}
-          <circle cx="14" cy="2" r="1.5" fill="currentColor" opacity="0.70" />
-        </svg>
-      </span>
+      <div className="divider__inner">
+        <div className="divider__line divider__line--left" />
 
-      {/* Fading line right */}
-      <span className="rf-divider-line" />
-    </div>
+        <div className="divider__matrix-container">
+          <svg
+            viewBox="0 0 720 80"
+            className="divider__rf-matrix"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <path
+              d={paths.carrier}
+              fill="none"
+              className="matrix-wave wave-carrier"
+            />
+
+            <path
+              d={paths.harmonic}
+              fill="none"
+              className="matrix-wave wave-harmonic"
+            />
+
+            <path
+              id={`wavePath-${variant}`}
+              d={paths.primary}
+              fill="none"
+              className="matrix-wave wave-primary-path"
+            />
+
+            <motion.circle
+              r="4.5"
+              className="matrix-packet-node"
+              style={{
+                offsetPath: `path("${paths.primary}")`,
+                offsetDistance: nodeProgress,
+              }}
+            />
+          </svg>
+
+          <div className="divider__center-motifs">
+            <span className="divider__motif divider__motif--a" />
+            <span className="divider__motif divider__motif--b" />
+            <span className="divider__motif divider__motif--c" />
+          </div>
+        </div>
+
+        <div className="divider__line divider__line--right" />
+      </div>
+    </motion.div>
   );
 }
 

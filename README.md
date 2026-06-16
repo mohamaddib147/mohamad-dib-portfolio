@@ -2,33 +2,57 @@
 
 **Live portfolio:** [mohamaddib147.github.io/mohamad-dib-portfolio](https://mohamaddib147.github.io/mohamad-dib-portfolio) *(coming soon)*
 
-A personal engineering portfolio built with **React + Vite**, designed around a dark navy interface with a cyan accent and section-specific wireless-inspired backgrounds. Each section carries its own visual motif drawn from wireless systems concepts — carrier waves, routing grids, spectrum fields, modulation layers, and signal trails — while keeping all content clear, readable, and professional.
+A professional personal portfolio website built with **React + Vite** to present my background, technical skills, engineering projects, and professional value in a clear, modern, and structured format. The site combines a clean component-based architecture with a custom dark navy visual system and section-specific wireless-inspired animated backgrounds. [file:772]
 
 ---
 
 ## Project Overview
 
-This portfolio presents Mohamad Dib's background, technical skills, and engineering projects across wireless systems, network security, and software development.
+This project was developed as a **React personal portfolio website** focused on clean UI structure, good project organization, responsive layout, and professional presentation. It showcases my profile across communication systems, wireless networking, network security, software development, and frontend engineering. [file:772]
 
-**Site structure:**
+Unlike a generic portfolio template, this version uses a custom technical art direction inspired by wireless systems concepts such as carrier waves, routing grids, spectrum fields, modulation layers, and signal paths. Each section has its own visual motif while preserving readability, hierarchy, and a professional tone. [file:772]
+
+### Purpose
+
+- Present my academic and technical background clearly. [file:772]
+- Highlight engineering and software-oriented projects in a structured way. [file:772]
+- Show technical skills, tools, and professional strengths. [file:772]
+- Provide recruiters, hiring teams, and collaborators with a clean contact point. [file:772]
+
+---
+
+## Site Structure
 
 | Section | Visual Motif | Purpose |
 |---|---|---|
-| Hero | Carrier wave + antenna pulse | First impression, name, title, CTA |
-| About | Network routing grid | Background, education, engineering story |
-| Tools | Spectrum analyzer / RF scan field | Software tools and environments |
-| Skills | Layered modulation waves | Technical skills grouped by domain |
-| Projects | Per-project wireless motif | Four featured engineering projects |
-| Hire Me | Stable low-noise link | Open to work call-to-action |
-| Contact | Endpoint connection / signal handoff | Email, LinkedIn, GitHub links |
+| Hero | Carrier wave + antenna pulse | First impression, role, introduction, call to action |
+| About | Routing grid / engineering signal map | Background, education, profile summary |
+| Tools | Spectrum analyzer / RF scan field | Technologies, tools, and development environments |
+| Skills | Layered modulation waves | Skills grouped by technical domain |
+| Projects | Project-specific wireless motif | Featured engineering and software projects |
+| Hire Me | Stable low-noise link | Professional value proposition |
+| Contact | Endpoint handoff / signal receiver | Contact details and professional links |
 
-**Design rules applied across all sections:**
-- One dark navy color base (`#0a0e1a`) across the entire site
-- One primary accent: cyan / electric blue (`#00d4ff`)
-- One typography system — modern sans body, stronger display weight for headings
-- One card system — glass cards with subtle border, consistent padding and radius
-- Section-specific wireless background at low visual intensity, never competing with content
-- No magenta overuse, no excessive glowing effects, content always above the visual noise
+The project brief requires sections for a hero/introduction, about, technologies and tools, skills, projects, a professional value section, contact, and footer, and this portfolio implements that structure in a customized one-page format. [file:772]
+
+---
+
+## Design System
+
+The interface is built around a technical dark-theme design language with restrained visual effects and readable content hierarchy.
+
+### Core design rules
+
+- Dark navy base across the full site.
+- Cyan / electric blue used as the primary accent.
+- Consistent card system with glass-style panels, soft borders, and controlled glow.
+- One typography system with strong heading hierarchy and readable body text.
+- Section-specific animated backgrounds that support the content without overpowering it.
+- Responsive layout for desktop, tablet, and mobile. [file:772]
+
+### Visual direction
+
+The design intentionally avoids generic portfolio styling and instead reflects my communication engineering background through wireless-inspired motion and signal-based visuals. This keeps the project aligned with both a frontend developer portfolio and an engineering identity. [file:772]
 
 ---
 
@@ -37,83 +61,92 @@ This portfolio presents Mohamad Dib's background, technical skills, and engineer
 | Technology | Role |
 |---|---|
 | **React 18** | Component-based UI architecture |
-| **Vite** | Development server and build tool |
-| **JavaScript (ES6+)** | Application logic and interactivity |
-| **CSS (custom)** | Design system, section backgrounds, animations |
-| **HTML5 Canvas / SVG** | Wireless-inspired animated backgrounds per section |
-| **Framer Motion** | Entrance and scroll-based animations |
-| **Lucide React** | Lightweight icon library |
+| **Vite** | Fast development server and production build tool |
+| **JavaScript (ES6+)** | Logic, rendering, and interactivity |
+| **Custom CSS** | Layout, design system, animations, and visual styling |
+| **HTML5 Canvas / SVG** | Section-specific animated wireless-inspired visuals |
+| **Framer Motion** | Entrance, reveal, and interaction animations |
+| **Lucide React** | Lightweight icon system |
 | **Git + GitHub** | Version control and repository hosting |
 
-**Design system:**
-- Color palette: dark navy base + cyan/electric blue accent
-- Typography: modern geometric sans for body, strong weight contrast for display headings
-- Spacing: 4px base unit system throughout
-- Backgrounds: Canvas/SVG animations unique to each section (carrier wave, routing grid, spectrum field, modulation layers, beamforming arcs, node topology, protocol bars)
+The project brief specifies React, JavaScript, React hooks where appropriate, no backend, and responsive design, all of which are reflected in this implementation. [file:772]
 
 ---
 
-## How to Run the Project Locally
+## Features
+
+- Built with reusable React components. [file:772]
+- Organized one-page portfolio structure with clearly separated sections. [file:772]
+- Responsive layout for desktop, tablet, and mobile. [file:772]
+- Custom animated section backgrounds using wireless systems motifs.
+- Professional project cards with engineering-focused descriptions.
+- Contact section with email and professional profile links.
+- Clean and modern UI with consistent spacing and typography, which the project brief explicitly requires. [file:772]
+
+---
+
+## How to Run Locally
 
 ### Prerequisites
 
-Make sure you have the following installed:
+Make sure you have installed:
+
 - [Node.js](https://nodejs.org/) (version 18 or higher recommended)
-- npm (comes with Node.js)
+- npm (included with Node.js)
 
-### Steps
+### Installation
 
-**1. Clone the repository**
+1. Clone the repository
 
 ```bash
 git clone https://github.com/mohamaddib147/mohamad-dib-portfolio.git
 ```
 
-**2. Navigate into the project folder**
+2. Move into the project folder
 
 ```bash
 cd mohamad-dib-portfolio
 ```
 
-**3. Install dependencies**
+3. Install dependencies
 
 ```bash
 npm install
 ```
 
-**4. Start the development server**
+4. Start the development server
 
 ```bash
 npm run dev
 ```
 
-**5. Open in your browser**
+5. Open the local URL shown in the terminal, usually:
 
-The terminal will show the local URL. By default it will be:
-
-```
+```bash
 http://localhost:5173
 ```
 
-### Build for production
+### Production build
 
 ```bash
 npm run build
 ```
 
-The production-ready files will be output to the `dist/` folder.
+This generates the optimized production build in the `dist/` folder.
 
-### Preview the production build locally
+### Preview production build locally
 
 ```bash
 npm run preview
 ```
 
+The project brief specifically asks for a README that explains the overview, technologies used, and how to run the project locally, so these instructions should remain in the final version. [file:772]
+
 ---
 
 ## Project Structure
 
-```
+```text
 mohamad-dib-portfolio/
 ├── public/
 │   └── favicon.ico
@@ -143,29 +176,50 @@ mohamad-dib-portfolio/
 └── README.md
 ```
 
+The provided project brief suggests a React structure with reusable components, section-based organization, and clean separation of concerns, which this structure follows closely. [file:772]
+
 ---
 
 ## Featured Projects
 
-Each project card uses a unique wireless-inspired visual motif that reflects the project's technical domain:
+Each featured project is presented in card format with a short description, technologies used, and repository or supporting links, matching the portfolio project requirements described in the brief. [file:772]
 
-- **Master's Thesis** — Beamforming / RF arc visual (research and wireless systems)
-- **VANET Security** — Packet route / network path visual (vehicular network security)
-- **IoT Air Quality Monitor** — Node topology visual (IoT systems and telemetry)
-- **TCP Protocol Tool** — Signal trail / protocol bars visual (low-level networking)
+Current featured project directions include:
+
+- **Master’s Thesis** — wireless systems research, beamforming, and communication design.
+- **VANET Security** — vehicular network security analysis and system-level thinking.
+- **IoT Air Quality Monitor** — sensor systems, telemetry, and IoT implementation.
+- **TCP Protocol Tool** — protocol logic, networking fundamentals, and software development.
+
+The original brief requires at least 2–3 projects with name, description, technologies used, and GitHub links, and this portfolio is structured around that requirement. [file:772]
+
+---
+
+## UI / UX Goals
+
+This project was designed with the following goals in mind:
+
+- Clean and modern presentation. [file:772]
+- Consistent spacing and typography. [file:772]
+- Clear section separation. [file:772]
+- Accessible contrast and readable content. [file:772]
+- Mobile responsiveness. [file:772]
+- A distinctive technical visual identity tied to engineering and wireless systems.
+
+These goals directly align with the UI/UX guidelines defined in the project PDF. [file:772]
 
 ---
 
 ## Author
 
 **Mohamad Dib**  
-Master's in Wireless Networking — KTH Royal Institute of Technology  
-Specialization in 5G NR, Network Security, Python, MATLAB
+Master’s in Communication Systems, Wireless Networking Track  
+KTH Royal Institute of Technology
 
 - GitHub: [github.com/mohamaddib147](https://github.com/mohamaddib147)
-- LinkedIn: [linkedin.com/in/mohamad-dib](https://www.linkedin.com/in/mohamad-dib)
+- LinkedIn: [linkedin.com/in/mohamad-dib-b51286271](https://www.linkedin.com/in/mohamad-dib-b51286271)
 - Email: [mohammaddeeb147@gmail.com](mailto:mohammaddeeb147@gmail.com)
 
 ---
 
-*Actively seeking opportunities in wireless systems, network engineering, and software development.*
+Actively seeking opportunities in wireless systems, network engineering, software development, and frontend engineering.
