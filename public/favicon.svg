@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none">
+  <!-- Background circle -->
+  <circle cx="18" cy="18" r="18" fill="#081120"/>
+
+  <!-- Signal arcs (radiating from top-right) -->
+  <!-- Arc 1 - closest -->
+  <path d="M 20.5 12.5 A 5 5 0 0 1 25.5 17.5" stroke="#38bdf8" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/>
+  <!-- Arc 2 - mid -->
+  <path d="M 18.8 9.8 A 8 8 0 0 1 27.8 18.8" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round" opacity="0.72"/>
+  <!-- Arc 3 - outer -->
+  <path d="M 17 7 A 11 11 0 0 1 30 20" stroke="#38bdf8" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- M letterform -->
+  <line x1="6" y1="28" x2="6" y2="12" stroke="#f4f9ff" stroke-width="2.8" stroke-linecap="round"/>
+  <line x1="6" y1="12" x2="14" y2="22" stroke="#f4f9ff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="14" y1="22" x2="22" y2="12" stroke="#f4f9ff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="22" y1="12" x2="22" y2="28" stroke="#f4f9ff" stroke-width="2.8" stroke-linecap="round"/>
+
+  <!-- Signal node dot -->
+  <circle cx="25" cy="11" r="2" fill="#38bdf8"/>
+</svg>
