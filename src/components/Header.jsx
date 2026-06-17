@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Logo from "./Logo";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -26,7 +27,7 @@ function Header() {
     <header className={`site-header ${scrolled ? "site-header-scrolled" : ""}`}>
       <div className="site-header-inner">
         <a href="#hero" className="site-logo">
-          <span className="site-logo-dot" />
+          <Logo size={32} />
           <span>Mohamad Dib</span>
         </a>
 
