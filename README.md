@@ -1,6 +1,6 @@
 # Mohamad Dib — Portfolio
 
-**Live portfolio:** [mohamaddib147.github.io/mohamad-dib-portfolio](https://mohamaddib147.github.io/mohamad-dib-portfolio) *(coming soon)*
+**Live portfolio:** [mohamaddib147.github.io/mohamad-dib-portfolio](https://mohamaddib147.github.io/mohamad-dib-portfolio) 
 
 A professional personal portfolio website built with **React + Vite** to present my background, technical skills, engineering projects, and professional value in a clear, modern, and structured format. The site combines a clean component-based architecture with a custom dark navy visual system and section-specific wireless-inspired animated backgrounds. 
 
