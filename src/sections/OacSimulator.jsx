@@ -1,7 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, Shield, Eye, Users, Zap, Activity, Info, Play } from "lucide-react";
-import SignalBackground from "../components/SignalBackground";
+import {
+  Radio,
+  Shield,
+  Eye,
+  Users,
+  Zap,
+  Activity,
+  Info,
+  Play,
+  Antenna,
+  Gauge,
+  Target,
+  Sparkles,
+} from "lucide-react";
 
 // ═══════════════════════════════════════════════════════════════════
 // MATH — real Monte Carlo of the thesis's secure OAC framework.
@@ -332,18 +344,24 @@ function MseChart({ data, running }) {
         <div className="oac-legend-item">
           <span className="oac-legend-swatch oac-legend-swatch-cp" />
           <div>
-            <p className="oac-legend-label">Legitimate receiver</p>
+            <p className="oac-legend-label">
+              CP · legitimate receiver
+              <span className="oac-legend-badge oac-legend-badge-good">accuracy target</span>
+            </p>
             <p className="oac-legend-value">
-              MSE @ 14 dB = <strong>{lastCp.toFixed(3)}</strong>
+              Error at 14 dB = <strong>{lastCp.toFixed(3)}</strong> — near zero ✓
             </p>
           </div>
         </div>
         <div className="oac-legend-item">
           <span className="oac-legend-swatch oac-legend-swatch-eve" />
           <div>
-            <p className="oac-legend-label">Eavesdropper</p>
+            <p className="oac-legend-label">
+              Eve · eavesdropper
+              <span className="oac-legend-badge oac-legend-badge-bad">blocked</span>
+            </p>
             <p className="oac-legend-value">
-              MSE @ 14 dB = <strong>{lastEve.toFixed(3)}</strong>
+              Error at 14 dB = <strong>{lastEve.toFixed(3)}</strong> — stays high ✓
             </p>
           </div>
         </div>
@@ -597,13 +615,15 @@ function Controls({ config, setConfig }) {
           </button>
         </div>
         <p className="oac-control-hint">
-          The choice from my thesis: uniform γ ~ U[−√3, √3] vs. traditional Gaussian.
+          What each device&apos;s value looks like statistically. <strong>Uniform</strong> is
+          bounded (like a value between limits); <strong>Gaussian</strong> is the classic
+          bell-curve. Uniform is the choice from my thesis — the one that secures the channel.
         </p>
       </div>
 
       <div className="oac-control-group">
         <label className="oac-control-label" htmlFor="oac-M">
-          <Users size={13} /> Number of users <span className="oac-control-value">M = {config.M}</span>
+          <Users size={13} /> Number of devices <span className="oac-control-value">{config.M}</span>
         </label>
         <input
           id="oac-M"
@@ -615,6 +635,10 @@ function Controls({ config, setConfig }) {
           onChange={(e) => update({ M: Number(e.target.value) })}
           className="oac-slider"
         />
+        <p className="oac-control-hint">
+          How many sensors are transmitting at once. More devices = more values summed into the
+          air.
+        </p>
       </div>
 
       <div className="oac-control-group">
@@ -629,10 +653,11 @@ function Controls({ config, setConfig }) {
           </span>
           <span className="oac-toggle-body">
             <span className="oac-toggle-title">
-              <Shield size={13} /> Zero-forced artificial noise
+              <Shield size={13} /> Artificial noise
             </span>
             <span className="oac-toggle-hint">
-              Injects V·A into every transmission — cancels at CP, hits Eve.
+              The security layer. When on, every device adds carefully-shaped noise that vanishes
+              at the trusted receiver but corrupts the attacker&apos;s reception.
             </span>
           </span>
         </label>
@@ -705,31 +730,36 @@ function OacSimulator() {
     if (!config.noiseOn) {
       return {
         key: "noise-off",
-        title: "Artificial noise is off — Eve now sees the channel almost as clearly as the CP.",
+        title: "Artificial noise is off — the attacker is now almost as accurate as the trusted receiver.",
         body:
-          "With V·A removed, the only thing separating Eve's estimate from the legitimate receiver is her channel mismatch and thermal noise. Watch the red curve drop in lockstep with the blue as SNR climbs — the security is in the mechanism, not in wishful thinking.",
+          "Watch the red curve drop in step with the blue one as signal quality (SNR) climbs. Without the injected noise, there's nothing left between the eavesdropper's estimate and the truth except her own channel imperfections. Toggle the noise back on — the red curve jumps up and stays there.",
       };
     }
     if (config.distribution === "uniform") {
       return {
         key: "uniform",
-        title: "Uniform inputs + zero-forced AN → a hard security floor.",
+        title: "Uniform inputs + artificial noise — the attacker can't improve, even with a better signal.",
         body:
-          "The eavesdropper's MSE stays bounded away from zero at every SNR. The residual V·A·g never cancels at Eve (because g ≠ h), and bounded inputs cap what a naïve attacker can recover from the aggregated signal. This is the core finding of my thesis.",
+          "This is the finding of my thesis: the red curve stays flat near the top no matter how good the wireless conditions get. The trusted receiver's error still drops all the way down — so security costs nothing in accuracy for the legitimate user.",
       };
     }
     return {
       key: "gaussian",
-      title: "Gaussian inputs — the traditional assumption behind most OAC security work.",
+      title: "Gaussian inputs — the traditional assumption, and where the vulnerability lives.",
       body:
-        "Under Gaussian γ the aggregated signal s has unbounded tails, giving Eve room to refine her estimate as the effective SNR grows. My thesis showed that swapping to bounded uniform inputs — at zero cost to the legitimate receiver — closes that door.",
+        "Under a Gaussian input distribution the red curve slopes down as signal quality improves — the attacker gradually refines her estimate. My thesis showed that just switching to uniform inputs (see the toggle above) closes that gap without touching the trusted receiver's accuracy.",
     };
   }, [config.distribution, config.noiseOn]);
 
+  const lastCp = data[data.length - 1]?.mseCp ?? 0;
+  const lastEve = data[data.length - 1]?.mseEve ?? 0;
+  const securityGapPct = Math.max(
+    0,
+    Math.min(100, ((lastEve - lastCp) / config.M) * 100),
+  );
+
   return (
     <section id="signal-lab" className="portfolio-data-section oac-lab-section">
-      <SignalBackground variant="skills" className="signal-oac" />
-
       <motion.div
         className="portfolio-section-shell"
         initial={{ opacity: 0, y: 28 }}
@@ -748,14 +778,116 @@ function OacSimulator() {
         </div>
 
         <p className="section-intro">
-          Over-the-Air Computation lets many devices compute a shared function — an average,
-          a sum, a gradient — directly through the wireless channel, without decoding any
-          individual message. Elegant, but wireless is a broadcast: an eavesdropper hears
-          everything. My thesis at KTH added zero-forced artificial noise on top of a uniform
-          input distribution so the noise cancels at the legitimate receiver but corrupts the
-          attacker&apos;s view. This is that model, running as real Monte Carlo — no cached
-          plots, no cheating.
+          Imagine dozens of small wireless sensors — smart-meters, wearables, drones — each with a
+          number to report. Instead of sending them one at a time, they all transmit at the same
+          moment so the wireless signals <em>add up in the air</em>. The base station reads that
+          combined signal and gets the answer directly. It&apos;s fast and clever — but any nearby
+          receiver hears it too. My thesis at KTH designed a way to jam that hidden listener while
+          leaving the trusted receiver&apos;s answer perfectly clear. Everything below is that
+          system, running real physics in your browser — no pre-rendered plots.
         </p>
+
+        <div className="oac-glossary">
+          <p className="oac-glossary-title">
+            <Sparkles size={13} /> A quick key before you start
+          </p>
+          <div className="oac-glossary-grid">
+            <div className="oac-glossary-card">
+              <div className="oac-glossary-icon"><Users size={14} /></div>
+              <p className="oac-glossary-term">
+                <span className="oac-glossary-abbr">CP</span>
+                <span className="oac-glossary-full">Central Processor</span>
+              </p>
+              <p className="oac-glossary-desc">
+                The trusted receiver — a base station or server that&apos;s <em>supposed</em> to
+                get the combined answer.
+              </p>
+            </div>
+            <div className="oac-glossary-card">
+              <div className="oac-glossary-icon"><Eye size={14} /></div>
+              <p className="oac-glossary-term">
+                <span className="oac-glossary-abbr">Eve</span>
+                <span className="oac-glossary-full">Eavesdropper</span>
+              </p>
+              <p className="oac-glossary-desc">
+                The attacker — any other antenna within range that&apos;s also picking up the
+                same wireless transmission.
+              </p>
+            </div>
+            <div className="oac-glossary-card">
+              <div className="oac-glossary-icon"><Gauge size={14} /></div>
+              <p className="oac-glossary-term">
+                <span className="oac-glossary-abbr">SNR</span>
+                <span className="oac-glossary-full">Signal-to-Noise Ratio</span>
+              </p>
+              <p className="oac-glossary-desc">
+                How clean the wireless conditions are, in decibels (dB). <strong>Higher = a
+                clearer signal</strong> — 0 dB is very noisy, 14 dB is a very clean link.
+              </p>
+            </div>
+            <div className="oac-glossary-card">
+              <div className="oac-glossary-icon"><Target size={14} /></div>
+              <p className="oac-glossary-term">
+                <span className="oac-glossary-abbr">MSE</span>
+                <span className="oac-glossary-full">Mean Squared Error</span>
+              </p>
+              <p className="oac-glossary-desc">
+                How wrong a receiver&apos;s estimate is on average. <strong>Lower = more
+                accurate.</strong> Zero means a perfect read; ~10 here means the attacker knows
+                essentially nothing.
+              </p>
+            </div>
+            <div className="oac-glossary-card">
+              <div className="oac-glossary-icon"><Antenna size={14} /></div>
+              <p className="oac-glossary-term">
+                <span className="oac-glossary-abbr">AN</span>
+                <span className="oac-glossary-full">Artificial Noise</span>
+              </p>
+              <p className="oac-glossary-desc">
+                Carefully-shaped interference added on purpose — it math­ematically cancels itself
+                out at the CP but scrambles Eve&apos;s reception.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="oac-score-row">
+          <div className="oac-score-block">
+            <p className="oac-score-label">Attacker blocked</p>
+            <div className="oac-score-value">
+              <motion.span
+                key={securityGapPct.toFixed(0)}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                {securityGapPct.toFixed(0)}
+                <span className="oac-score-unit">%</span>
+              </motion.span>
+            </div>
+            <div className="oac-score-bar">
+              <motion.div
+                className="oac-score-bar-fill"
+                animate={{ width: `${securityGapPct}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            </div>
+            <p className="oac-score-hint">
+              How much of the eavesdropper&apos;s knowledge is still hidden at the best SNR
+              (14 dB). Higher is better.
+            </p>
+          </div>
+
+          <div className="oac-quick-nudge">
+            <span className="oac-quick-nudge-badge">Try this →</span>
+            <p>
+              Flip the <strong>Input distribution</strong> toggle in the panel below from
+              <em> Uniform</em> to <em>Gaussian</em>. Watch the red curve start dropping — that&apos;s
+              the vulnerability my thesis fixes. Then turn the <strong>Artificial noise</strong>
+              switch off and see both curves collapse together.
+            </p>
+          </div>
+        </div>
 
         <div className="oac-lab-grid">
           <div className="oac-lab-main">
@@ -795,13 +927,23 @@ function OacSimulator() {
           <Controls config={config} setConfig={setConfig} />
         </div>
 
-        <div className="oac-footnote">
-          <Info size={12} />
-          <span>
-            Physical model: <code>x_m = c·γ_m/h_m + w_m</code> with{" "}
-            <code>(w_1,…,w_M) = V·A</code> and <code>A·h = 0</code>. Legit sees{" "}
-            <code>c·s + n_y</code>; Eve sees <code>c·Σ(g_m/h_m)·γ_m + V·A·g + n_z</code>.
-            Channels <code>h, g</code> are Rayleigh, σ<sub>y</sub> = σ<sub>z</sub> = 0.1.
+        <details className="oac-footnote-details">
+          <summary>
+            <Info size={12} /> Show the physics for the technical crowd
+          </summary>
+          <div className="oac-footnote-body">
+            Each user <code>m</code> transmits <code>x_m = c·γ_m/h_m + w_m</code>, where
+            <code> γ_m</code> is their private value, <code>h_m</code> is the wireless channel
+            to the CP, <code>c</code> is a scaling factor set by the target SNR, and
+            <code> w_m</code> is the artificial-noise share <code>(w_1,…,w_M) = V·A</code>
+            drawn so that <code>A·h = 0</code>. The CP receives
+            <code> c·s + n_y</code> (the artificial noise cancels because the design
+            forces <code>A·h = 0</code>); Eve receives
+            <code> c·Σ(g_m/h_m)·γ_m + V·A·g + n_z</code>, and the residual{" "}
+            <code>V·A·g</code> does <em>not</em> cancel because her channel{" "}
+            <code>g ≠ h</code>. Channels are Rayleigh-fading with σ<sub>y</sub> = σ<sub>z</sub> = 0.1;
+            the plotted curves are the LMMSE bounds from Theorem&nbsp;1 (thesis
+            eqs&nbsp;3.9 and&nbsp;3.10) averaged over Monte-Carlo channel draws.
             &nbsp;
             <a
               href="https://github.com/mohamaddib147/Secure-Over-the-Air-Computation-using-Zero-Forced-Artificial-Noise"
@@ -810,8 +952,8 @@ function OacSimulator() {
             >
               Thesis code on GitHub →
             </a>
-          </span>
-        </div>
+          </div>
+        </details>
       </motion.div>
     </section>
   );
