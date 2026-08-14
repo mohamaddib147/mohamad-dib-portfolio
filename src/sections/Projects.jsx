@@ -7,6 +7,7 @@ import {
   Building2,
   HeartPulse,
   Ticket,
+  UtensilsCrossed,
   ArrowUpRight,
 } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
@@ -35,6 +36,27 @@ const projects = [
       "Built a role-gated admin dashboard (NextAuth) separate from the public site's JWT-based user auth.",
     ],
     tech: ["Next.js", "TypeScript", "MongoDB", "Stripe", "NextAuth", "Tailwind CSS"],
+  },
+  {
+    title: "RestoManager",
+    meta: "Full-Stack Web Application · 2026",
+    role: "Full-Stack Developer",
+    badge: "Featured · Full-Stack",
+    accent: "accent-software",
+    icon: UtensilsCrossed,
+    layout: "layout-software",
+    projectType: "software",
+    link: "https://github.com/mohamaddib147/resto-manager",
+    summary:
+      "A full-stack restaurant discovery, menu management, approval, and ordering platform with role-based access for customers, restaurant owners, and administrators.",
+    description:
+      "Built as a monorepo with React 19, TypeScript, and Tailwind CSS on the frontend and Express 5 with MongoDB on the backend. Customers browse approved restaurants and menus, manage a persistent cart, and check out; owners register restaurants, submit verification documents, and manage menus and orders from an operational dashboard.",
+    highlights: [
+      "Designed role-based access control for customers, restaurant owners, and administrators using Better Auth.",
+      "Built an owner dashboard for menu, category, and order management backed by Zod-validated shared schemas.",
+      "Integrated Supabase for restaurant media and verification-document storage alongside MongoDB data models.",
+    ],
+    tech: ["React", "TypeScript", "Express", "MongoDB", "Better Auth", "Tailwind CSS"],
   },
   {
     title: "Enhancing Security in Over-the-Air Computation",

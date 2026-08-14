@@ -1,5 +1,4 @@
-import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { GraduationCap, Sparkles } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
 
@@ -83,30 +82,6 @@ const skillGroups = [
   },
 ];
 
-// ── Stat counter hook ─────────────────────────────────────────────────────
-
-function useCounter(target, duration = 1200) {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (!inView) return;
-    let start = null;
-
-    const step = (ts) => {
-      if (!start) start = ts;
-      const progress = Math.min((ts - start) / duration, 1);
-      setCount(Math.floor(progress * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-
-    requestAnimationFrame(step);
-  }, [inView, target, duration]);
-
-  return { count, ref };
-}
-
 // ── Flag image ────────────────────────────────────────────────────────────
 
 function FlagImg({ code, label }) {
@@ -125,22 +100,6 @@ function FlagImg({ code, label }) {
         flexShrink: 0,
       }}
     />
-  );
-}
-
-// ── Profile stats ─────────────────────────────────────────────────────────
-
-function StatCounter({ target, label, suffix = "+" }) {
-  const { count, ref } = useCounter(target);
-
-  return (
-    <div ref={ref} className="about-stat">
-      <span className="about-stat-number">
-        {count}
-        {suffix}
-      </span>
-      <span className="about-stat-label">{label}</span>
-    </div>
   );
 }
 
@@ -188,12 +147,6 @@ function About() {
             with React, Next.js, and MongoDB, backed by a deep technical foundation in
             wireless networks, network security, and systems programming.
           </p>
-
-          <div className="about-stats-grid">
-            <StatCounter target={2} label="Degrees" suffix="" />
-            <StatCounter target={7} label="Projects Shipped" suffix="" />
-            <StatCounter target={3} label="Professional Roles" suffix="" />
-          </div>
         </motion.div>
 
         <motion.div className="about-education" variants={itemVariants}>
