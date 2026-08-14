@@ -93,13 +93,24 @@ function runTrial({ M, snrLin, noiseOn, sigmaY, sigmaZ }) {
     sumRatioSq += r * r;
   }
 
-  // 5. Closed-form LMMSE MSE at each receiver (thesis eqs 3.9 and 3.10).
+  // 5. Closed-form LMMSE MSE (thesis eqs 3.9 and 3.10).
   //    CP has no artificial-noise residual because A·h = 0.
+  //    Compute both the "with-AN" and "no-AN baseline" values so the chart can
+  //    show the with-and-without comparison in a single sweep — this matches the
+  //    "Eve noise-less" reference curve in the thesis's Figs 4.1 and 4.2.
   const mseCp = (M * sigmaY * sigmaY) / (M * cSquared + sigmaY * sigmaY);
+
   const denomEve = cSquared * sumRatioSq + anRes + sigmaZ * sigmaZ;
   const mseEve = M - (cSquared * sumRatio * sumRatio) / denomEve;
 
-  return { mseCp, mseEve: Math.max(0, Math.min(M, mseEve)) };
+  const denomBaseline = cSquared * sumRatioSq + sigmaZ * sigmaZ; // anRes = 0
+  const mseEveBaseline = M - (cSquared * sumRatio * sumRatio) / denomBaseline;
+
+  return {
+    mseCp,
+    mseEve: Math.max(0, Math.min(M, mseEve)),
+    mseEveBaseline: Math.max(0, Math.min(M, mseEveBaseline)),
+  };
 }
 
 function runSweep({ M, distribution, noiseOn, runs, sigmaY = 0.1, sigmaZ = 0.1 }) {
@@ -109,10 +120,12 @@ function runSweep({ M, distribution, noiseOn, runs, sigmaY = 0.1, sigmaZ = 0.1 }
     const snrLin = Math.pow(10, snrDb / 10);
     let sumCp = 0;
     let sumEve = 0;
+    let sumBaseline = 0;
     for (let t = 0; t < runs; t += 1) {
-      const { mseCp, mseEve } = runTrial({ M, snrLin, noiseOn, sigmaY, sigmaZ });
-      sumCp += mseCp;
-      sumEve += mseEve;
+      const trial = runTrial({ M, snrLin, noiseOn, sigmaY, sigmaZ });
+      sumCp += trial.mseCp;
+      sumEve += trial.mseEve;
+      sumBaseline += trial.mseEveBaseline;
     }
     let mseEveAvg = sumEve / runs;
 
@@ -125,7 +138,12 @@ function runSweep({ M, distribution, noiseOn, runs, sigmaY = 0.1, sigmaZ = 0.1 }
       mseEveAvg = mseEveAvg + factor * (M - mseEveAvg);
     }
 
-    return { snrDb, mseCp: sumCp / runs, mseEve: mseEveAvg };
+    return {
+      snrDb,
+      mseCp: sumCp / runs,
+      mseEve: mseEveAvg,
+      mseBaseline: sumBaseline / runs,
+    };
   });
 }
 
@@ -146,7 +164,7 @@ function pointsPath(points) {
     .join(" ");
 }
 
-function MseChart({ data, running }) {
+function MseChart({ data, running, showBaseline }) {
   const snrTicks = [0, 2, 4, 6, 8, 10, 12, 14];
   const mseTicks = [0, 2, 4, 6, 8, 10];
 
@@ -155,9 +173,11 @@ function MseChart({ data, running }) {
 
   const cpPoints = data.map((d) => ({ x: xOf(d.snrDb), y: yOf(d.mseCp) }));
   const evePoints = data.map((d) => ({ x: xOf(d.snrDb), y: yOf(d.mseEve) }));
+  const baselinePoints = data.map((d) => ({ x: xOf(d.snrDb), y: yOf(d.mseBaseline) }));
 
   const lastCp = data[data.length - 1]?.mseCp ?? 0;
   const lastEve = data[data.length - 1]?.mseEve ?? 0;
+  const lastBaseline = data[data.length - 1]?.mseBaseline ?? 0;
 
   return (
     <div className="oac-chart-card">
@@ -292,6 +312,18 @@ function MseChart({ data, running }) {
             animate={{ opacity: 1 }}
           />
 
+          {/* Baseline dashed reference — Eve's MSE with NO artificial noise
+              (i.e., the world without this thesis's defense). Toggleable. */}
+          {showBaseline && (
+            <motion.path
+              d={pointsPath(baselinePoints)}
+              fill="none"
+              className="oac-line oac-line-baseline"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, d: pointsPath(baselinePoints) }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+            />
+          )}
           {/* Eve line */}
           <motion.path
             d={pointsPath(evePoints)}
@@ -313,6 +345,19 @@ function MseChart({ data, running }) {
           />
 
           {/* Data points */}
+          {showBaseline &&
+            baselinePoints.map((p, i) => (
+              <motion.circle
+                key={`b-${i}`}
+                cx={p.x}
+                cy={p.y}
+                r={3}
+                className="oac-dot oac-dot-baseline"
+                initial={false}
+                animate={{ cx: p.x, cy: p.y }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+              />
+            ))}
           {evePoints.map((p, i) => (
             <motion.circle
               key={`e-${i}`}
@@ -340,7 +385,9 @@ function MseChart({ data, running }) {
         </svg>
       </div>
 
-      <div className="oac-chart-legend">
+      <div
+        className={`oac-chart-legend ${showBaseline ? "oac-chart-legend--with-baseline" : ""}`}
+      >
         <div className="oac-legend-item">
           <span className="oac-legend-swatch oac-legend-swatch-cp" />
           <div>
@@ -357,7 +404,7 @@ function MseChart({ data, running }) {
           <span className="oac-legend-swatch oac-legend-swatch-eve" />
           <div>
             <p className="oac-legend-label">
-              Eve · eavesdropper
+              Eve · with my defense
               <span className="oac-legend-badge oac-legend-badge-bad">blocked</span>
             </p>
             <p className="oac-legend-value">
@@ -365,6 +412,20 @@ function MseChart({ data, running }) {
             </p>
           </div>
         </div>
+        {showBaseline && (
+          <div className="oac-legend-item">
+            <span className="oac-legend-swatch oac-legend-swatch-baseline" />
+            <div>
+              <p className="oac-legend-label">
+                Eve · without any defense
+                <span className="oac-legend-badge oac-legend-badge-warn">baseline</span>
+              </p>
+              <p className="oac-legend-value">
+                Error at 14 dB = <strong>{lastBaseline.toFixed(3)}</strong> — she gets closer
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -664,6 +725,28 @@ function Controls({ config, setConfig }) {
       </div>
 
       <div className="oac-control-group">
+        <label className="oac-control-toggle">
+          <input
+            type="checkbox"
+            checked={config.showBaseline}
+            onChange={(e) => update({ showBaseline: e.target.checked })}
+          />
+          <span className="oac-toggle-track">
+            <span className="oac-toggle-thumb" />
+          </span>
+          <span className="oac-toggle-body">
+            <span className="oac-toggle-title">
+              <Activity size={13} /> Show &ldquo;no defense&rdquo; baseline
+            </span>
+            <span className="oac-toggle-hint">
+              Adds a dashed reference line: what the attacker would learn without any protection
+              at all. Makes the gap my design creates visible at a glance.
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <div className="oac-control-group">
         <label className="oac-control-label">
           <Zap size={13} /> Monte Carlo runs
         </label>
@@ -702,6 +785,7 @@ function OacSimulator() {
     runs: 2000,
     distribution: "uniform",
     noiseOn: true,
+    showBaseline: true,
   });
   const [data, setData] = useState(() =>
     runSweep({ M: 10, distribution: "uniform", noiseOn: true, runs: 500 }),
@@ -896,7 +980,7 @@ function OacSimulator() {
               noiseOn={config.noiseOn}
               distribution={config.distribution}
             />
-            <MseChart data={data} running={running} />
+            <MseChart data={data} running={running} showBaseline={config.showBaseline} />
 
             <AnimatePresence mode="wait">
               <motion.div
@@ -927,6 +1011,43 @@ function OacSimulator() {
           <Controls config={config} setConfig={setConfig} />
         </div>
 
+        <div className="oac-impact-block">
+          <p className="oac-impact-eyebrow">Why this matters in the real world</p>
+          <div className="oac-impact-grid">
+            <div className="oac-impact-card">
+              <div className="oac-impact-icon oac-impact-icon-a"><Antenna size={16} /></div>
+              <p className="oac-impact-title">IoT sensor networks</p>
+              <p className="oac-impact-body">
+                Smart-meters, air-quality monitors, wearables — hundreds or thousands of tiny
+                devices reporting readings at once. Over-the-Air Computation lets a base station
+                read the <em>combined</em> answer in a single wireless slot instead of decoding
+                each device one by one, so the network scales cleanly. My scheme keeps that
+                combined value private from any nearby receiver on the same frequency.
+              </p>
+            </div>
+            <div className="oac-impact-card">
+              <div className="oac-impact-icon oac-impact-icon-b"><Zap size={16} /></div>
+              <p className="oac-impact-title">Federated learning</p>
+              <p className="oac-impact-body">
+                In distributed model training, phones and edge devices need to sum their local
+                gradient updates without leaking any individual&apos;s data. OAC does the sum in
+                the air; the artificial-noise design in this thesis stops an eavesdropper from
+                reconstructing anyone&apos;s contribution — even on a shared wireless medium.
+              </p>
+            </div>
+            <div className="oac-impact-card">
+              <div className="oac-impact-icon oac-impact-icon-c"><Radio size={16} /></div>
+              <p className="oac-impact-title">Edge computing &amp; smart cities</p>
+              <p className="oac-impact-body">
+                Traffic sensors, industrial monitoring, autonomous-vehicle telemetry — real-time
+                aggregation where the wireless channel is fundamentally broadcast. The uniform-input
+                choice from my thesis gives an <em>irreducible</em> security floor regardless of how
+                clean the attacker&apos;s reception is, so it holds up as environments change.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <details className="oac-footnote-details">
           <summary>
             <Info size={12} /> Show the physics for the technical crowd
@@ -952,6 +1073,61 @@ function OacSimulator() {
             >
               Thesis code on GitHub →
             </a>
+          </div>
+        </details>
+
+        <details className="oac-honest-details">
+          <summary>
+            <Info size={12} /> What this work doesn&apos;t solve yet · where I&apos;d take it next
+          </summary>
+          <div className="oac-honest-grid">
+            <div className="oac-honest-col">
+              <p className="oac-honest-eyebrow">Honest limitations</p>
+              <ul className="oac-honest-list">
+                <li>
+                  <strong>Perfect channel knowledge assumed.</strong> Real deployments have
+                  estimation error in the CSI, which can leak the null-space alignment. Robust
+                  designs need to tolerate that.
+                </li>
+                <li>
+                  <strong>Single-dimensional inputs (k = 1).</strong> Practical aggregation over
+                  vectors — like gradient tensors in federated learning — is a natural next step
+                  but changes the linear algebra.
+                </li>
+                <li>
+                  <strong>Simulation, not hardware.</strong> No RF impairments, no timing/frequency
+                  offsets, no realistic multipath testbed data.
+                </li>
+                <li>
+                  <strong>Single passive eavesdropper.</strong> Doesn&apos;t yet model
+                  <em> colluding</em> attackers or active jammers.
+                </li>
+              </ul>
+            </div>
+            <div className="oac-honest-col">
+              <p className="oac-honest-eyebrow">Where I&apos;d take it next</p>
+              <ul className="oac-honest-list">
+                <li>
+                  <strong>Robust AN design under imperfect CSI</strong> — worst-case null-space
+                  approximations that keep working when channel estimates drift.
+                </li>
+                <li>
+                  <strong>Multi-dimensional inputs (k &gt; 1)</strong> for federated
+                  gradient aggregation.
+                </li>
+                <li>
+                  <strong>Hardware testbed</strong> on a small SDR setup to measure the effect
+                  under real synchronization and multipath.
+                </li>
+                <li>
+                  <strong>Adaptive AN tuned by ML</strong> — learn optimal artificial-noise power
+                  from live channel telemetry, per the thesis&apos;s Ch. 5.3 direction.
+                </li>
+                <li>
+                  <strong>Energy-efficient variants</strong> for battery-powered IoT devices.
+                </li>
+              </ul>
+            </div>
           </div>
         </details>
       </motion.div>

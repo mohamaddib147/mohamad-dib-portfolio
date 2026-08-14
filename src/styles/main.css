@@ -2955,11 +2955,192 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 
 .oac-footnote-body a:hover { color: #7dd3fc; }
 
+/* ── Real-world impact strip ─────────────────────────── */
+
+.oac-impact-block {
+  margin-top: 26px;
+}
+
+.oac-impact-eyebrow {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(207, 230, 251, 0.85);
+  font-weight: 600;
+}
+
+.oac-impact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.oac-impact-card {
+  padding: 18px 20px 20px;
+  border-radius: 14px;
+  background: linear-gradient(
+    145deg,
+    rgba(56, 189, 248, 0.045),
+    rgba(255, 255, 255, 0.015)
+  );
+  border: 1px solid rgba(56, 189, 248, 0.14);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.oac-impact-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(56, 189, 248, 0.32);
+}
+
+.oac-impact-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+  color: #eaf3ff;
+}
+
+.oac-impact-icon-a {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(56, 189, 248, 0.12));
+}
+
+.oac-impact-icon-b {
+  background: linear-gradient(135deg, rgba(192, 132, 252, 0.35), rgba(192, 132, 252, 0.12));
+}
+
+.oac-impact-icon-c {
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.35), rgba(250, 204, 21, 0.12));
+}
+
+.oac-impact-title {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  color: #eaf3ff;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.oac-impact-body {
+  margin: 0;
+  font-size: 0.83rem;
+  color: rgba(157, 180, 204, 0.85);
+  line-height: 1.65;
+}
+
+.oac-impact-body em {
+  color: #cfe6fb;
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ── Honest limitations & next steps ─────────────────── */
+
+.oac-honest-details {
+  margin-top: 14px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(9, 20, 34, 0.4);
+  border: 1px dashed rgba(192, 132, 252, 0.22);
+}
+
+.oac-honest-details summary {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 0.76rem;
+  color: rgba(216, 180, 254, 0.9);
+  font-weight: 500;
+  list-style: none;
+  transition: color 0.2s ease;
+}
+
+.oac-honest-details summary::-webkit-details-marker { display: none; }
+
+.oac-honest-details summary:hover {
+  color: #e9d5ff;
+}
+
+.oac-honest-details[open] summary {
+  color: #e9d5ff;
+  margin-bottom: 12px;
+}
+
+.oac-honest-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(192, 132, 252, 0.10);
+}
+
+.oac-honest-col {
+  min-width: 0;
+}
+
+.oac-honest-eyebrow {
+  margin: 0 0 10px;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(216, 180, 254, 0.88);
+  font-weight: 700;
+}
+
+.oac-honest-list {
+  margin: 0;
+  padding: 0 0 0 18px;
+  list-style: none;
+}
+
+.oac-honest-list li {
+  position: relative;
+  padding: 5px 0;
+  font-size: 0.8rem;
+  color: rgba(157, 180, 204, 0.88);
+  line-height: 1.6;
+}
+
+.oac-honest-list li::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 12px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(192, 132, 252, 0.72);
+}
+
+.oac-honest-list strong {
+  color: #eaf3ff;
+  font-weight: 600;
+}
+
+.oac-honest-list em {
+  color: #d8b4fe;
+  font-style: normal;
+  font-weight: 500;
+}
+
 @media (max-width: 900px) {
   .oac-glossary-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .oac-score-row {
+    grid-template-columns: 1fr;
+  }
+  .oac-impact-grid {
+    grid-template-columns: 1fr;
+  }
+  .oac-honest-grid {
+    grid-template-columns: 1fr;
+  }
+  .oac-chart-legend--with-baseline {
     grid-template-columns: 1fr;
   }
 }
@@ -3212,6 +3393,19 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   stroke-dasharray: 0;
 }
 
+.oac-line-baseline {
+  stroke: #c084fc;
+  stroke-width: 1.8;
+  stroke-dasharray: 6 5;
+  opacity: 0.85;
+}
+
+.oac-dot-baseline {
+  fill: #c084fc;
+  stroke: rgba(9, 20, 34, 0.9);
+  stroke-width: 1.2;
+}
+
 .oac-dot {
   stroke: rgba(9, 20, 34, 0.9);
   stroke-width: 1.5;
@@ -3255,6 +3449,25 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 .oac-legend-swatch-eve {
   background: var(--oac-eve);
   box-shadow: 0 0 8px rgba(248, 113, 113, 0.5);
+}
+
+.oac-legend-swatch-baseline {
+  background: repeating-linear-gradient(
+    90deg,
+    #c084fc 0 5px,
+    transparent 5px 9px
+  );
+  box-shadow: 0 0 8px rgba(192, 132, 252, 0.35);
+}
+
+.oac-chart-legend--with-baseline {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.oac-legend-badge-warn {
+  background: rgba(192, 132, 252, 0.14);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  color: #d8b4fe;
 }
 
 .oac-legend-label {
