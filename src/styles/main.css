@@ -1735,6 +1735,17 @@ main { position: relative; z-index: 1; }
   border-color: rgba(127,212,255,0.16);
 }
 
+.project-arrow-mark-disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.project-card-unique:hover .project-arrow-mark-disabled {
+  transform: none;
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.06);
+}
+
 /* Per-project accent colours for icon wrap */
 .accent-research  .project-icon-wrap { color: #cfeeff; border-color: rgba(125,211,252,0.12); }
 .accent-security  .project-icon-wrap { color: #d9f5ff; border-color: rgba(56,189,248,0.14); }

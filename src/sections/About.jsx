@@ -77,9 +77,9 @@ const skillGroups = [
     skills: ["Python", "MATLAB", "C/C++", "Java", "Bash", "SQL"],
   },
   {
-    category: "Frontend",
-    description: "Modern UI implementation with responsive, structured, maintainable interfaces.",
-    skills: ["React", "JavaScript", "HTML", "CSS", "Responsive Design"],
+    category: "Full-Stack Development",
+    description: "End-to-end web development, from responsive UI to backend and database integration.",
+    skills: ["React", "Next.js", "Node.js", "TypeScript", "MongoDB", "Stripe API", "Responsive Design"],
   },
 ];
 
@@ -175,7 +175,7 @@ function About() {
           <div className="about-summary-top">
             <div>
               <p className="about-summary-label">Profile</p>
-              <h3 className="about-summary-heading">Bridging engineering systems and frontend execution</h3>
+              <h3 className="about-summary-heading">Bridging engineering systems and full-stack execution</h3>
             </div>
 
             
@@ -184,14 +184,15 @@ function About() {
           <p className="about-summary-text">
             Master&apos;s graduate in Communication Systems (Wireless Networking) from KTH,
             with a strong foundation in electrical engineering and computer science principles.
-            Experienced in wireless networks, network security, and Python programming, and now
-            growing into frontend development to build clean, responsive, and technically disciplined web interfaces.
+            Currently working as a Full-Stack Engineer, building production web applications
+            with React, Next.js, and MongoDB, backed by a deep technical foundation in
+            wireless networks, network security, and systems programming.
           </p>
 
           <div className="about-stats-grid">
-            <StatCounter target={2} label="Degrees" />
-            <StatCounter target={6} label="Core domains" />
-            <StatCounter target={3} label="Technical tracks" />
+            <StatCounter target={2} label="Degrees" suffix="" />
+            <StatCounter target={7} label="Projects Shipped" suffix="" />
+            <StatCounter target={3} label="Professional Roles" suffix="" />
           </div>
         </motion.div>
 

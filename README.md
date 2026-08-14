@@ -27,6 +27,7 @@ Unlike a generic portfolio template, this version uses a custom technical art di
 |---|---|---|
 | Hero | Carrier wave + antenna pulse | First impression, role, introduction, call to action |
 | About | Routing grid / engineering signal map | Background, education, profile summary |
+| Experience | Routing grid / engineering signal map | Professional work history and roles |
 | Tools | Spectrum analyzer / RF scan field | Technologies, tools, and development environments |
 | Skills | Layered modulation waves | Skills grouped by technical domain |
 | Projects | Project-specific wireless motif | Featured engineering and software projects |
@@ -60,7 +61,7 @@ The design intentionally avoids generic portfolio styling and instead reflects m
 
 | Technology | Role |
 |---|---|
-| **React 18** | Component-based UI architecture |
+| **React 19** | Component-based UI architecture |
 | **Vite** | Fast development server and production build tool |
 | **JavaScript (ES6+)** | Logic, rendering, and interactivity |
 | **Custom CSS** | Layout, design system, animations, and visual styling |
@@ -154,14 +155,14 @@ mohamad-dib-portfolio/
 │   ├── components/
 │   │   ├── Header.jsx
 │   │   ├── Footer.jsx
-│   │   ├── ProjectCard.jsx
 │   │   └── SignalBackground.jsx
 │   ├── data/
 │   │   └── signalVariants.js
 │   ├── sections/
 │   │   ├── Hero.jsx
 │   │   ├── About.jsx
-│   │   ├── Tools.jsx
+│   │   ├── Experience.jsx
+│   │   ├── Technologies.jsx
 │   │   ├── Skills.jsx
 │   │   ├── Projects.jsx
 │   │   ├── HireMe.jsx
@@ -186,6 +187,7 @@ Each featured project is presented in card format with a short description, tech
 
 Current featured project directions include:
 
+- **Event Ticket Platform** — full-stack event ticketing system with Stripe payments, seat selection, and an admin dashboard (Next.js, TypeScript, MongoDB).
 - **Master’s Thesis** — wireless systems research, beamforming, and communication design.
 - **VANET Security** — vehicular network security analysis and system-level thinking.
 - **IoT Air Quality Monitor** — sensor systems, telemetry, and IoT implementation.

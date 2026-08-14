@@ -46,12 +46,13 @@ function Hero() {
           </motion.h1>
 
           <motion.h2 className="hero-subtitle" variants={contentItem}>
-            Frontend Developer & Communication Engineer
+            Full-Stack Developer & Communication Engineer
           </motion.h2>
 
           <motion.p className="hero-description" variants={contentItem}>
-            I build clean, responsive web interfaces and bring a strong engineering
-            background in software, networking, wireless communication, and technical problem-solving.
+            I build full-stack web applications — from React interfaces to Node/Next.js
+            backends — and bring a strong engineering background in networking, wireless
+            communication, and technical problem-solving.
           </motion.p>
 
           <motion.div className="hero-actions" variants={contentItem}>
@@ -90,7 +91,7 @@ function Hero() {
             <Wifi size={18} />
             <div>
               <h3>Focus</h3>
-              <p>Frontend, Networks, Wireless Systems</p>
+              <p>Full-Stack, Networks, Wireless Systems</p>
             </div>
           </div>
 

@@ -3,6 +3,7 @@ import Logo from "./Logo";
 
 const navLinks = [
   { label: "About", href: "#about" },
+  { label: "Experience", href: "#experience" },
   { label: "Technologies", href: "#technologies" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },

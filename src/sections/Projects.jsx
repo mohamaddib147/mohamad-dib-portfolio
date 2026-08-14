@@ -6,12 +6,36 @@ import {
   Network,
   Building2,
   HeartPulse,
+  Ticket,
   ArrowUpRight,
 } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
 
 // projectType drives the per-card SignalBackground motif inside each card
+// `link` is optional — cards without a public repo/demo simply render without
+// a clickable footer link instead of pointing somewhere fake.
 const projects = [
+  {
+    title: "Event Ticket Platform",
+    meta: "Full-Stack Web Application · 2026",
+    role: "Full-Stack Developer",
+    badge: "Featured · Full-Stack",
+    accent: "accent-software",
+    icon: Ticket,
+    layout: "layout-software",
+    projectType: "software",
+    link: "https://github.com/mahmoudaudi/event-ticket",
+    summary:
+      "A full-stack event ticketing and reservation platform — from event discovery to seat selection, real payments, and an admin dashboard.",
+    description:
+      "Built with Next.js 16 (App Router), TypeScript, and MongoDB. Implements interactive seat selection, Stripe Checkout for real card payments, QR-code digital e-tickets, and a NextAuth-protected admin dashboard for managing events, bookings, and users.",
+    highlights: [
+      "Integrated Stripe Checkout with webhook + confirmation-page fulfillment for idempotent, reliable payment processing.",
+      "Implemented atomic seat reservation to prevent double-booking under concurrent checkout.",
+      "Built a role-gated admin dashboard (NextAuth) separate from the public site's JWT-based user auth.",
+    ],
+    tech: ["Next.js", "TypeScript", "MongoDB", "Stripe", "NextAuth", "Tailwind CSS"],
+  },
   {
     title: "Enhancing Security in Over-the-Air Computation",
     meta: "KTH Royal Institute of Technology · Aug 2022 – Feb 2024",
@@ -21,6 +45,7 @@ const projects = [
     icon: Radio,
     layout: "layout-research",
     projectType: "thesis",  // beamforming RF arcs
+    link: "https://github.com/mohamaddib147/Secure-Over-the-Air-Computation-using-Zero-Forced-Artificial-Noise",
     summary:
       "A research-driven wireless security project focused on protecting Over-the-Air Computation systems without reducing performance.",
     description:
@@ -61,6 +86,7 @@ const projects = [
     icon: Cpu,
     layout: "layout-iot",
     projectType: "iot",  // hub-and-spoke node topology
+    link: "https://github.com/mohamaddib147/aqiot",
     summary:
       "A practical embedded and telemetry project for real-time environmental monitoring and system validation.",
     description:
@@ -216,9 +242,21 @@ function Projects() {
                     ))}
                   </div>
 
-                  <span className="project-arrow-mark">
-                    <ArrowUpRight size={16} strokeWidth={2} />
-                  </span>
+                  {project.link ? (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="project-arrow-mark"
+                      aria-label={`View ${project.title} on GitHub`}
+                    >
+                      <ArrowUpRight size={16} strokeWidth={2} />
+                    </a>
+                  ) : (
+                    <span className="project-arrow-mark project-arrow-mark-disabled" aria-hidden="true">
+                      <ArrowUpRight size={16} strokeWidth={2} />
+                    </span>
+                  )}
                 </div>
               </motion.article>
             );
