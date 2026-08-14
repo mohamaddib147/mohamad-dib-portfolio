@@ -3875,19 +3875,25 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 }
 
 /* =========================================================
-   SIGNAL SCROLL METER — WiFi-icon-styled scroll progress
-   Fixed-position vertical widget on the right; five ascending
-   bars representing five "chapters" of the site. Click a bar
-   to jump. Hover to reveal each chapter's label.
+   SIGNAL SCROLL METER — literal WiFi-icon scroll progress
+   Fixed widget on the right: a dot + three concentric arcs
+   (the actual WiFi glyph, not ascending cellular-signal bars).
+   Each ring represents one "chapter" of the site — the dot is
+   the innermost stop, arcs light up outward as the reader
+   scrolls further. Click a ring to jump; hover/focus shows a
+   tooltip with the chapter name.
    ========================================================= */
 
 .signal-meter {
   position: fixed;
   top: 50%;
-  right: 22px;
+  right: 26px;
   transform: translateY(-50%);
   z-index: 60;
-  padding: 12px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
   border-radius: 14px;
   background: rgba(9, 20, 34, 0.72);
   border: 1px solid rgba(56, 189, 248, 0.18);
@@ -3905,81 +3911,76 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   transform: translateY(-50%) translateX(0);
 }
 
-.signal-meter-bars {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: flex-end; /* bars grow upward, share a common baseline */
-  gap: 4px;
-  height: 28px;
+.signal-meter-glyph {
+  width: 30px;
+  height: 30px;
+  overflow: visible;
 }
 
-.signal-meter-item {
-  display: flex;
-  align-items: flex-end;
-  height: 100%;
+/* Visible decorative rings — thin stroke, no pointer events
+   (the wider transparent "hit" twin below handles interaction). */
+.signal-ring {
+  stroke: rgba(56, 189, 248, 0.20);
+  stroke-width: 2;
+  stroke-linecap: round;
+  fill: none;
+  transition: stroke 0.25s ease, filter 0.25s ease;
 }
 
-/* Each bar — the ascending WiFi-icon shape. All bars share width;
-   height increases per bar via the modifier classes below. */
-.signal-meter-bar {
-  position: relative;
-  width: 5px;
-  border: 0;
-  padding: 0;
-  border-radius: 2px;
-  background: rgba(56, 189, 248, 0.14);
-  cursor: pointer;
-  transition:
-    background 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.2s ease;
+.signal-ring-dot {
+  fill: rgba(56, 189, 248, 0.20);
+  stroke: none;
+  transition: fill 0.25s ease, filter 0.25s ease;
 }
 
-.signal-meter-bar:hover {
-  transform: translateY(-1px);
-  background: rgba(56, 189, 248, 0.35);
+.signal-ring.is-lit,
+.signal-ring-dot.is-lit {
+  stroke: #38bdf8;
+  fill: #38bdf8;
+  filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.65));
 }
 
-.signal-meter-bar:focus-visible {
-  outline: 2px solid rgba(56, 189, 248, 0.7);
-  outline-offset: 3px;
+.signal-ring.is-hovered,
+.signal-ring-dot.is-hovered {
+  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.85));
 }
 
-.signal-meter-bar--1 { height: 6px; }
-.signal-meter-bar--2 { height: 11px; }
-.signal-meter-bar--3 { height: 16px; }
-.signal-meter-bar--4 { height: 22px; }
-.signal-meter-bar--5 { height: 28px; }
-
-.signal-meter-bar.is-lit {
-  background: #38bdf8;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.55);
-}
-
-/* Current chapter — same lit color but with a slow pulse
-   so the eye lands on it without stealing focus from the page. */
-.signal-meter-bar.is-active {
+/* Current chapter — slow pulse so the eye lands on it without
+   stealing focus from the page. */
+.signal-ring.is-active,
+.signal-ring-dot.is-active {
   animation: signal-meter-pulse 2.2s ease-in-out infinite;
 }
 
 @keyframes signal-meter-pulse {
   0%, 100% {
-    box-shadow: 0 0 8px rgba(56, 189, 248, 0.55);
+    filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.6));
   }
   50% {
-    box-shadow: 0 0 14px rgba(56, 189, 248, 0.9);
+    filter: drop-shadow(0 0 7px rgba(56, 189, 248, 0.95));
   }
 }
 
-/* Tooltip pill — shows the chapter name to the LEFT of the bar
-   on hover / focus. Positioned absolute against each bar. */
+/* Invisible wide-stroke twin — the actual click/hover/focus target,
+   generous enough to be usable even though the visible glyph is thin. */
+.signal-ring-hit {
+  stroke: transparent;
+  stroke-width: 2.6;
+  cursor: pointer;
+  outline: none;
+}
+
+.signal-ring-hit:focus-visible {
+  stroke: rgba(56, 189, 248, 0.35);
+}
+
+/* Single shared tooltip pill above the glyph, retexted to whichever
+   ring is hovered/focused (falls back to the current chapter). */
 .signal-meter-tooltip {
   position: absolute;
-  right: calc(100% + 12px);
-  top: 50%;
-  transform: translateY(-50%) translateX(6px);
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
   padding: 5px 10px;
   border-radius: 8px;
   background: rgba(9, 20, 34, 0.95);
@@ -3996,20 +3997,20 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 }
 
 .signal-meter-tooltip::after {
-  /* small arrow pointing right toward the bar */
+  /* small arrow pointing down toward the glyph */
   content: "";
   position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
   border: 5px solid transparent;
-  border-left-color: rgba(9, 20, 34, 0.95);
+  border-top-color: rgba(9, 20, 34, 0.95);
 }
 
-.signal-meter-bar:hover .signal-meter-tooltip,
-.signal-meter-bar:focus-visible .signal-meter-tooltip {
+.signal-meter:hover .signal-meter-tooltip,
+.signal-meter:focus-within .signal-meter-tooltip {
   opacity: 1;
-  transform: translateY(-50%) translateX(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 /* Mobile — hide entirely; the site's mobile nav already covers navigation
@@ -4022,7 +4023,8 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 
 /* Reduced motion — kill the pulse animation. */
 @media (prefers-reduced-motion: reduce) {
-  .signal-meter-bar.is-active {
+  .signal-ring.is-active,
+  .signal-ring-dot.is-active {
     animation: none;
   }
   .signal-meter,
