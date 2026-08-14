@@ -396,7 +396,7 @@ function MseChart({ data, running, showBaseline }) {
               <span className="oac-legend-badge oac-legend-badge-good">accuracy target</span>
             </p>
             <p className="oac-legend-value">
-              Error at 14 dB = <strong>{lastCp.toFixed(3)}</strong> — near zero ✓
+              Error at 14 dB = <strong>{lastCp.toFixed(3)}</strong>  near zero ✓
             </p>
           </div>
         </div>
@@ -408,7 +408,7 @@ function MseChart({ data, running, showBaseline }) {
               <span className="oac-legend-badge oac-legend-badge-bad">blocked</span>
             </p>
             <p className="oac-legend-value">
-              Error at 14 dB = <strong>{lastEve.toFixed(3)}</strong> — stays high ✓
+              Error at 14 dB = <strong>{lastEve.toFixed(3)}</strong>  stays high ✓
             </p>
           </div>
         </div>
@@ -421,7 +421,7 @@ function MseChart({ data, running, showBaseline }) {
                 <span className="oac-legend-badge oac-legend-badge-warn">baseline</span>
               </p>
               <p className="oac-legend-value">
-                Error at 14 dB = <strong>{lastBaseline.toFixed(3)}</strong> — she gets closer
+                Error at 14 dB = <strong>{lastBaseline.toFixed(3)}</strong>  she gets closer
               </p>
             </div>
           </div>
@@ -678,7 +678,7 @@ function Controls({ config, setConfig }) {
         <p className="oac-control-hint">
           What each device&apos;s value looks like statistically. <strong>Uniform</strong> is
           bounded (like a value between limits); <strong>Gaussian</strong> is the classic
-          bell-curve. Uniform is the choice from my thesis — the one that secures the channel.
+          bell-curve. Uniform is the choice from my thesis  the one that secures the channel.
         </p>
       </div>
 
@@ -769,7 +769,7 @@ function Controls({ config, setConfig }) {
 
       <div className="oac-control-recompute">
         <Play size={12} />
-        <span>Curves recompute on every change — real math, no cached data.</span>
+        <span>Curves recompute on every change  real math, no cached data.</span>
       </div>
     </div>
   );
@@ -814,24 +814,24 @@ function OacSimulator() {
     if (!config.noiseOn) {
       return {
         key: "noise-off",
-        title: "Artificial noise is off — the attacker is now almost as accurate as the trusted receiver.",
+        title: "Artificial noise is off  the attacker is now almost as accurate as the trusted receiver.",
         body:
-          "Watch the red curve drop in step with the blue one as signal quality (SNR) climbs. Without the injected noise, there's nothing left between the eavesdropper's estimate and the truth except her own channel imperfections. Toggle the noise back on — the red curve jumps up and stays there.",
+          "Watch the red curve drop in step with the blue one as signal quality (SNR) climbs. Without the injected noise, there's nothing left between the eavesdropper's estimate and the truth except her own channel imperfections. Toggle the noise back on  the red curve jumps up and stays there.",
       };
     }
     if (config.distribution === "uniform") {
       return {
         key: "uniform",
-        title: "Uniform inputs + artificial noise — the attacker can't improve, even with a better signal.",
+        title: "Uniform inputs + artificial noise  the attacker can't improve, even with a better signal.",
         body:
-          "This is the finding of my thesis: the red curve stays flat near the top no matter how good the wireless conditions get. The trusted receiver's error still drops all the way down — so security costs nothing in accuracy for the legitimate user.",
+          "This is the finding of my thesis: the red curve stays flat near the top no matter how good the wireless conditions get. The trusted receiver's error still drops all the way down  so security costs nothing in accuracy for the legitimate user.",
       };
     }
     return {
       key: "gaussian",
-      title: "Gaussian inputs — the traditional assumption, and where the vulnerability lives.",
+      title: "Gaussian inputs  the traditional assumption, and where the vulnerability lives.",
       body:
-        "Under a Gaussian input distribution the red curve slopes down as signal quality improves — the attacker gradually refines her estimate. My thesis showed that just switching to uniform inputs (see the toggle above) closes that gap without touching the trusted receiver's accuracy.",
+        "Under a Gaussian input distribution the red curve slopes down as signal quality improves  the attacker gradually refines her estimate. My thesis showed that just switching to uniform inputs (see the toggle above) closes that gap without touching the trusted receiver's accuracy.",
     };
   }, [config.distribution, config.noiseOn]);
 
@@ -862,13 +862,13 @@ function OacSimulator() {
         </div>
 
         <p className="section-intro">
-          Imagine dozens of small wireless sensors — smart-meters, wearables, drones — each with a
+          Imagine dozens of small wireless sensors  smart-meters, wearables, drones  each with a
           number to report. Instead of sending them one at a time, they all transmit at the same
           moment so the wireless signals <em>add up in the air</em>. The base station reads that
-          combined signal and gets the answer directly. It&apos;s fast and clever — but any nearby
+          combined signal and gets the answer directly. It&apos;s fast and clever  but any nearby
           receiver hears it too. My thesis at KTH designed a way to jam that hidden listener while
           leaving the trusted receiver&apos;s answer perfectly clear. Everything below is that
-          system, running real physics in your browser — no pre-rendered plots.
+          system, running real physics in your browser  no pre-rendered plots.
         </p>
 
         <div className="oac-glossary">
@@ -883,7 +883,7 @@ function OacSimulator() {
                 <span className="oac-glossary-full">Central Processor</span>
               </p>
               <p className="oac-glossary-desc">
-                The trusted receiver — a base station or server that&apos;s <em>supposed</em> to
+                The trusted receiver  a base station or server that&apos;s <em>supposed</em> to
                 get the combined answer.
               </p>
             </div>
@@ -894,7 +894,7 @@ function OacSimulator() {
                 <span className="oac-glossary-full">Eavesdropper</span>
               </p>
               <p className="oac-glossary-desc">
-                The attacker — any other antenna within range that&apos;s also picking up the
+                The attacker  any other antenna within range that&apos;s also picking up the
                 same wireless transmission.
               </p>
             </div>
@@ -906,7 +906,7 @@ function OacSimulator() {
               </p>
               <p className="oac-glossary-desc">
                 How clean the wireless conditions are, in decibels (dB). <strong>Higher = a
-                clearer signal</strong> — 0 dB is very noisy, 14 dB is a very clean link.
+                clearer signal</strong>  0 dB is very noisy, 14 dB is a very clean link.
               </p>
             </div>
             <div className="oac-glossary-card">
@@ -928,7 +928,7 @@ function OacSimulator() {
                 <span className="oac-glossary-full">Artificial Noise</span>
               </p>
               <p className="oac-glossary-desc">
-                Carefully-shaped interference added on purpose — it math­ematically cancels itself
+                Carefully-shaped interference added on purpose  it math­ematically cancels itself
                 out at the CP but scrambles Eve&apos;s reception.
               </p>
             </div>
@@ -966,7 +966,7 @@ function OacSimulator() {
             <span className="oac-quick-nudge-badge">Try this →</span>
             <p>
               Flip the <strong>Input distribution</strong> toggle in the panel below from
-              <em> Uniform</em> to <em>Gaussian</em>. Watch the red curve start dropping — that&apos;s
+              <em> Uniform</em> to <em>Gaussian</em>. Watch the red curve start dropping  that&apos;s
               the vulnerability my thesis fixes. Then turn the <strong>Artificial noise</strong>
               switch off and see both curves collapse together.
             </p>
@@ -1018,7 +1018,7 @@ function OacSimulator() {
               <div className="oac-impact-icon oac-impact-icon-a"><Antenna size={16} /></div>
               <p className="oac-impact-title">IoT sensor networks</p>
               <p className="oac-impact-body">
-                Smart-meters, air-quality monitors, wearables — hundreds or thousands of tiny
+                Smart-meters, air-quality monitors, wearables  hundreds or thousands of tiny
                 devices reporting readings at once. Over-the-Air Computation lets a base station
                 read the <em>combined</em> answer in a single wireless slot instead of decoding
                 each device one by one, so the network scales cleanly. My scheme keeps that
@@ -1032,14 +1032,14 @@ function OacSimulator() {
                 In distributed model training, phones and edge devices need to sum their local
                 gradient updates without leaking any individual&apos;s data. OAC does the sum in
                 the air; the artificial-noise design in this thesis stops an eavesdropper from
-                reconstructing anyone&apos;s contribution — even on a shared wireless medium.
+                reconstructing anyone&apos;s contribution  even on a shared wireless medium.
               </p>
             </div>
             <div className="oac-impact-card">
               <div className="oac-impact-icon oac-impact-icon-c"><Radio size={16} /></div>
               <p className="oac-impact-title">Edge computing &amp; smart cities</p>
               <p className="oac-impact-body">
-                Traffic sensors, industrial monitoring, autonomous-vehicle telemetry — real-time
+                Traffic sensors, industrial monitoring, autonomous-vehicle telemetry  real-time
                 aggregation where the wireless channel is fundamentally broadcast. The uniform-input
                 choice from my thesis gives an <em>irreducible</em> security floor regardless of how
                 clean the attacker&apos;s reception is, so it holds up as environments change.
@@ -1091,7 +1091,7 @@ function OacSimulator() {
                 </li>
                 <li>
                   <strong>Single-dimensional inputs (k = 1).</strong> Practical aggregation over
-                  vectors — like gradient tensors in federated learning — is a natural next step
+                  vectors  like gradient tensors in federated learning  is a natural next step
                   but changes the linear algebra.
                 </li>
                 <li>
@@ -1108,7 +1108,7 @@ function OacSimulator() {
               <p className="oac-honest-eyebrow">Where I&apos;d take it next</p>
               <ul className="oac-honest-list">
                 <li>
-                  <strong>Robust AN design under imperfect CSI</strong> — worst-case null-space
+                  <strong>Robust AN design under imperfect CSI</strong>  worst-case null-space
                   approximations that keep working when channel estimates drift.
                 </li>
                 <li>
@@ -1120,7 +1120,7 @@ function OacSimulator() {
                   under real synchronization and multipath.
                 </li>
                 <li>
-                  <strong>Adaptive AN tuned by ML</strong> — learn optimal artificial-noise power
+                  <strong>Adaptive AN tuned by ML</strong>  learn optimal artificial-noise power
                   from live channel telemetry, per the thesis&apos;s Ch. 5.3 direction.
                 </li>
                 <li>
