@@ -7,6 +7,7 @@ import Experience from "../sections/Experience";
 import Technologies from "../sections/Technologies";
 import Skills from "../sections/Skills";
 import Projects from "../sections/Projects";
+import OacSimulator from "../sections/OacSimulator";
 import HireMe from "../sections/HireMe";
 import Contact from "../sections/Contact";
 
@@ -32,6 +33,9 @@ function Home() {
         <SectionDivider variant="skills-projects" />
 
         <Projects />
+        <SectionDivider variant="projects-hire" />
+
+        <OacSimulator />
         <SectionDivider variant="projects-hire" />
 
         <HireMe />
