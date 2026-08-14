@@ -3886,9 +3886,9 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 
 .signal-meter {
   position: fixed;
-  top: 50%;
+  top: 96px;
   right: 26px;
-  transform: translateY(-50%);
+  transform: translateY(-6px);
   z-index: 60;
   display: flex;
   align-items: center;
@@ -3908,7 +3908,7 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 .signal-meter.is-visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(-50%) translateX(0);
+  transform: translateY(0);
 }
 
 .signal-meter-glyph {
@@ -3940,9 +3940,20 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.65));
 }
 
+/* The dot is a filled shape, not a thin stroke — the same blur radius
+   reads as a much heavier blob on it than on the arcs, so it gets a
+   lighter glow to stay visually balanced with the rest of the glyph. */
+.signal-ring-dot.is-lit {
+  filter: drop-shadow(0 0 1.4px rgba(56, 189, 248, 0.75));
+}
+
 .signal-ring.is-hovered,
 .signal-ring-dot.is-hovered {
   filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.85));
+}
+
+.signal-ring-dot.is-hovered {
+  filter: drop-shadow(0 0 2.2px rgba(56, 189, 248, 0.9));
 }
 
 /* Current chapter — slow pulse so the eye lands on it without
@@ -3950,6 +3961,10 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 .signal-ring.is-active,
 .signal-ring-dot.is-active {
   animation: signal-meter-pulse 2.2s ease-in-out infinite;
+}
+
+.signal-ring-dot.is-active {
+  animation: signal-meter-pulse-dot 2.2s ease-in-out infinite;
 }
 
 @keyframes signal-meter-pulse {
@@ -3961,9 +3976,19 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   }
 }
 
+@keyframes signal-meter-pulse-dot {
+  0%, 100% {
+    filter: drop-shadow(0 0 1.4px rgba(56, 189, 248, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 2.6px rgba(56, 189, 248, 1));
+  }
+}
+
 /* Invisible wide-stroke twin — the actual click/hover/focus target,
    generous enough to be usable even though the visible glyph is thin. */
 .signal-ring-hit {
+  fill: none;
   stroke: transparent;
   stroke-width: 2.6;
   cursor: pointer;
@@ -3978,9 +4003,9 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
    ring is hovered/focused (falls back to the current chapter). */
 .signal-meter-tooltip {
   position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
+  top: calc(100% + 10px);
+  right: 0;
+  transform: translateY(-4px);
   padding: 5px 10px;
   border-radius: 8px;
   background: rgba(9, 20, 34, 0.95);
@@ -3997,20 +4022,19 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 }
 
 .signal-meter-tooltip::after {
-  /* small arrow pointing down toward the glyph */
+  /* small arrow pointing up toward the glyph */
   content: "";
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 100%;
+  right: 12px;
   border: 5px solid transparent;
-  border-top-color: rgba(9, 20, 34, 0.95);
+  border-bottom-color: rgba(9, 20, 34, 0.95);
 }
 
 .signal-meter:hover .signal-meter-tooltip,
 .signal-meter:focus-within .signal-meter-tooltip {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 
 /* Mobile — hide entirely; the site's mobile nav already covers navigation

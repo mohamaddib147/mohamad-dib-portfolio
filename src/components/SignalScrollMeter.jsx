@@ -16,7 +16,7 @@ const CHAPTERS = [
 // arcs opening upward at radii 5 / 9.5 / 14, each spanning ±50° from
 // vertical, spaced to leave clean gaps between each ring's hit area.
 const RINGS = [
-  { type: "dot", cx: 12, cy: 21, r: 1.4 },
+  { type: "dot", cx: 12, cy: 21, r: 1.1 },
   { type: "arc", d: "M8.17 17.79 A5 5 0 0 1 15.83 17.79" },
   { type: "arc", d: "M4.72 14.89 A9.5 9.5 0 0 1 19.28 14.89" },
   { type: "arc", d: "M1.28 12.00 A14 14 0 0 1 22.72 12.00" },
@@ -115,6 +115,7 @@ function SignalScrollMeter() {
                   cx={ring.cx}
                   cy={ring.cy}
                   r={3.2}
+                  fill="none"
                   className="signal-ring-hit"
                   role="button"
                   tabIndex={0}
