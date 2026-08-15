@@ -33,7 +33,7 @@ function Home() {
         <SectionDivider variant="skills-projects" />
 
         <Projects />
-        <SectionDivider variant="projects-hire" />
+        <SectionDivider variant="projects-signal-lab" />
 
         <OacSimulator />
         <SectionDivider variant="projects-hire" />

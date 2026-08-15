@@ -207,6 +207,97 @@ main { position: relative; z-index: 1; }
   pointer-events: none;
 }
 
+/* =========================================================
+   INTERACTIVE WAVE — cursor-as-signal-generator (all dividers)
+   Hovering the matrix hands wave amplitude/frequency to the
+   cursor; otherwise it's driven by ambient scroll velocity.
+   ========================================================= */
+
+.divider__matrix-container {
+  cursor: default;
+}
+
+.divider__rf-matrix {
+  will-change: transform;
+}
+
+/* =========================================================
+   FEATURED DIVIDER — Projects -> Signal Lab data burst
+   Idle: packets drift gently toward center. Click/Enter:
+   packets accelerate inward and merge into a bright pulse.
+   ========================================================= */
+
+.divider--featured {
+  cursor: pointer;
+}
+
+.divider--featured:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.6);
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+.divider__matrix-container--featured {
+  cursor: pointer;
+}
+
+.divider__burst-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.burst-packet {
+  fill: rgba(190, 245, 255, 0.9);
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.7));
+}
+
+.burst-core {
+  fill: #f0ffff;
+  filter: drop-shadow(0 0 10px #38bdf8) drop-shadow(0 0 22px rgba(56, 189, 248, 0.9));
+}
+
+.burst-ring {
+  fill: none;
+  stroke: rgba(56, 189, 248, 0.65);
+  stroke-width: 1.4;
+}
+
+.divider__burst-hint {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: rgba(190, 245, 255, 0.55);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.divider__matrix-container--featured:hover .divider__burst-hint,
+.divider--featured:focus-visible .divider__burst-hint {
+  opacity: 1;
+  animation: burstHintPulse 1.8s ease-in-out infinite;
+}
+
+.divider__burst-hint.is-hidden {
+  opacity: 0 !important;
+  animation: none;
+}
+
+@keyframes burstHintPulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
 /* HERO -> ABOUT : signature arc */
 .divider--hero-about {
   --divider-fade-top: rgba(120, 190, 255, 0.05);
