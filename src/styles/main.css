@@ -298,6 +298,46 @@ main { position: relative; z-index: 1; }
   50% { opacity: 1; }
 }
 
+/* Result panel — revealed once the sync burst completes, showing the
+   thesis's actual MSE numbers instead of leaving the moment silent. */
+.divider__burst-result {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.divider__burst-result-item {
+  font-size: 0.7rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.divider__burst-result-item strong {
+  font-weight: 700;
+}
+
+.divider__burst-result-item--good {
+  color: rgba(134, 239, 172, 0.9);
+}
+
+.divider__burst-result-item--bad {
+  color: rgba(252, 165, 165, 0.9);
+}
+
+.divider__burst-replay {
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  color: rgba(157, 180, 204, 0.55);
+  white-space: nowrap;
+}
+
 /* =========================================================
    LIVE RF READOUT DIVIDERS — real formula, live number, one
    caption. Cursor position drives an actual textbook equation

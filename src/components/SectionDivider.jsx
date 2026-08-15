@@ -42,6 +42,7 @@ function SectionDivider({ variant = "default" }) {
   const isReadout = Boolean(readoutMetric);
 
   const [burstActive, setBurstActive] = useState(false);
+  const [showResult, setShowResult] = useState(false);
   const burstTimeoutRef = useRef(null);
   // Ref, not state — the ambient-vs-cursor gate must be readable synchronously
   // inside the motion-value subscription below. React state would lag by a
@@ -107,11 +108,17 @@ function SectionDivider({ variant = "default" }) {
   }, []);
 
   // ── #4: click-to-trigger data burst (featured divider only) ────────────
+  // Reveals the thesis's real MSE result — legitimate receiver stays low,
+  // eavesdropper stays blocked — right as the burst completes.
   const triggerBurst = useCallback(() => {
     if (!isFeatured || burstActive) return;
+    setShowResult(false);
     setBurstActive(true);
     if (burstTimeoutRef.current) clearTimeout(burstTimeoutRef.current);
-    burstTimeoutRef.current = setTimeout(() => setBurstActive(false), 1300);
+    burstTimeoutRef.current = setTimeout(() => {
+      setBurstActive(false);
+      setShowResult(true);
+    }, 1300);
   }, [isFeatured, burstActive]);
 
   useEffect(() => () => {
@@ -170,7 +177,11 @@ function SectionDivider({ variant = "default" }) {
       tabIndex={isFeatured ? 0 : undefined}
       aria-hidden={isFeatured || isReadout ? undefined : true}
       aria-label={
-        isFeatured ? "Signal Lab is next — click to trigger the data burst" : undefined
+        isFeatured
+          ? showResult
+            ? "Signal Lab is next. Result: legitimate receiver MSE 0.6, eavesdropper MSE 9.9 — blocked. Click to replay."
+            : "Signal Lab is next — click to trigger the data burst"
+          : undefined
       }
       onClick={isFeatured ? triggerBurst : undefined}
       onKeyDown={isFeatured ? handleFeaturedKeyDown : undefined}
@@ -314,10 +325,27 @@ function SectionDivider({ variant = "default" }) {
             </div>
           )}
 
-          {isFeatured && (
+          {isFeatured && !showResult && (
             <span className={`divider__burst-hint ${burstActive ? "is-hidden" : ""}`}>
               Click to sync ⚡
             </span>
+          )}
+
+          {isFeatured && showResult && (
+            <motion.div
+              className="divider__burst-result"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+            >
+              <span className="divider__burst-result-item divider__burst-result-item--good">
+                You <strong>0.6</strong> MSE
+              </span>
+              <span className="divider__burst-result-item divider__burst-result-item--bad">
+                Eve <strong>9.9</strong> MSE — blocked
+              </span>
+              <span className="divider__burst-replay">click to replay</span>
+            </motion.div>
           )}
         </div>
 
