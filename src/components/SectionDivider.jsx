@@ -7,8 +7,18 @@ import {
   useSpring,
   useMotionValue,
 } from "framer-motion";
+import DividerReadout from "./DividerReadout";
 
 const FEATURED_VARIANT = "projects-signal-lab";
+
+// Dividers that show a live, interactive RF-engineering readout instead of
+// the ambient wave — each teaches a real metric via an actual formula.
+const READOUT_METRICS = {
+  "hero-about": "rssi",
+  "about-experience": "snr",
+  "experience-tools": "latency",
+  "tools-skills": "ber",
+};
 
 // Symmetric packet start positions for the featured data-burst divider,
 // in the shared 720x80 viewBox — three on each side, converging to (360, 40).
@@ -25,6 +35,8 @@ function SectionDivider({ variant = "default" }) {
   const containerRef = useRef(null);
   const matrixRef = useRef(null);
   const isFeatured = variant === FEATURED_VARIANT;
+  const readoutMetric = READOUT_METRICS[variant];
+  const isReadout = Boolean(readoutMetric);
 
   const [burstActive, setBurstActive] = useState(false);
   const burstTimeoutRef = useRef(null);
@@ -150,10 +162,10 @@ function SectionDivider({ variant = "default" }) {
       ref={containerRef}
       className={`section-divider section-divider--full divider divider--${variant} ${
         isFeatured ? "divider--featured" : ""
-      }`}
+      } ${isReadout ? "divider--readout" : ""}`}
       role={isFeatured ? "button" : "separator"}
       tabIndex={isFeatured ? 0 : undefined}
-      aria-hidden={isFeatured ? undefined : true}
+      aria-hidden={isFeatured || isReadout ? undefined : true}
       aria-label={
         isFeatured ? "Signal Lab is next — click to trigger the data burst" : undefined
       }
@@ -171,50 +183,56 @@ function SectionDivider({ variant = "default" }) {
         <div className="divider__line divider__line--left" />
 
         <div
-          className={`divider__matrix-container ${isFeatured ? "divider__matrix-container--featured" : ""}`}
+          className={`divider__matrix-container ${isFeatured ? "divider__matrix-container--featured" : ""} ${
+            isReadout ? "divider__matrix-container--readout" : ""
+          }`}
           ref={matrixRef}
-          onMouseMove={handlePointerMove}
-          onMouseEnter={handlePointerEnter}
-          onMouseLeave={handlePointerLeave}
+          onMouseMove={isReadout ? undefined : handlePointerMove}
+          onMouseEnter={isReadout ? undefined : handlePointerEnter}
+          onMouseLeave={isReadout ? undefined : handlePointerLeave}
         >
-          <motion.svg
-            viewBox="0 0 720 80"
-            className="divider__rf-matrix"
-            preserveAspectRatio="xMidYMid meet"
-            style={{
-              scaleX: springScaleX,
-              scaleY: springScaleY,
-              transformOrigin: "50% 50%",
-            }}
-          >
-            <path
-              d={paths.carrier}
-              fill="none"
-              className="matrix-wave wave-carrier"
-            />
-
-            <path
-              d={paths.harmonic}
-              fill="none"
-              className="matrix-wave wave-harmonic"
-            />
-
-            <path
-              id={`wavePath-${variant}`}
-              d={paths.primary}
-              fill="none"
-              className="matrix-wave wave-primary-path"
-            />
-
-            <motion.circle
-              r="4.5"
-              className="matrix-packet-node"
+          {isReadout ? (
+            <DividerReadout metric={readoutMetric} />
+          ) : (
+            <motion.svg
+              viewBox="0 0 720 80"
+              className="divider__rf-matrix"
+              preserveAspectRatio="xMidYMid meet"
               style={{
-                offsetPath: `path("${paths.primary}")`,
-                offsetDistance: nodeProgress,
+                scaleX: springScaleX,
+                scaleY: springScaleY,
+                transformOrigin: "50% 50%",
               }}
-            />
-          </motion.svg>
+            >
+              <path
+                d={paths.carrier}
+                fill="none"
+                className="matrix-wave wave-carrier"
+              />
+
+              <path
+                d={paths.harmonic}
+                fill="none"
+                className="matrix-wave wave-harmonic"
+              />
+
+              <path
+                id={`wavePath-${variant}`}
+                d={paths.primary}
+                fill="none"
+                className="matrix-wave wave-primary-path"
+              />
+
+              <motion.circle
+                r="4.5"
+                className="matrix-packet-node"
+                style={{
+                  offsetPath: `path("${paths.primary}")`,
+                  offsetDistance: nodeProgress,
+                }}
+              />
+            </motion.svg>
+          )}
 
           {isFeatured ? (
             <svg
@@ -285,11 +303,13 @@ function SectionDivider({ variant = "default" }) {
             </svg>
           ) : null}
 
-          <div className="divider__center-motifs">
-            <span className="divider__motif divider__motif--a" />
-            <span className="divider__motif divider__motif--b" />
-            <span className="divider__motif divider__motif--c" />
-          </div>
+          {!isReadout && (
+            <div className="divider__center-motifs">
+              <span className="divider__motif divider__motif--a" />
+              <span className="divider__motif divider__motif--b" />
+              <span className="divider__motif divider__motif--c" />
+            </div>
+          )}
 
           {isFeatured && (
             <span className={`divider__burst-hint ${burstActive ? "is-hidden" : ""}`}>
