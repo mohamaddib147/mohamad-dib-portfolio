@@ -18,6 +18,9 @@ const READOUT_METRICS = {
   "about-experience": "snr",
   "experience-tools": "latency",
   "tools-skills": "channel-reuse",
+  "skills-projects": "shannon",
+  "projects-hire": "beamforming",
+  "hire-contact": "wifi-handshake",
 };
 
 // Symmetric packet start positions for the featured data-burst divider,
