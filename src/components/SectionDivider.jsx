@@ -17,7 +17,7 @@ const READOUT_METRICS = {
   "hero-about": "rssi",
   "about-experience": "snr",
   "experience-tools": "latency",
-  "tools-skills": "ber",
+  "tools-skills": "channel-reuse",
 };
 
 // Symmetric packet start positions for the featured data-burst divider,

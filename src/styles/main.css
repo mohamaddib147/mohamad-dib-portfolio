@@ -462,38 +462,185 @@ main { position: relative; z-index: 1; }
   filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.8));
 }
 
-/* ── BER: bit row ──────────────────────────────────────── */
+/* ── Value lock button (RSSI / SNR / Latency) ──────────── */
 
-.ber-bits {
+.divider-readout__value-line {
   display: flex;
-  gap: 3px;
-  flex-wrap: wrap;
-  max-width: 100px;
+  align-items: center;
+  gap: 7px;
+}
+
+.divider-readout__lock {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  background: rgba(9, 20, 34, 0.5);
+  color: rgba(157, 180, 204, 0.75);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.ber-bit {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: rgba(56, 189, 248, 0.35);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+.divider-readout__lock:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #cfe6fb;
 }
 
-.ber-bit.is-error {
-  background: #f87171;
-  box-shadow: 0 0 6px rgba(248, 113, 113, 0.65);
+.divider-readout__lock.is-locked {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #7dd3fc;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+}
+
+.divider-readout__locked-hint {
+  color: rgba(125, 211, 252, 0.85);
+  font-weight: 500;
+}
+
+/* ── Channel-reuse / collision demo ─────────────────────── */
+
+.channel-reuse-row {
+  gap: clamp(10px, 3vw, 24px);
+}
+
+.channel-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.channel-cell__label {
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(207, 230, 251, 0.65);
+  font-weight: 700;
+}
+
+.channel-cell__stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.channel-cell__stepper button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(9, 20, 34, 0.55);
+  color: #cfe6fb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.channel-cell__stepper button:hover:not(:disabled) {
+  border-color: rgba(56, 189, 248, 0.6);
+  background: rgba(56, 189, 248, 0.14);
+}
+
+.channel-cell__stepper button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.channel-cell__value {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #eaf3ff;
+  min-width: 40px;
+  text-align: center;
+}
+
+.channel-overlap {
+  width: clamp(70px, 12vw, 100px);
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.channel-circle {
+  fill-opacity: 0.14;
+  stroke-width: 1.4;
+  transition: stroke 0.3s ease, fill 0.3s ease;
+}
+
+.channel-circle--a {
+  fill: #38bdf8;
+  stroke: rgba(56, 189, 248, 0.55);
+}
+
+.channel-circle--b {
+  fill: #c084fc;
+  stroke: rgba(192, 132, 252, 0.55);
+}
+
+.channel-x {
+  stroke: #f87171;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(248, 113, 113, 0.75));
+}
+
+.channel-check-dot {
+  fill: #4ade80;
+  filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.75));
+}
+
+.channel-status {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color 0.25s ease;
+}
+
+.channel-status.is-bad {
+  color: #fca5a5;
+}
+
+.channel-status.is-good {
+  color: #86efac;
+}
+
+.channel-status-note {
+  font-weight: 400;
+  color: rgba(157, 180, 204, 0.7);
+}
+
+.divider-readout__caption--always {
+  opacity: 1 !important;
+}
+
+.divider--tools-skills.divider--readout {
+  min-height: clamp(160px, 16vw, 190px);
 }
 
 @media (max-width: 640px) {
   .divider--readout {
     min-height: clamp(150px, 30vw, 190px);
   }
+  .divider--tools-skills.divider--readout {
+    min-height: clamp(210px, 40vw, 250px);
+  }
   .divider-readout__row {
     gap: 16px;
   }
   .divider-readout__panel {
     min-width: 80px;
+  }
+  .channel-reuse-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 10px;
   }
 }
 

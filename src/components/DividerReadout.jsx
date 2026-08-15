@@ -1,44 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, animate } from "framer-motion";
+import { Lock, Unlock, Minus, Plus } from "lucide-react";
 
 // ═══════════════════════════════════════════════════════════════════
-// MATH — real formulas, not decoration. Each metric is driven by a
-// single normalized input t ∈ [0,1] (cursor position along the
-// divider), mapped through the actual textbook equation.
+// MATH — real formulas, not decoration. Each cursor-driven metric is
+// driven by a single normalized input t ∈ [0,1] (cursor position
+// along the divider), mapped through the actual textbook equation.
 // ═══════════════════════════════════════════════════════════════════
-
-const SUPERSCRIPTS = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
-function toSuperscript(n) {
-  return String(n)
-    .split("")
-    .map((c) => SUPERSCRIPTS[c] ?? c)
-    .join("");
-}
-
-// Abramowitz & Stegun 7.1.26 rational approximation of erfc(x).
-function erfc(x) {
-  const z = Math.abs(x);
-  const t = 1 / (1 + 0.5 * z);
-  const ans =
-    t *
-    Math.exp(
-      -z * z -
-        1.26551223 +
-        t *
-          (1.00002368 +
-            t *
-              (0.37409196 +
-                t *
-                  (0.09678418 +
-                    t *
-                      (-0.18628806 +
-                        t *
-                          (0.27886807 +
-                            t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277)))))))),
-    );
-  return x >= 0 ? ans : 2 - ans;
-}
-const qFunc = (x) => 0.5 * erfc(x / Math.SQRT2);
 
 const METRICS = {
   rssi: {
@@ -74,21 +42,6 @@ const METRICS = {
       const distance = t * 100; // simulated hops/km
       const latency = 5 + distance * 0.6; // 5 .. 65 ms
       return { display: `${Math.round(latency)} ms`, latency };
-    },
-  },
-  ber: {
-    label: "BER",
-    caption:
-      "As signal quality improves, bit errors drop exponentially — this exact curve (BER vs. SNR for BPSK) determines every wireless standard's range and speed.",
-    idleRange: [0.5, 0.86],
-    // BPSK bit-error rate: BER = Q(√(2·SNR_linear))
-    compute(t) {
-      const snrDb = t * 15; // 0 .. 15 dB
-      const snrLinear = 10 ** (snrDb / 10);
-      const ber = Math.max(1e-9, Math.min(0.5, qFunc(Math.sqrt(2 * snrLinear))));
-      const exp = Math.floor(Math.log10(ber));
-      const mantissa = ber / 10 ** exp;
-      return { display: `${mantissa.toFixed(2)} × 10${toSuperscript(exp)}`, ber, snrDb };
     },
   },
 };
@@ -156,34 +109,22 @@ function LatencyVisual({ latency }) {
   );
 }
 
-// Stable per-bit thresholds so bits flip deterministically as BER crosses
-// them, instead of flickering randomly on every render.
-const BIT_THRESHOLDS = Array.from({ length: 14 }, (_, i) => ((i * 0.6180339887) % 1));
-
-function BerVisual({ ber }) {
-  // Real BER at good SNR is far too small to show in a 14-bit sample —
-  // this exaggeration is purely visual; the readout above shows the truth.
-  const visualErrorRate = Math.min(0.5, ber * 4000);
-  return (
-    <div className="ber-bits" aria-hidden="true">
-      {BIT_THRESHOLDS.map((thresh, i) => (
-        <span key={i} className={`ber-bit ${thresh < visualErrorRate ? "is-error" : ""}`} />
-      ))}
-    </div>
-  );
-}
-
 // ═══════════════════════════════════════════════════════════════════
-// MAIN
+// CURSOR-DRIVEN READOUT (RSSI / SNR / Latency) — shared machinery.
+// Idle: gentle animation through the metric's natural range. Hover:
+// cursor position takes over. Lock: freezes the current value so you
+// can pin a number in place instead of it drifting or cursor-chasing.
 // ═══════════════════════════════════════════════════════════════════
 
-function DividerReadout({ metric }) {
+function CursorReadout({ metric }) {
   const config = useMemo(() => METRICS[metric], [metric]);
   const containerRef = useRef(null);
   const progress = useMotionValue((config.idleRange[0] + config.idleRange[1]) / 2);
   const springProgress = useSpring(progress, { stiffness: 90, damping: 20 });
   const idleControlsRef = useRef(null);
   const [t, setT] = useState(progress.get());
+  const [locked, setLocked] = useState(false);
+  const [lockedValue, setLockedValue] = useState(null);
 
   useEffect(() => {
     const unsub = springProgress.on("change", (v) => setT(Math.min(Math.max(v, 0), 1)));
@@ -202,6 +143,7 @@ function DividerReadout({ metric }) {
   }, []);
 
   const handleMove = (e) => {
+    if (locked) return;
     const el = containerRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -212,10 +154,11 @@ function DividerReadout({ metric }) {
   };
 
   const handleEnter = () => {
-    idleControlsRef.current?.stop();
+    if (!locked) idleControlsRef.current?.stop();
   };
 
   const handleLeave = () => {
+    if (locked) return;
     const [from, to] = config.idleRange;
     idleControlsRef.current = animate(progress, [progress.get(), from, to, from], {
       duration: 7,
@@ -224,7 +167,24 @@ function DividerReadout({ metric }) {
     });
   };
 
-  const result = config.compute(t);
+  const toggleLock = () => {
+    if (!locked) {
+      idleControlsRef.current?.stop();
+      setLockedValue(t);
+      setLocked(true);
+    } else {
+      setLocked(false);
+      const [from, to] = config.idleRange;
+      idleControlsRef.current = animate(progress, [t, from, to, from], {
+        duration: 7,
+        repeat: Infinity,
+        ease: "easeInOut",
+      });
+    }
+  };
+
+  const effectiveT = locked && lockedValue !== null ? lockedValue : t;
+  const result = config.compute(effectiveT);
 
   return (
     <div
@@ -233,28 +193,141 @@ function DividerReadout({ metric }) {
       onMouseMove={handleMove}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      tabIndex={0}
       role="group"
       aria-label={`${config.label} readout: ${result.display}. ${config.caption}`}
     >
       <div className="divider-readout__row">
         <div className="divider-readout__panel">
           <span className="divider-readout__label">{config.label}</span>
-          <span className="divider-readout__value">{result.display}</span>
+          <div className="divider-readout__value-line">
+            <span className="divider-readout__value">{result.display}</span>
+            <button
+              type="button"
+              className={`divider-readout__lock ${locked ? "is-locked" : ""}`}
+              onClick={toggleLock}
+              aria-pressed={locked}
+              aria-label={locked ? `Unlock ${config.label} — resume live sweep` : `Lock ${config.label} at its current value`}
+              title={locked ? "Unlock" : "Lock this value"}
+            >
+              {locked ? <Lock size={12} /> : <Unlock size={12} />}
+            </button>
+          </div>
         </div>
 
         <div className="divider-readout__visual">
           {metric === "rssi" && <RssiVisual rssi={result.rssi} />}
-          {metric === "snr" && <SnrVisual t={t} />}
+          {metric === "snr" && <SnrVisual t={effectiveT} />}
           {metric === "latency" && <LatencyVisual latency={result.latency} />}
-          {metric === "ber" && <BerVisual ber={result.ber} />}
         </div>
       </div>
 
-      <p className="divider-readout__caption">{config.caption}</p>
+      <p className="divider-readout__caption">
+        {config.caption}
+        {locked && <span className="divider-readout__locked-hint"> — locked in, click the pin to release.</span>}
+      </p>
     </div>
   );
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// CHANNEL-REUSE / COLLISION DEMO — two independent +/- steppers, no
+// cursor tracking. Same channel = visible interference; different
+// channels = clean. This is the WiFi-router problem everyone has lived
+// through without knowing why.
+// ═══════════════════════════════════════════════════════════════════
+
+const CHANNEL_MIN = 1;
+const CHANNEL_MAX = 11;
+const NON_OVERLAPPING = [1, 6, 11];
+
+function ChannelStepper({ label, value, onChange, accent }) {
+  return (
+    <div className={`channel-cell channel-cell--${accent}`}>
+      <span className="channel-cell__label">{label}</span>
+      <div className="channel-cell__stepper">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(CHANNEL_MIN, value - 1))}
+          aria-label={`Decrease ${label} channel`}
+          disabled={value <= CHANNEL_MIN}
+        >
+          <Minus size={12} />
+        </button>
+        <span className="channel-cell__value">Ch {value}</span>
+        <button
+          type="button"
+          onClick={() => onChange(Math.min(CHANNEL_MAX, value + 1))}
+          aria-label={`Increase ${label} channel`}
+          disabled={value >= CHANNEL_MAX}
+        >
+          <Plus size={12} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ChannelReuseReadout() {
+  const [chA, setChA] = useState(6);
+  const [chB, setChB] = useState(6); // start colliding — the problem, right away
+  const colliding = chA === chB;
+  const bothNonOverlapping = NON_OVERLAPPING.includes(chA) && NON_OVERLAPPING.includes(chB);
+
+  return (
+    <div className="divider-readout divider-readout--channel-reuse" role="group" aria-label="Channel reuse interference demo">
+      <div className="divider-readout__row channel-reuse-row">
+        <ChannelStepper label="Router A" value={chA} onChange={setChA} accent="a" />
+
+        <svg viewBox="0 0 100 46" className="channel-overlap" aria-hidden="true">
+          <circle cx="38" cy="23" r="17" className="channel-circle channel-circle--a" />
+          <circle cx="62" cy="23" r="17" className="channel-circle channel-circle--b" />
+          {colliding ? (
+            <motion.g
+              key="collision"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: [0.4, 1, 0.4], scale: 1 }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <line x1="44" y1="16" x2="56" y2="30" className="channel-x" />
+              <line x1="56" y1="16" x2="44" y2="30" className="channel-x" />
+            </motion.g>
+          ) : (
+            <motion.circle
+              key="clean"
+              cx="50"
+              cy="23"
+              r="3"
+              className="channel-check-dot"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            />
+          )}
+        </svg>
+
+        <ChannelStepper label="Router B" value={chB} onChange={setChB} accent="b" />
+      </div>
+
+      <div className={`channel-status ${colliding ? "is-bad" : "is-good"}`}>
+        {colliding ? "✕ Interference — same channel" : "✓ Clean — no overlap"}
+        {!colliding && bothNonOverlapping && <span className="channel-status-note"> (both non-overlapping)</span>}
+      </div>
+
+      <p className="divider-readout__caption divider-readout__caption--always">
+        Neighboring WiFi routers on the same channel interfere with each other — that&apos;s why routers
+        auto-select non-overlapping channels like 1, 6, or 11.
+      </p>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MAIN — dispatches to the cursor-driven readouts or the channel demo.
+// ═══════════════════════════════════════════════════════════════════
+
+function DividerReadout({ metric }) {
+  if (metric === "channel-reuse") return <ChannelReuseReadout />;
+  return <CursorReadout metric={metric} />;
+}
+
 export default DividerReadout;
-export { METRICS as DIVIDER_READOUT_METRICS };
