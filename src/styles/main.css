@@ -4574,27 +4574,31 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   transition: fill 0.25s ease, filter 0.25s ease;
 }
 
+/* Each ring carries its own --ring-color custom property (set inline
+   per-ring in SignalScrollMeter.jsx) so the four lit rings stay
+   distinguishable by hue instead of blending into one cyan blob once
+   the reader reaches the bottom of the page and all four are lit. */
 .signal-ring.is-lit,
 .signal-ring-dot.is-lit {
-  stroke: #38bdf8;
-  fill: #38bdf8;
-  filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.65));
+  stroke: var(--ring-color, #38bdf8);
+  fill: var(--ring-color, #38bdf8);
+  filter: drop-shadow(0 0 3px var(--ring-color, #38bdf8));
 }
 
 /* The dot is a filled shape, not a thin stroke — the same blur radius
    reads as a much heavier blob on it than on the arcs, so it gets a
    lighter glow to stay visually balanced with the rest of the glyph. */
 .signal-ring-dot.is-lit {
-  filter: drop-shadow(0 0 1.4px rgba(56, 189, 248, 0.75));
+  filter: drop-shadow(0 0 1.4px var(--ring-color, #38bdf8));
 }
 
 .signal-ring.is-hovered,
 .signal-ring-dot.is-hovered {
-  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.85));
+  filter: drop-shadow(0 0 5px var(--ring-color, #38bdf8));
 }
 
 .signal-ring-dot.is-hovered {
-  filter: drop-shadow(0 0 2.2px rgba(56, 189, 248, 0.9));
+  filter: drop-shadow(0 0 2.2px var(--ring-color, #38bdf8));
 }
 
 /* Current chapter — slow pulse so the eye lands on it without
@@ -4610,19 +4614,19 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 
 @keyframes signal-meter-pulse {
   0%, 100% {
-    filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.6));
+    filter: drop-shadow(0 0 3px var(--ring-color, #38bdf8));
   }
   50% {
-    filter: drop-shadow(0 0 7px rgba(56, 189, 248, 0.95));
+    filter: drop-shadow(0 0 7px var(--ring-color, #38bdf8));
   }
 }
 
 @keyframes signal-meter-pulse-dot {
   0%, 100% {
-    filter: drop-shadow(0 0 1.4px rgba(56, 189, 248, 0.7));
+    filter: drop-shadow(0 0 1.4px var(--ring-color, #38bdf8));
   }
   50% {
-    filter: drop-shadow(0 0 2.6px rgba(56, 189, 248, 1));
+    filter: drop-shadow(0 0 2.6px var(--ring-color, #38bdf8));
   }
 }
 

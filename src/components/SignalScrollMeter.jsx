@@ -15,11 +15,14 @@ const CHAPTERS = [
 // Hand-plotted concentric arcs, viewBox 0 0 24 24 — dot at (12, 21),
 // arcs opening upward at radii 5 / 9.5 / 14, each spanning ±50° from
 // vertical, spaced to leave clean gaps between each ring's hit area.
+// Each ring gets its own hue — once all four are lit they'd otherwise
+// blend into one indistinguishable cyan blob with no way to tell the
+// rings apart.
 const RINGS = [
-  { type: "dot", cx: 12, cy: 21, r: 1.1 },
-  { type: "arc", d: "M8.17 17.79 A5 5 0 0 1 15.83 17.79" },
-  { type: "arc", d: "M4.72 14.89 A9.5 9.5 0 0 1 19.28 14.89" },
-  { type: "arc", d: "M1.28 12.00 A14 14 0 0 1 22.72 12.00" },
+  { type: "dot", cx: 12, cy: 21, r: 1.1, color: "#38bdf8" },
+  { type: "arc", d: "M8.17 17.79 A5 5 0 0 1 15.83 17.79", color: "#2dd4bf" },
+  { type: "arc", d: "M4.72 14.89 A9.5 9.5 0 0 1 19.28 14.89", color: "#60a5fa" },
+  { type: "arc", d: "M1.28 12.00 A14 14 0 0 1 22.72 12.00", color: "#c084fc" },
 ];
 
 function SignalScrollMeter() {
@@ -109,7 +112,7 @@ function SignalScrollMeter() {
                   cy={ring.cy}
                   r={ring.r}
                   className={`signal-ring signal-ring-dot ${stateClass}`}
-                  style={{ pointerEvents: "none" }}
+                  style={{ pointerEvents: "none", "--ring-color": ring.color }}
                 />
                 <circle
                   cx={ring.cx}
@@ -138,7 +141,7 @@ function SignalScrollMeter() {
                 d={ring.d}
                 className={`signal-ring signal-ring-arc ${stateClass}`}
                 fill="none"
-                style={{ pointerEvents: "none" }}
+                style={{ pointerEvents: "none", "--ring-color": ring.color }}
               />
               <path
                 d={ring.d}
