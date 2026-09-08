@@ -1,43 +1,37 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Shield,
-  Radio,
-  Cpu,
-  Network,
-  Building2,
-  HeartPulse,
-  Ticket,
-  UtensilsCrossed,
-  ArrowUpRight,
-} from "lucide-react";
-import SignalBackground from "../components/SignalBackground";
-import { supabase } from "../lib/supabaseClient";
-import { ICON_MAP } from "../data/projectPresets";
+// One-off migration: seeds the existing hardcoded Projects/Skills content into
+// Supabase so the site has real data to show as soon as it switches to fetching
+// from the database. Not imported by the app — safe to leave in the repo.
+//
+// Usage (from the repo root):
+//   SUPABASE_URL=... SUPABASE_ANON_KEY=... ADMIN_EMAIL=... ADMIN_PASSWORD=... node scripts/seed-supabase.mjs
+//
+// Signs in as the admin user (rather than using a service-role key) so the
+// insert goes through the same RLS write policy the admin panel uses.
 
-// projectType drives the per-card SignalBackground motif inside each card
-// category drives the Full Stack / Engineering filter tabs
-// `link` is optional — cards without a public repo/demo simply render without
-// a clickable footer link instead of pointing somewhere fake.
-const filters = [
-  { id: "all", label: "All" },
-  { id: "fullstack", label: "Full Stack" },
-  { id: "engineering", label: "Engineering" },
-];
+import { createClient } from "@supabase/supabase-js";
 
-// Shown until the Supabase fetch resolves, and kept as a fallback if it fails
-// or the table is empty — the section should never render blank.
-const FALLBACK_PROJECTS = [
+const { SUPABASE_URL, SUPABASE_ANON_KEY, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !ADMIN_EMAIL || !ADMIN_PASSWORD) {
+  console.error(
+    "Missing env vars. Required: SUPABASE_URL, SUPABASE_ANON_KEY, ADMIN_EMAIL, ADMIN_PASSWORD"
+  );
+  process.exit(1);
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const projects = [
   {
     title: "Event Ticket Platform",
     meta: "Full-Stack Web Application · 2026",
     role: "Full-Stack Developer",
     badge: "Featured · Full-Stack",
     accent: "accent-software",
-    icon: Ticket,
     layout: "layout-software",
-    projectType: "software",
+    project_type: "software",
     category: "fullstack",
+    icon_name: "Ticket",
     link: "https://github.com/mahmoudaudi/event-ticket",
     summary:
       "A full-stack event ticketing and reservation platform — from event discovery to seat selection, real payments, and an admin dashboard.",
@@ -49,6 +43,7 @@ const FALLBACK_PROJECTS = [
       "Built a role-gated admin dashboard (NextAuth) separate from the public site's JWT-based user auth.",
     ],
     tech: ["Next.js", "TypeScript", "MongoDB", "Stripe", "NextAuth", "Tailwind CSS"],
+    sort_order: 10,
   },
   {
     title: "RestoManager",
@@ -56,10 +51,10 @@ const FALLBACK_PROJECTS = [
     role: "Full-Stack Developer",
     badge: "Featured · Full-Stack",
     accent: "accent-software",
-    icon: UtensilsCrossed,
     layout: "layout-software",
-    projectType: "software",
+    project_type: "software",
     category: "fullstack",
+    icon_name: "UtensilsCrossed",
     link: "https://github.com/mohamaddib147/resto-manager",
     summary:
       "A full-stack restaurant discovery, menu management, approval, and ordering platform with role-based access for customers, restaurant owners, and administrators.",
@@ -71,6 +66,7 @@ const FALLBACK_PROJECTS = [
       "Integrated Supabase for restaurant media and verification-document storage alongside MongoDB data models.",
     ],
     tech: ["React", "TypeScript", "Express", "MongoDB", "Better Auth", "Tailwind CSS"],
+    sort_order: 20,
   },
   {
     title: "Enhancing Security in Over-the-Air Computation",
@@ -78,10 +74,10 @@ const FALLBACK_PROJECTS = [
     role: "Graduate Researcher",
     badge: "Master's Thesis",
     accent: "accent-research",
-    icon: Radio,
     layout: "layout-research",
-    projectType: "thesis",  // beamforming RF arcs
+    project_type: "thesis",
     category: "engineering",
+    icon_name: "Radio",
     link: "https://github.com/mohamaddib147/Secure-Over-the-Air-Computation-using-Zero-Forced-Artificial-Noise",
     summary:
       "A research-driven wireless security project focused on protecting Over-the-Air Computation systems without reducing performance.",
@@ -93,6 +89,7 @@ const FALLBACK_PROJECTS = [
       "Worked across wireless communication, signal processing, and interference defense.",
     ],
     tech: ["Python", "MATLAB", "Signal Processing", "Wireless Security", "OAC"],
+    sort_order: 30,
   },
   {
     title: "Vehicular Communication Security",
@@ -100,10 +97,11 @@ const FALLBACK_PROJECTS = [
     role: "Security Engineer",
     badge: "VANET Security",
     accent: "accent-security",
-    icon: Shield,
     layout: "layout-security",
-    projectType: "networking",  // packet route path
+    project_type: "networking",
     category: "engineering",
+    icon_name: "Shield",
+    link: null,
     summary:
       "A protocol-security project centered on securing vehicle-to-vehicle and wireless communication environments.",
     description:
@@ -114,6 +112,7 @@ const FALLBACK_PROJECTS = [
       "Strengthened security thinking at the architecture and protocol layers.",
     ],
     tech: ["VANET", "PKI", "Authentication", "Privacy", "Network Security"],
+    sort_order: 40,
   },
   {
     title: "IoT Air Quality System",
@@ -121,10 +120,10 @@ const FALLBACK_PROJECTS = [
     role: "IoT & Firmware Developer",
     badge: "IoT Monitoring",
     accent: "accent-iot",
-    icon: Cpu,
     layout: "layout-iot",
-    projectType: "iot",  // hub-and-spoke node topology
+    project_type: "iot",
     category: "engineering",
+    icon_name: "Cpu",
     link: "https://github.com/mohamaddib147/aqiot",
     summary:
       "A practical embedded and telemetry project for real-time environmental monitoring and system validation.",
@@ -136,6 +135,7 @@ const FALLBACK_PROJECTS = [
       "Managed firmware builds and engineering validation workflows.",
     ],
     tech: ["C/C++", "Python", "IoT", "Telemetry", "CMake"],
+    sort_order: 50,
   },
   {
     title: "Network Protocol Development",
@@ -143,10 +143,11 @@ const FALLBACK_PROJECTS = [
     role: "Protocol Developer",
     badge: "Low-Level Networking",
     accent: "accent-systems",
-    icon: Network,
     layout: "layout-systems",
-    projectType: "networking",  // packet route path
+    project_type: "networking",
     category: "engineering",
+    icon_name: "Network",
+    link: null,
     summary:
       "A systems-focused networking project built around reliable and efficient TCP-based communication.",
     description:
@@ -157,6 +158,7 @@ const FALLBACK_PROJECTS = [
       "Strengthened practical implementation of transport-layer concepts.",
     ],
     tech: ["C++", "TCP", "Sockets", "Packet Analysis", "Networking"],
+    sort_order: 60,
   },
   {
     title: "Secure Enterprise Network Architecture",
@@ -164,10 +166,11 @@ const FALLBACK_PROJECTS = [
     role: "Network Security Architect",
     badge: "Enterprise Infrastructure",
     accent: "accent-enterprise",
-    icon: Building2,
     layout: "layout-enterprise",
-    projectType: "networking",  // packet route path
+    project_type: "networking",
     category: "engineering",
+    icon_name: "Building2",
+    link: null,
     summary:
       "A network design project focused on secure enterprise connectivity, routing, and firewall-backed resilience.",
     description:
@@ -178,6 +181,7 @@ const FALLBACK_PROJECTS = [
       "Focused on resilient infrastructure and secure enterprise traffic flow.",
     ],
     tech: ["Cisco", "Fortinet", "OSPF", "BGP", "IPsec VPN"],
+    sort_order: 70,
   },
   {
     title: "Clinical Management Application",
@@ -185,10 +189,11 @@ const FALLBACK_PROJECTS = [
     role: "Full-Stack Developer",
     badge: "Application Development",
     accent: "accent-software",
-    icon: HeartPulse,
     layout: "layout-software",
-    projectType: "software",  // protocol bars / signal trail
+    project_type: "software",
     category: "fullstack",
+    icon_name: "HeartPulse",
+    link: null,
     summary:
       "A software application project for managing patient records and administrative workflows in a structured system.",
     description:
@@ -199,173 +204,84 @@ const FALLBACK_PROJECTS = [
       "Applied access control thinking to sensitive application data.",
     ],
     tech: ["Java", "Android", "MySQL", "SQL", "Application Design"],
+    sort_order: 80,
   },
 ];
 
-function normalizeProject(row) {
-  return {
-    ...row,
-    projectType: row.project_type,
-    icon: ICON_MAP[row.icon_name] ?? Cpu,
-    highlights: row.highlights ?? [],
-    tech: row.tech ?? [],
-  };
+const skillGroups = [
+  {
+    title: "Wireless & Networking",
+    items: [
+      "5G NR", "LTE", "3GPP Standards", "Beamforming", "MIMO", "RF Planning",
+      "Spectrum Analysis", "Wireless Performance Optimization", "Robust Network Design",
+      "TCP/IP", "DNS", "VPN", "Routing Protocols", "Network Administration", "Troubleshooting",
+    ],
+    sort_order: 10,
+  },
+  {
+    title: "Security",
+    items: [
+      "Network Security", "Wireless Network Security", "Secure System Design",
+      "Ethical Hacking Principles", "Vulnerability Assessment",
+      "Intrusion Detection / Prevention Concepts", "Security Auditing Fundamentals", "Data Privacy",
+    ],
+    sort_order: 20,
+  },
+  {
+    title: "Programming & Simulation",
+    items: [
+      "Python", "Network Simulations", "Data Analysis", "Automation Scripts",
+      "MATLAB", "Signal Processing", "Algorithm Development", "C/C++ Basics",
+    ],
+    sort_order: 30,
+  },
+  {
+    title: "Engineering & Analysis",
+    items: [
+      "Systems Engineering Concepts", "Analytical Thinking",
+      "Complex Problem-Solving", "System Design & Modeling", "Technical Analysis",
+    ],
+    sort_order: 40,
+  },
+  {
+    title: "Soft Skills",
+    items: [
+      "Teamwork & Collaboration", "Curiosity & Eagerness to Learn",
+      "Adaptability", "Communication", "Problem-Solving",
+    ],
+    sort_order: 50,
+  },
+];
+
+async function main() {
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: ADMIN_EMAIL,
+    password: ADMIN_PASSWORD,
+  });
+  if (signInError) {
+    console.error("Sign-in failed:", signInError.message);
+    process.exit(1);
+  }
+
+  const { error: projectsError, data: projectsData } = await supabase
+    .from("projects")
+    .insert(projects)
+    .select();
+  if (projectsError) {
+    console.error("Projects insert failed:", projectsError.message);
+  } else {
+    console.log(`Inserted ${projectsData.length} projects.`);
+  }
+
+  const { error: skillsError, data: skillsData } = await supabase
+    .from("skill_groups")
+    .insert(skillGroups)
+    .select();
+  if (skillsError) {
+    console.error("Skill groups insert failed:", skillsError.message);
+  } else {
+    console.log(`Inserted ${skillsData.length} skill groups.`);
+  }
 }
 
-function Projects() {
-  // Starts with the fallback content so the section never renders blank —
-  // swaps to live Supabase data silently once the fetch resolves.
-  const [projects, setProjects] = useState(FALLBACK_PROJECTS);
-  const [activeFilter, setActiveFilter] = useState("all");
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadProjects() {
-      if (!supabase) return;
-
-      const { data, error } = await supabase
-        .from("projects")
-        .select("*")
-        .order("sort_order");
-
-      if (cancelled) return;
-
-      if (!error && data && data.length > 0) {
-        setProjects(data.map(normalizeProject));
-      }
-    }
-
-    loadProjects();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const visibleProjects =
-    activeFilter === "all"
-      ? projects
-      : projects.filter((project) => project.category === activeFilter);
-
-  return (
-    <section id="projects" className="portfolio-data-section projects-section">
-      {/* Section-level background — generic projects variant */}
-      <SignalBackground variant="projects" projectType="networking" className="signal-projects" />
-
-      <motion.div
-        className="portfolio-section-shell"
-        initial={{ opacity: 0, y: 28 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.18 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-      >
-        <p className="section-kicker">Projects</p>
-        <h2>Engineering work shaped by research, systems, security, and software.</h2>
-        <p className="section-intro">
-          These projects reflect different sides of my technical background, from
-          wireless security and protocol engineering to IoT systems, enterprise
-          infrastructure, and application development.
-        </p>
-
-        <div className="project-filter-bar" role="tablist" aria-label="$ filter --projects">
-          {filters.map((filter) => (
-            <button
-              key={filter.id}
-              type="button"
-              role="tab"
-              aria-selected={activeFilter === filter.id}
-              className={`project-filter-tab ${activeFilter === filter.id ? "active" : ""}`}
-              onClick={() => setActiveFilter(filter.id)}
-            >
-              {filter.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="project-data-grid project-grid-upgraded">
-          {visibleProjects.map((project, index) => {
-            const Icon = project.icon;
-
-            return (
-              <motion.article
-                key={project.id ?? index}
-                className={`project-data-card refined-project-card project-card-unique ${project.accent} ${project.layout}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.12 }}
-                transition={{ duration: 0.45, delay: index * 0.05 }}
-                whileHover={{ y: -6 }}
-              >
-                {/* Per-card signal motif — replaces the static .project-card-signal div */}
-                <div className="project-card-signal">
-                  <SignalBackground
-                    variant="projects"
-                    projectType={project.projectType}
-                    className="signal-card"
-                  />
-                </div>
-
-                <div className="project-top-shell">
-                  <div className="project-card-top">
-                    <p className="project-meta">{project.meta}</p>
-                    <span className="project-type-badge">{project.badge}</span>
-                  </div>
-
-                  <div className="project-icon-wrap">
-                    <Icon size={18} strokeWidth={2} />
-                  </div>
-                </div>
-
-                <div className="project-role-line">
-                  <span className="project-role-label">Role</span>
-                  <span className="project-role-value">{project.role}</span>
-                </div>
-
-                <h3>{project.title}</h3>
-                <p className="project-summary">{project.summary}</p>
-                <p className="project-description">{project.description}</p>
-
-                <div className="project-highlight-block">
-                  {project.highlights.map((highlight, highlightIndex) => (
-                    <div className="project-highlight-item" key={highlightIndex}>
-                      <span className="project-highlight-dot" />
-                      <p>{highlight}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="project-card-footer">
-                  <div className="project-tag-list">
-                    {project.tech.map((tag, tagIndex) => (
-                      <span className="project-tag" key={tagIndex}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {project.link ? (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-arrow-mark"
-                      aria-label={`View ${project.title} on GitHub`}
-                    >
-                      <ArrowUpRight size={16} strokeWidth={2} />
-                    </a>
-                  ) : (
-                    <span className="project-arrow-mark project-arrow-mark-disabled" aria-hidden="true">
-                      <ArrowUpRight size={16} strokeWidth={2} />
-                    </span>
-                  )}
-                </div>
-              </motion.article>
-            );
-          })}
-        </div>
-      </motion.div>
-    </section>
-  );
-}
-
-export default Projects;
+main();

@@ -21,6 +21,9 @@ build/
 .env.local
 .env.*.local
 
+# Local-only MCP server config (personal dev tooling, not project content)
+.mcp.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
