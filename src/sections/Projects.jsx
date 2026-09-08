@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -13,8 +14,15 @@ import {
 import SignalBackground from "../components/SignalBackground";
 
 // projectType drives the per-card SignalBackground motif inside each card
+// category drives the Full Stack / Engineering filter tabs
 // `link` is optional — cards without a public repo/demo simply render without
 // a clickable footer link instead of pointing somewhere fake.
+const filters = [
+  { id: "all", label: "All" },
+  { id: "fullstack", label: "Full Stack" },
+  { id: "engineering", label: "Engineering" },
+];
+
 const projects = [
   {
     title: "Event Ticket Platform",
@@ -25,6 +33,7 @@ const projects = [
     icon: Ticket,
     layout: "layout-software",
     projectType: "software",
+    category: "fullstack",
     link: "https://github.com/mahmoudaudi/event-ticket",
     summary:
       "A full-stack event ticketing and reservation platform — from event discovery to seat selection, real payments, and an admin dashboard.",
@@ -46,6 +55,7 @@ const projects = [
     icon: UtensilsCrossed,
     layout: "layout-software",
     projectType: "software",
+    category: "fullstack",
     link: "https://github.com/mohamaddib147/resto-manager",
     summary:
       "A full-stack restaurant discovery, menu management, approval, and ordering platform with role-based access for customers, restaurant owners, and administrators.",
@@ -67,6 +77,7 @@ const projects = [
     icon: Radio,
     layout: "layout-research",
     projectType: "thesis",  // beamforming RF arcs
+    category: "engineering",
     link: "https://github.com/mohamaddib147/Secure-Over-the-Air-Computation-using-Zero-Forced-Artificial-Noise",
     summary:
       "A research-driven wireless security project focused on protecting Over-the-Air Computation systems without reducing performance.",
@@ -88,6 +99,7 @@ const projects = [
     icon: Shield,
     layout: "layout-security",
     projectType: "networking",  // packet route path
+    category: "engineering",
     summary:
       "A protocol-security project centered on securing vehicle-to-vehicle and wireless communication environments.",
     description:
@@ -108,6 +120,7 @@ const projects = [
     icon: Cpu,
     layout: "layout-iot",
     projectType: "iot",  // hub-and-spoke node topology
+    category: "engineering",
     link: "https://github.com/mohamaddib147/aqiot",
     summary:
       "A practical embedded and telemetry project for real-time environmental monitoring and system validation.",
@@ -129,6 +142,7 @@ const projects = [
     icon: Network,
     layout: "layout-systems",
     projectType: "networking",  // packet route path
+    category: "engineering",
     summary:
       "A systems-focused networking project built around reliable and efficient TCP-based communication.",
     description:
@@ -149,6 +163,7 @@ const projects = [
     icon: Building2,
     layout: "layout-enterprise",
     projectType: "networking",  // packet route path
+    category: "engineering",
     summary:
       "A network design project focused on secure enterprise connectivity, routing, and firewall-backed resilience.",
     description:
@@ -169,6 +184,7 @@ const projects = [
     icon: HeartPulse,
     layout: "layout-software",
     projectType: "software",  // protocol bars / signal trail
+    category: "fullstack",
     summary:
       "A software application project for managing patient records and administrative workflows in a structured system.",
     description:
@@ -183,6 +199,13 @@ const projects = [
 ];
 
 function Projects() {
+  const [activeFilter, setActiveFilter] = useState("all");
+
+  const visibleProjects =
+    activeFilter === "all"
+      ? projects
+      : projects.filter((project) => project.category === activeFilter);
+
   return (
     <section id="projects" className="portfolio-data-section projects-section">
       {/* Section-level background — generic projects variant */}
@@ -203,8 +226,23 @@ function Projects() {
           infrastructure, and application development.
         </p>
 
+        <div className="project-filter-bar" role="tablist" aria-label="$ filter --projects">
+          {filters.map((filter) => (
+            <button
+              key={filter.id}
+              type="button"
+              role="tab"
+              aria-selected={activeFilter === filter.id}
+              className={`project-filter-tab ${activeFilter === filter.id ? "active" : ""}`}
+              onClick={() => setActiveFilter(filter.id)}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
         <div className="project-data-grid project-grid-upgraded">
-          {projects.map((project, index) => {
+          {visibleProjects.map((project, index) => {
             const Icon = project.icon;
 
             return (

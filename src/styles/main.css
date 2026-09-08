@@ -1262,6 +1262,39 @@ main { position: relative; z-index: 1; }
   font-size: 0.9rem;
 }
 
+.availability-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  margin-left: 12px;
+  padding: 7px 14px;
+  border: 1px solid rgba(134, 239, 172, 0.28);
+  border-radius: 999px;
+  background: rgba(134, 239, 172, 0.06);
+  font-family: monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.availability-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #86efac;
+  box-shadow: 0 0 8px rgba(134, 239, 172, 0.8);
+  animation: availability-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes availability-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(134, 239, 172, 0.7); }
+  50% { opacity: 0.5; box-shadow: 0 0 12px rgba(134, 239, 172, 0.35); }
+}
+
+.availability-text { color: rgba(134, 239, 172, 0.65); }
+
+.availability-value { color: #86efac; font-weight: 700; }
+
 .hero-title {
   font-size: clamp(3rem, 8vw, 5.5rem);
   line-height: 0.95;
@@ -2191,6 +2224,39 @@ main { position: relative; z-index: 1; }
   gap: 26px;
 }
 
+.project-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 28px 0 32px;
+}
+
+.project-filter-tab {
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #a9c2d6;
+  font-family: monospace;
+  font-size: 0.84rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.project-filter-tab:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #e6f1ff;
+}
+
+.project-filter-tab.active {
+  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(56, 189, 248, 0.1);
+  color: #7fd4ff;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.16);
+}
+
 .project-data-card {
   padding: 28px;
   border-radius: 22px;
@@ -2581,6 +2647,65 @@ main { position: relative; z-index: 1; }
 
 .contact-card h3 { margin-bottom: 18px; color: #f4f9ff; font-size: 1.15rem; }
 .contact-support-text { margin-bottom: 22px; color: #8da4b8; line-height: 1.7; font-size: 0.95rem; }
+
+.contact-form-card { margin-top: 24px; }
+
+.transmit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.transmit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transmit-field input,
+.transmit-field textarea {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  background: rgba(56, 189, 248, 0.03);
+  color: #e6f1ff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.transmit-field input::placeholder,
+.transmit-field textarea::placeholder {
+  color: rgba(184, 209, 230, 0.4);
+}
+
+.transmit-field input:focus,
+.transmit-field textarea:focus {
+  outline: none;
+  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(56, 189, 248, 0.06);
+}
+
+.transmit-form .establish-btn {
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.transmit-form .establish-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.tx-status-line {
+  font-size: 0.78rem;
+  font-family: monospace;
+  letter-spacing: 0.04em;
+}
+
+.tx-status-ok { color: rgba(134, 239, 172, 0.85); }
+.tx-status-fail { color: rgba(248, 113, 113, 0.85); }
 
 /* Holographic Link Cards */
 .holo-link {

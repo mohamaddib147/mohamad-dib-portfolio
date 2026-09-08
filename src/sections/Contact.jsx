@@ -1,8 +1,10 @@
 // Contact — The Receiver (Active RX Holographic Update)
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Mail, Phone, UserRound, MapPin, Briefcase, Languages } from "lucide-react";
+import { Mail, Phone, UserRound, MapPin, Briefcase, Languages, Send } from "lucide-react";
 import githubIcon from "../assets/logos/github-color-svgrepo-com.svg";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xppzoarw";
 
 // ── Data ──────────────────────────────────────────────────────────────────
 const languages = ["English", "Swedish", "Arabic"];
@@ -16,7 +18,7 @@ const profileLinks = [
   {
     label: "LinkedIn",
     value: "Mohamad Dib",
-    href: "https://www.linkedin.com/in/mohamad-dib-b51286271",
+    href: "https://www.linkedin.com/in/mohamad-dib-eng",
     icon: UserRound,
     type: "lucide",
   },
@@ -263,6 +265,116 @@ function EstablishLink() {
   );
 }
 
+// ── Transmit Form (contact form → Formspree) ──────────────────────────────
+function TransmitForm() {
+  const [values, setValues] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+
+  const handleChange = (e) => {
+    setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("sending");
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(e.target),
+      });
+
+      if (res.ok) {
+        setStatus("sent");
+        setValues({ name: "", email: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <form className="transmit-form" onSubmit={handleSubmit}>
+      <p className="tx-endpoint-text">DATA UPLINK — COMPOSE PACKET</p>
+
+      <div className="transmit-field">
+        <label className="contact-mini-label" htmlFor="tx-name">Name</label>
+        <input
+          id="tx-name"
+          name="name"
+          type="text"
+          placeholder="Your name"
+          required
+          value={values.name}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="transmit-field">
+        <label className="contact-mini-label" htmlFor="tx-email">Email</label>
+        <input
+          id="tx-email"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          required
+          value={values.email}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="transmit-field">
+        <label className="contact-mini-label" htmlFor="tx-message">Message</label>
+        <textarea
+          id="tx-message"
+          name="message"
+          rows={5}
+          placeholder="Payload — what's the opportunity or project?"
+          required
+          value={values.message}
+          onChange={handleChange}
+        />
+      </div>
+
+      <motion.button
+        type="submit"
+        className={`establish-btn ${status === "sent" ? "sent" : ""}`}
+        whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(56,189,248,0.4)" }}
+        whileTap={{ scale: 0.98 }}
+        disabled={status === "sending"}
+      >
+        <Send size={16} />
+        {status === "sending" && "TRANSMITTING…"}
+        {status === "sent" && "PACKET DELIVERED"}
+        {(status === "idle" || status === "error") && "TRANSMIT MESSAGE"}
+      </motion.button>
+
+      {status === "sent" && (
+        <motion.p
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="tx-status-line tx-status-ok"
+        >
+          ✓ ACK received — message delivered to receiver
+        </motion.p>
+      )}
+
+      {status === "error" && (
+        <motion.p
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="tx-status-line tx-status-fail"
+        >
+          ✗ Packet dropped — retry, or email directly at mohammaddeeb147@gmail.com
+        </motion.p>
+      )}
+    </form>
+  );
+}
+
 // ── Section ───────────────────────────────────────────────────────────────
 function Contact() {
   const sectionRef = useRef(null);
@@ -439,6 +551,25 @@ function Contact() {
             </div>
           </motion.div>
         </div>
+
+        <motion.div
+          className="contact-card holo-card contact-form-card"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+        >
+          <div className="holo-card-inner">
+            <div className="contact-card-heading">
+              <h3>Send a Message</h3>
+              <p className="contact-support-text">
+                Prefer a form over email? Fill this out and it lands directly in my inbox.
+              </p>
+            </div>
+
+            <TransmitForm />
+          </div>
+        </motion.div>
       </motion.div>
     </section>
   );

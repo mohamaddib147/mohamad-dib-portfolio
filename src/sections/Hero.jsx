@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Mail, Wifi, Shield, Cpu, MapPin } from "lucide-react";
+import { ArrowRight, Mail, Wifi, Shield, Cpu, MapPin, Download } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
 
 const contentContainer = {
@@ -41,6 +41,12 @@ function Hero() {
             Communication Engineer → Wireless Networking
           </motion.span>
 
+          <motion.div className="availability-pill" variants={contentItem}>
+            <span className="availability-dot" />
+            <span className="availability-text">$ status --link</span>
+            <span className="availability-value">AVAILABLE FOR WORK</span>
+          </motion.div>
+
           <motion.h1 className="hero-title" variants={contentItem}>
             Mohamad Dib
           </motion.h1>
@@ -64,6 +70,15 @@ function Hero() {
             <a href="#contact" className="btn btn-secondary">
               Contact Me
               <Mail size={18} />
+            </a>
+
+            <a
+              href={`${import.meta.env.BASE_URL}Mohamad_Dib_Resume.pdf`}
+              download="Mohamad_Dib_Resume.pdf"
+              className="btn btn-secondary"
+            >
+              Download CV
+              <Download size={18} />
             </a>
           </motion.div>
 

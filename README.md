@@ -219,7 +219,7 @@ Master’s in Communication Systems, Wireless Networking Track
 KTH Royal Institute of Technology
 
 - GitHub: [github.com/mohamaddib147](https://github.com/mohamaddib147)
-- LinkedIn: [linkedin.com/in/mohamad-dib-b51286271](https://www.linkedin.com/in/mohamad-dib-b51286271)
+- LinkedIn: [linkedin.com/in/mohamad-dib-eng](https://www.linkedin.com/in/mohamad-dib-eng)
 - Email: [mohammaddeeb147@gmail.com](mailto:mohammaddeeb147@gmail.com)
 
 ---
