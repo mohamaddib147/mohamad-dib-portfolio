@@ -45,13 +45,8 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
 
-// TEMP (local testing only): includes localhost dev ports alongside the
-// production origin so the widget can be tested before merging to main.
-// Narrow this back to just the production origin before/at merge time.
 const ALLOWED_ORIGINS = new Set([
   "https://mohamaddib147.github.io",
-  "http://localhost:5173",
-  "http://localhost:5188",
 ]);
 const MAX_QUESTION_LENGTH = 300;
 const MAX_ANSWER_CHARS = 900;
