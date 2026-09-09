@@ -5222,6 +5222,8 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   bottom: 24px;
   right: 24px;
   z-index: 60;
+  width: fit-content;
+  max-width: calc(100vw - 32px);
 }
 
 .ask-widget-launcher {
@@ -5256,7 +5258,9 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 }
 
 .ask-widget-panel {
-  width: min(360px, calc(100vw - 32px));
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
 }
 
 .ask-widget-panel .holo-card-inner {

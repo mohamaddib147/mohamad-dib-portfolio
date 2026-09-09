@@ -45,7 +45,14 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
 
-const ALLOWED_ORIGIN = "https://mohamaddib147.github.io";
+// TEMP (local testing only): includes localhost dev ports alongside the
+// production origin so the widget can be tested before merging to main.
+// Narrow this back to just the production origin before/at merge time.
+const ALLOWED_ORIGINS = new Set([
+  "https://mohamaddib147.github.io",
+  "http://localhost:5173",
+  "http://localhost:5188",
+]);
 const MAX_QUESTION_LENGTH = 300;
 const MAX_ANSWER_CHARS = 900;
 const MAX_OUTPUT_TOKENS = 300;
@@ -66,17 +73,14 @@ const STOPWORDS = new Set([
 ]);
 
 // CORS: Supabase does not add these automatically — the function must.
-const corsHeaders = {
-  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
-function jsonResponse(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+// Origin is checked against an allowlist (not reflected verbatim) so this
+// never becomes an open CORS policy.
+function buildCorsHeaders(origin: string | null) {
+  return {
+    "Access-Control-Allow-Origin": origin && ALLOWED_ORIGINS.has(origin) ? origin : "https://mohamaddib147.github.io",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
 }
 
 function tokenize(text: string): string[] {
@@ -94,6 +98,21 @@ interface ScoredRecord {
 
 const TITLE_MATCH_WEIGHT = 5;
 const BODY_MATCH_WEIGHT = 1;
+
+// Bio-level facts (education, languages, professional summary) — stable,
+// low-churn info that doesn't fit the projects/skills/experience shape, so
+// it isn't in a Supabase table. Treated as one more retrievable record
+// (scored like everything else) rather than always injected, so it still
+// respects the "skip Gemini when nothing matches" cost/hallucination gate.
+const PROFILE_FACTS = {
+  name: "Mohamad Dib education degree university study background summary bio languages",
+  text: [
+    "Professional summary: Mohamad Dib is a Communication Systems Engineer (M.Sc., KTH Royal Institute of Technology) focused on wireless networking and the intersection of hardware and software — from embedded firmware and secure wireless communication design to full-stack web development and enterprise network security.",
+    "Education: M.Sc. in Electrical Engineering, Communication Systems (Wireless Networking Track), KTH Royal Institute of Technology, Stockholm, Sweden (Aug 2022 - Jan 2025) - highest grade (A) in Communication Systems Design and Internet Security and Privacy.",
+    "Education: B.Sc. in Communication Engineering, Lebanese International University, Beirut, Lebanon (Sep 2018 - Jul 2021) - top grades in Advanced Digital Logic, Linux Lab, and Analog Communication.",
+    "Languages: Arabic (Native), English (Fluent), Swedish (Conversational).",
+  ].join("\n"),
+};
 
 // A match on the record's own name (project title, skill group title,
 // company/role) is a much stronger relevance signal than a match on a
@@ -150,6 +169,11 @@ function retrieve(
         text: `Experience: ${e.role} at ${e.company} (${e.period ?? ""})\nDetails: ${(e.highlights ?? []).join("; ")}`,
       });
     }
+  }
+
+  const profileScore = scoreTokens(questionTokens, PROFILE_FACTS.name, "");
+  if (profileScore > 0) {
+    candidates.push({ score: profileScore, text: PROFILE_FACTS.text });
   }
 
   return candidates.sort((a, b) => b.score - a.score).slice(0, 4);
@@ -238,8 +262,12 @@ async function callGemini(context: string, question: string): Promise<string> {
 }
 
 Deno.serve(async (req: Request) => {
+  const cors = buildCorsHeaders(req.headers.get("origin"));
+  const jsonResponse = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
+
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: cors });
   }
 
   if (req.method !== "POST") {
