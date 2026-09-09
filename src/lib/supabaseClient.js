@@ -8,3 +8,8 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 // failure rather than crashing the whole app at import time.
 export const supabase =
   supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+
+// Exposed for callers that need to hit an Edge Function directly (fetch,
+// not the supabase-js client) — e.g. AskWidget calling ask-portfolio.
+export const supabaseUrlForFunctions = supabaseUrl;
+export const supabaseAnonKeyForFunctions = supabaseAnonKey;

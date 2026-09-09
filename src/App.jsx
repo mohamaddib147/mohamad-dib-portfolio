@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import SignalScrollMeter from "./components/SignalScrollMeter";
+import AskWidget from "./components/AskWidget";
 
 function App() {
   const [hash, setHash] = useState(window.location.hash);
@@ -20,6 +21,7 @@ function App() {
     <>
       <Home />
       <SignalScrollMeter />
+      <AskWidget />
     </>
   );
 }
