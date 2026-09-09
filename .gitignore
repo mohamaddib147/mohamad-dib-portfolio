@@ -24,6 +24,9 @@ build/
 # Local-only MCP server config (personal dev tooling, not project content)
 .mcp.json
 
+# Local Claude Code settings (may contain secrets in permission allowlists)
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

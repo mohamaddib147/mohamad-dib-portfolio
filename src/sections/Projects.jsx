@@ -10,6 +10,7 @@ import {
   Ticket,
   UtensilsCrossed,
   ArrowUpRight,
+  ExternalLink,
 } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
 import { supabase } from "../lib/supabaseClient";
@@ -305,6 +306,12 @@ function Projects() {
                   />
                 </div>
 
+                {project.image_url && (
+                  <div className="project-card-image">
+                    <img src={project.image_url} alt="" loading="lazy" />
+                  </div>
+                )}
+
                 <div className="project-top-shell">
                   <div className="project-card-top">
                     <p className="project-meta">{project.meta}</p>
@@ -333,6 +340,18 @@ function Projects() {
                     </div>
                   ))}
                 </div>
+
+                {project.demo_link && (
+                  <a
+                    href={project.demo_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-demo-link"
+                  >
+                    <ExternalLink size={14} strokeWidth={2} />
+                    Live Demo
+                  </a>
+                )}
 
                 <div className="project-card-footer">
                   <div className="project-tag-list">

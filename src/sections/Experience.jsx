@@ -1,10 +1,13 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
+import { supabase } from "../lib/supabaseClient";
 
 // ── Data ─────────────────────────────────────────────────────────────────
-
-const experience = [
+// Shown until the Supabase fetch resolves, and kept as a fallback if it fails
+// or the table is empty — the section should never render blank.
+const FALLBACK_EXPERIENCE = [
   {
     company: "The Digital Hub",
     role: "Full Stack Engineer (Internship)",
@@ -42,6 +45,34 @@ const experience = [
 // ── Section ──────────────────────────────────────────────────────────────
 
 function Experience() {
+  // Starts with the fallback content so the section never renders blank —
+  // swaps to live Supabase data silently once the fetch resolves.
+  const [experience, setExperience] = useState(FALLBACK_EXPERIENCE);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadExperience() {
+      if (!supabase) return;
+
+      const { data, error } = await supabase
+        .from("experience")
+        .select("*")
+        .order("sort_order");
+
+      if (cancelled) return;
+
+      if (!error && data && data.length > 0) {
+        setExperience(data);
+      }
+    }
+
+    loadExperience();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section id="experience" className="portfolio-data-section experience-section">
       <SignalBackground variant="about" className="signal-experience" />
@@ -64,7 +95,7 @@ function Experience() {
           {experience.map((job, i) => (
             <motion.div
               className="education-item"
-              key={i}
+              key={job.id ?? i}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
