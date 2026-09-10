@@ -1,4 +1,4 @@
-import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { ExternalLink, FolderGit2 } from "lucide-react";
 import { STYLE_PRESETS, ICON_MAP } from "../../data/projectPresets";
 
 // Mirrors the public project card markup/classes in src/sections/Projects.jsx
@@ -11,16 +11,22 @@ function ProjectPreviewCard({ form }) {
 
   return (
     <div className={`project-data-card refined-project-card project-card-unique admin-preview-card ${preset.accent} ${preset.layout}`}>
-      {form.image_url && (
+      {form.images?.length > 0 && (
         <div className="admin-preview-image">
-          <img src={form.image_url} alt="" />
+          <img src={form.images[0]} alt="" />
+          <span className="project-type-badge project-type-badge-overlay">{form.badge || "Badge"}</span>
+          {form.images.length > 1 && (
+            <span className="admin-preview-image-count">+{form.images.length - 1} more</span>
+          )}
         </div>
       )}
 
       <div className="project-top-shell">
         <div className="project-card-top">
           <p className="project-meta">{form.meta || "Meta line…"}</p>
-          <span className="project-type-badge">{form.badge || "Badge"}</span>
+          {!(form.images?.length > 0) && (
+            <span className="project-type-badge">{form.badge || "Badge"}</span>
+          )}
         </div>
         <div className="project-icon-wrap">
           <Icon size={18} strokeWidth={2} />
@@ -60,8 +66,9 @@ function ProjectPreviewCard({ form }) {
             <span className="project-tag" key={i}>{tag}</span>
           ))}
         </div>
-        <span className="project-arrow-mark project-arrow-mark-disabled" aria-hidden="true">
-          <ArrowUpRight size={16} strokeWidth={2} />
+        <span className="project-source-link project-source-link-disabled" aria-hidden="true">
+          <FolderGit2 size={15} strokeWidth={2} />
+          Source code
         </span>
       </div>
     </div>

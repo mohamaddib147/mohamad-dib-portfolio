@@ -4,7 +4,10 @@ import { supabase } from "../../lib/supabaseClient";
 
 const BUCKET = "project-images";
 
+// `value` is an array of public URLs (order = carousel order on the public
+// card); `onChange` receives the full replacement array.
 function ImageUploader({ value, onChange }) {
+  const images = value ?? [];
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef(null);
@@ -26,34 +29,43 @@ function ImageUploader({ value, onChange }) {
     }
 
     const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-    onChange(data.publicUrl);
+    onChange([...images, data.publicUrl]);
     setUploading(false);
     if (inputRef.current) inputRef.current.value = "";
   };
 
+  const removeAt = (index) => {
+    onChange(images.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="admin-image-uploader">
-      {value ? (
-        <div className="admin-image-preview">
-          <img src={value} alt="Project" />
-          <button type="button" className="admin-image-remove" onClick={() => onChange("")} aria-label="Remove image">
-            <X size={14} />
-          </button>
+      {images.length > 0 && (
+        <div className="admin-image-grid">
+          {images.map((url, i) => (
+            <div className="admin-image-preview" key={url}>
+              <img src={url} alt={`Project ${i + 1}`} />
+              <button type="button" className="admin-image-remove" onClick={() => removeAt(i)} aria-label={`Remove image ${i + 1}`}>
+                <X size={14} />
+              </button>
+            </div>
+          ))}
         </div>
-      ) : (
-        <label className="admin-image-drop">
-          <Upload size={18} />
-          <span>{uploading ? "Uploading…" : "Upload image"}</span>
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFile}
-            disabled={uploading}
-            hidden
-          />
-        </label>
       )}
+
+      <label className="admin-image-drop">
+        <Upload size={18} />
+        <span>{uploading ? "Uploading…" : images.length > 0 ? "Add another image" : "Upload image"}</span>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFile}
+          disabled={uploading}
+          hidden
+        />
+      </label>
+
       {error && <p className="tx-status-line tx-status-fail">✗ {error}</p>}
     </div>
   );

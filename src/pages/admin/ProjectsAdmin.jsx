@@ -17,7 +17,7 @@ const EMPTY_PROJECT_FORM = {
   iconName: "Cpu",
   link: "",
   demo_link: "",
-  image_url: "",
+  images: [],
   is_published: true,
   summary: "",
   description: "",
@@ -100,7 +100,7 @@ function ProjectsAdmin() {
       iconName: project.icon_name ?? "Cpu",
       link: project.link ?? "",
       demo_link: project.demo_link ?? "",
-      image_url: project.image_url ?? "",
+      images: project.image_urls ?? [],
       is_published: project.is_published ?? true,
       summary: project.summary ?? "",
       description: project.description ?? "",
@@ -163,7 +163,7 @@ function ProjectsAdmin() {
       icon_name: form.iconName,
       link: form.link || null,
       demo_link: form.demo_link || null,
-      image_url: form.image_url || null,
+      image_urls: form.images,
       is_published: form.is_published,
       summary: form.summary,
       description: form.description,
@@ -302,8 +302,8 @@ function ProjectsAdmin() {
             </div>
 
             <div className="transmit-field">
-              <label className="contact-mini-label">Image</label>
-              <ImageUploader value={form.image_url} onChange={(url) => setForm({ ...form, image_url: url })} />
+              <label className="contact-mini-label">Images (first one shown as the card cover)</label>
+              <ImageUploader value={form.images} onChange={(images) => setForm({ ...form, images })} />
             </div>
 
             <label className="admin-toggle-row">

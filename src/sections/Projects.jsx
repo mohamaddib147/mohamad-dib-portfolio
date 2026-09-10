@@ -9,8 +9,10 @@ import {
   HeartPulse,
   Ticket,
   UtensilsCrossed,
-  ArrowUpRight,
   ExternalLink,
+  FolderGit2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
 import { supabase } from "../lib/supabaseClient";
@@ -210,7 +212,138 @@ function normalizeProject(row) {
     icon: ICON_MAP[row.icon_name] ?? Cpu,
     highlights: row.highlights ?? [],
     tech: row.tech ?? [],
+    image_urls: row.image_urls?.length ? row.image_urls : row.image_url ? [row.image_url] : [],
   };
+}
+
+// Its own component (not inlined in the .map()) because the image carousel
+// needs its own state per card — hooks can't live inside a loop body.
+function ProjectCard({ project, index }) {
+  const Icon = project.icon;
+  const images = project.image_urls ?? [];
+  const [imgIndex, setImgIndex] = useState(0);
+
+  const showPrev = (e) => {
+    e.stopPropagation();
+    setImgIndex((i) => (i - 1 + images.length) % images.length);
+  };
+  const showNext = (e) => {
+    e.stopPropagation();
+    setImgIndex((i) => (i + 1) % images.length);
+  };
+
+  return (
+    <motion.article
+      className={`project-data-card refined-project-card project-card-unique ${project.accent} ${project.layout}`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.45, delay: index * 0.05 }}
+      whileHover={{ y: -6 }}
+    >
+      {/* Per-card signal motif — replaces the static .project-card-signal div */}
+      <div className="project-card-signal">
+        <SignalBackground
+          variant="projects"
+          projectType={project.projectType}
+          className="signal-card"
+        />
+      </div>
+
+      {images.length > 0 && (
+        <div className="project-card-image">
+          <img src={images[imgIndex]} alt="" loading="lazy" />
+          <span className="project-type-badge project-type-badge-overlay">{project.badge}</span>
+
+          {images.length > 1 && (
+            <>
+              <button type="button" className="project-image-nav project-image-nav-prev" onClick={showPrev} aria-label="Previous image">
+                <ChevronLeft size={16} strokeWidth={2.5} />
+              </button>
+              <button type="button" className="project-image-nav project-image-nav-next" onClick={showNext} aria-label="Next image">
+                <ChevronRight size={16} strokeWidth={2.5} />
+              </button>
+              <div className="project-image-dots">
+                {images.map((_, i) => (
+                  <span key={i} className={`project-image-dot ${i === imgIndex ? "active" : ""}`} />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      <div className="project-top-shell">
+        <div className="project-card-top">
+          <p className="project-meta">{project.meta}</p>
+          {images.length === 0 && (
+            <span className="project-type-badge">{project.badge}</span>
+          )}
+        </div>
+
+        <div className="project-icon-wrap">
+          <Icon size={18} strokeWidth={2} />
+        </div>
+      </div>
+
+      <div className="project-role-line">
+        <span className="project-role-label">Role</span>
+        <span className="project-role-value">{project.role}</span>
+      </div>
+
+      <h3>{project.title}</h3>
+      <p className="project-summary">{project.summary}</p>
+      <p className="project-description">{project.description}</p>
+
+      <div className="project-highlight-block">
+        {project.highlights.map((highlight, highlightIndex) => (
+          <div className="project-highlight-item" key={highlightIndex}>
+            <span className="project-highlight-dot" />
+            <p>{highlight}</p>
+          </div>
+        ))}
+      </div>
+
+      {project.demo_link && (
+        <a
+          href={project.demo_link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-demo-link"
+        >
+          <ExternalLink size={14} strokeWidth={2} />
+          Live Demo
+        </a>
+      )}
+
+      <div className="project-card-footer">
+        <div className="project-tag-list">
+          {project.tech.map((tag, tagIndex) => (
+            <span className="project-tag" key={tagIndex}>
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {project.link ? (
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-source-link"
+          >
+            <FolderGit2 size={15} strokeWidth={2} />
+            Source code
+          </a>
+        ) : (
+          <span className="project-source-link project-source-link-disabled" aria-hidden="true">
+            <FolderGit2 size={15} strokeWidth={2} />
+            Source code
+          </span>
+        )}
+      </div>
+    </motion.article>
+  );
 }
 
 function Projects() {
@@ -284,103 +417,9 @@ function Projects() {
         </div>
 
         <div className="project-data-grid project-grid-upgraded">
-          {visibleProjects.map((project, index) => {
-            const Icon = project.icon;
-
-            return (
-              <motion.article
-                key={project.id ?? index}
-                className={`project-data-card refined-project-card project-card-unique ${project.accent} ${project.layout}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.12 }}
-                transition={{ duration: 0.45, delay: index * 0.05 }}
-                whileHover={{ y: -6 }}
-              >
-                {/* Per-card signal motif — replaces the static .project-card-signal div */}
-                <div className="project-card-signal">
-                  <SignalBackground
-                    variant="projects"
-                    projectType={project.projectType}
-                    className="signal-card"
-                  />
-                </div>
-
-                {project.image_url && (
-                  <div className="project-card-image">
-                    <img src={project.image_url} alt="" loading="lazy" />
-                  </div>
-                )}
-
-                <div className="project-top-shell">
-                  <div className="project-card-top">
-                    <p className="project-meta">{project.meta}</p>
-                    <span className="project-type-badge">{project.badge}</span>
-                  </div>
-
-                  <div className="project-icon-wrap">
-                    <Icon size={18} strokeWidth={2} />
-                  </div>
-                </div>
-
-                <div className="project-role-line">
-                  <span className="project-role-label">Role</span>
-                  <span className="project-role-value">{project.role}</span>
-                </div>
-
-                <h3>{project.title}</h3>
-                <p className="project-summary">{project.summary}</p>
-                <p className="project-description">{project.description}</p>
-
-                <div className="project-highlight-block">
-                  {project.highlights.map((highlight, highlightIndex) => (
-                    <div className="project-highlight-item" key={highlightIndex}>
-                      <span className="project-highlight-dot" />
-                      <p>{highlight}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {project.demo_link && (
-                  <a
-                    href={project.demo_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="project-demo-link"
-                  >
-                    <ExternalLink size={14} strokeWidth={2} />
-                    Live Demo
-                  </a>
-                )}
-
-                <div className="project-card-footer">
-                  <div className="project-tag-list">
-                    {project.tech.map((tag, tagIndex) => (
-                      <span className="project-tag" key={tagIndex}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {project.link ? (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-arrow-mark"
-                      aria-label={`View ${project.title} on GitHub`}
-                    >
-                      <ArrowUpRight size={16} strokeWidth={2} />
-                    </a>
-                  ) : (
-                    <span className="project-arrow-mark project-arrow-mark-disabled" aria-hidden="true">
-                      <ArrowUpRight size={16} strokeWidth={2} />
-                    </span>
-                  )}
-                </div>
-              </motion.article>
-            );
-          })}
+          {visibleProjects.map((project, index) => (
+            <ProjectCard project={project} index={index} key={project.id ?? index} />
+          ))}
         </div>
       </motion.div>
     </section>
