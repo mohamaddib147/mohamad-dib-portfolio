@@ -222,6 +222,18 @@ function ProjectCard({ project, index }) {
   const Icon = project.icon;
   const images = project.image_urls ?? [];
   const [imgIndex, setImgIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  // Auto-advances through the gallery on its own — pauses while the visitor
+  // is actually hovering the card so an image they're looking at doesn't
+  // slide away mid-glance.
+  useEffect(() => {
+    if (images.length <= 1 || paused) return;
+    const timer = setInterval(() => {
+      setImgIndex((i) => (i + 1) % images.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [images.length, paused]);
 
   const showPrev = (e) => {
     e.stopPropagation();
@@ -251,7 +263,11 @@ function ProjectCard({ project, index }) {
       </div>
 
       {images.length > 0 && (
-        <div className="project-card-image">
+        <div
+          className="project-card-image"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
           <img src={images[imgIndex]} alt="" loading="lazy" />
           <span className="project-type-badge project-type-badge-overlay">{project.badge}</span>
 
