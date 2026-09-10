@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageCircleQuestion, X, Send } from "lucide-react";
+import { RadioTower, X, Send } from "lucide-react";
 import { supabase, supabaseUrlForFunctions, supabaseAnonKeyForFunctions } from "../lib/supabaseClient";
 
 const MAX_QUESTION_LENGTH = 300;
@@ -96,7 +96,7 @@ function AskWidget() {
       ) : (
         <button type="button" className="ask-widget-launcher" onClick={() => setOpen(true)}>
           <span className="ask-widget-dot" />
-          <MessageCircleQuestion size={18} />
+          <RadioTower size={18} />
           <span>Ask about my work</span>
         </button>
       )}
