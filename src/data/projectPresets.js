@@ -7,6 +7,7 @@ import {
   HeartPulse,
   Ticket,
   UtensilsCrossed,
+  Film,
 } from "lucide-react";
 
 // "Visual Style" is a form-only convenience — it fans out to real accent/layout/
@@ -60,6 +61,7 @@ export const ICON_MAP = {
   HeartPulse,
   Ticket,
   UtensilsCrossed,
+  Film,
 };
 
 export const ICON_NAMES = Object.keys(ICON_MAP);
