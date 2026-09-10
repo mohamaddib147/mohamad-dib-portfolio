@@ -68,9 +68,15 @@ function AskWidget() {
                 className="ask-widget-input"
                 rows={2}
                 maxLength={MAX_QUESTION_LENGTH}
-                placeholder="e.g. What's your experience with Django?"
+                placeholder="e.g. What is your experience with Python?"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    e.currentTarget.form?.requestSubmit();
+                  }
+                }}
                 disabled={status.state === "loading"}
               />
               <div className="ask-widget-actions">
@@ -83,7 +89,9 @@ function AskWidget() {
 
             {status.state === "answered" && (
               <div className="ask-widget-answer">
-                <p>{status.answer}</p>
+                <div className="ask-widget-answer-text">
+                  <p>{status.answer}</p>
+                </div>
                 <button type="button" className="ask-widget-reset" onClick={handleReset}>Ask another question</button>
               </div>
             )}

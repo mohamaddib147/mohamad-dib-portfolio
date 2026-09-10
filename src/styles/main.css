@@ -5342,7 +5342,13 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   animation: availability-pulse 1.8s ease-in-out infinite;
 }
 
-.ask-widget-panel {
+/* Combined-class selector (not just .ask-widget-panel) so this reliably
+   beats contact-responsive.css's unconditional ".holo-card { width: 100% }"
+   rule — that file loads after main.css, so on an equal-specificity tie it
+   would otherwise win regardless of source order here, and combined with
+   .ask-widget's width:fit-content parent produced unstable, growing panel
+   widths once an answer was rendered. */
+.ask-widget-panel.holo-card {
   width: 360px;
   max-width: calc(100vw - 32px);
   box-sizing: border-box;
@@ -5414,6 +5420,14 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Fixed-height, scrollable answer text — keeps the panel a consistent size
+   regardless of how long a given answer is, instead of the whole card
+   growing taller every time. */
+.ask-widget-answer-text {
+  max-height: 220px;
+  overflow-y: auto;
 }
 
 .ask-widget-answer p {
