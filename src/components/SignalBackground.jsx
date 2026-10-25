@@ -106,8 +106,6 @@ const TOOL_BANDS = [
   { label: "5G NR",   color: [79, 149, 255] },
 ];
 
-const toolDrawState = { mouse: null };
-
 function drawTools(ctx, w, h, t, mouse) {
   ctx.clearRect(0, 0, w, h);
 
@@ -296,7 +294,6 @@ function drawHireMe(ctx, w, h, t) {
   [0, 1, 2].forEach(layer => {
     const phaseOffset = layer * (Math.PI * 2 / 3);
     const timePhase   = (t * 0.55 + phaseOffset) % (Math.PI * 2);
-    const spread      = 0.35 + layer * 0.22;
     const amp         = h * (0.10 + layer * 0.08);
     const centerY     = h * (0.52 + layer * 0.14);
     const alpha       = 0.50 - layer * 0.12;

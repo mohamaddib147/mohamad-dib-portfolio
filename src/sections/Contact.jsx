@@ -57,20 +57,17 @@ function RXCanvas({ active }) {
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
   const tRef = useRef(0);
-  const dataParticles = useRef(
-    Array.from({ length: 15 }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      speed: 0.001 + Math.random() * 0.003,
-      val: Math.random() > 0.5 ? "1" : "0",
-    }))
-  );
-
   useEffect(() => {
     if (!active) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+    const dataParticles = Array.from({ length: 15 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      speed: 0.001 + Math.random() * 0.003,
+      val: Math.random() > 0.5 ? "1" : "0",
+    }));
 
     function resize() {
       canvas.width = canvas.offsetWidth;
@@ -136,7 +133,7 @@ function RXCanvas({ active }) {
       ctx.fillStyle = "rgba(56,189,248,0.6)";
       ctx.font = "10px monospace";
 
-      dataParticles.current.forEach((p) => {
+      dataParticles.forEach((p) => {
         p.x -= p.speed;
         if (p.x < 0) {
           p.x = 1;

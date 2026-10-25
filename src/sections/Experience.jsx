@@ -9,10 +9,22 @@ import { supabase } from "../lib/supabaseClient";
 // or the table is empty — the section should never render blank.
 const FALLBACK_EXPERIENCE = [
   {
+    company: "Bait Atfal Assomoud (NISCVT)",
+    role: "Robotics Instructor",
+    location: "Sidon, Lebanon · In-Person",
+    period: "Sep 2026 – Oct 2026",
+    highlights: [
+      "Designed and delivered a 13-session 'Introduction to Robotics' foundation course for beginner students, covering embedded C/C++, digital/analog I/O, sensors, servo motors, and wireless IR control on Arduino UNO.",
+      "Authored all instructional materials from scratch, including slide decks, student study guides, and tested example code for every session.",
+      "Introduced a dedicated module teaching students a structured workflow for using AI tools to assist with coding and project development.",
+      "Directed students through an independent final project, with each pair designing, building, and presenting a working robotics project at a live class showcase.",
+    ],
+  },
+  {
     company: "The Digital Hub",
     role: "Full Stack Engineer (Internship)",
     location: "Beirut Governorate, Lebanon · Hybrid",
-    period: "May 2026 – Present",
+    period: "May 2026 – Sep 2026",
     highlights: [
       "Developing full-stack web applications with a focus on JavaScript and modern front-end/back-end integration.",
       "Collaborating within a hybrid engineering team on feature development, code review, and iterative delivery.",

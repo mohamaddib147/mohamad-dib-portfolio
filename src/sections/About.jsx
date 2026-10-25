@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { GraduationCap, Sparkles } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
 
 // ── Animation variants ────────────────────────────────────────────────────
