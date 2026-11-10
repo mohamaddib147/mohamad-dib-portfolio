@@ -23,6 +23,18 @@ const READOUT_METRICS = {
   "hire-contact": "wifi-handshake",
 };
 
+// What each divider leads into — rendered as a "NEXT ▸" jump tag.
+const NEXT_SECTION = {
+  "hero-about": { id: "about", label: "ABOUT" },
+  "about-experience": { id: "experience", label: "EXPERIENCE" },
+  "experience-tools": { id: "technologies", label: "TECHNOLOGIES" },
+  "tools-skills": { id: "skills", label: "SKILLS" },
+  "skills-projects": { id: "projects", label: "PROJECTS" },
+  "projects-signal-lab": { id: "signal-lab", label: "SIGNAL LAB" },
+  "projects-hire": { id: "hire-me", label: "HIRE ME" },
+  "hire-contact": { id: "contact", label: "CONTACT" },
+};
+
 // Symmetric packet start positions for the featured data-burst divider,
 // in the shared 720x80 viewBox — three on each side, converging to (360, 40).
 const BURST_PACKETS = [
@@ -40,6 +52,7 @@ function SectionDivider({ variant = "default" }) {
   const isFeatured = variant === FEATURED_VARIANT;
   const readoutMetric = READOUT_METRICS[variant];
   const isReadout = Boolean(readoutMetric);
+  const next = NEXT_SECTION[variant];
 
   const [burstActive, setBurstActive] = useState(false);
   const [showResult, setShowResult] = useState(false);
@@ -201,9 +214,9 @@ function SectionDivider({ variant = "default" }) {
             isReadout ? "divider__matrix-container--readout" : ""
           }`}
           ref={matrixRef}
-          onMouseMove={isReadout ? undefined : handlePointerMove}
-          onMouseEnter={isReadout ? undefined : handlePointerEnter}
-          onMouseLeave={isReadout ? undefined : handlePointerLeave}
+          onPointerMove={isReadout ? undefined : handlePointerMove}
+          onPointerEnter={isReadout ? undefined : handlePointerEnter}
+          onPointerLeave={isReadout ? undefined : handlePointerLeave}
         >
           {isReadout ? (
             <DividerReadout metric={readoutMetric} />
@@ -351,6 +364,17 @@ function SectionDivider({ variant = "default" }) {
 
         <div className="divider__line divider__line--right" />
       </div>
+
+      {next && (
+        <a
+          className="divider__next"
+          href={`#${next.id}`}
+          aria-label={`Jump to ${next.label.toLowerCase()} section`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          NEXT <span aria-hidden="true">▸</span> {next.label}
+        </a>
+      )}
     </motion.div>
   );
 }

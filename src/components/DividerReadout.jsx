@@ -190,9 +190,9 @@ function CursorReadout({ metric }) {
     <div
       className={`divider-readout divider-readout--${metric}`}
       ref={containerRef}
-      onMouseMove={handleMove}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
+      onPointerMove={handleMove}
+      onPointerEnter={handleEnter}
+      onPointerLeave={handleLeave}
       role="group"
       aria-label={`${config.label} readout: ${result.display}. ${config.caption}`}
     >
@@ -412,9 +412,9 @@ function ShannonReadout() {
     <div
       className="divider-readout divider-readout--shannon"
       ref={containerRef}
-      onMouseMove={handleMove}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
+      onPointerMove={handleMove}
+      onPointerEnter={handleEnter}
+      onPointerLeave={handleLeave}
       role="group"
       aria-label={`Shannon channel capacity: ${Math.round(capacity)} Mbps, from ${Math.round(bandwidth)} MHz bandwidth and ${snrDb.toFixed(1)} dB SNR`}
     >
@@ -537,9 +537,9 @@ function BeamformingReadout() {
     <div
       className="divider-readout divider-readout--beamforming"
       ref={containerRef}
-      onMouseMove={handleMove}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
+      onPointerMove={handleMove}
+      onPointerEnter={handleEnter}
+      onPointerLeave={handleLeave}
       role="group"
       aria-label={`Beamforming steering angle: ${Math.round(angleDeg)} degrees`}
     >

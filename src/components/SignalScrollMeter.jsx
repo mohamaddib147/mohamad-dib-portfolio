@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 // Four "chapters" mapped onto the site's sections, rendered as a literal WiFi
 // glyph — a dot with three concentric arcs radiating outward/upward, exactly
 // like a WiFi signal-strength icon (not the ascending-bars cellular icon).
-// The dot is the innermost stop; each arc lights up as the reader scrolls
-// further into the page.
+// The dot is the innermost stop; each arc draws in progressively as the reader
+// scrolls through its chapter, so the glyph is a continuous signal meter.
 const CHAPTERS = [
   { key: "intro", label: "Intro", targetId: "hero" },
   { key: "background", label: "Background", targetId: "about" },
@@ -25,8 +25,13 @@ const RINGS = [
   { type: "arc", d: "M1.28 12.00 A14 14 0 0 1 22.72 12.00", color: "#c084fc" },
 ];
 
+// Overall page progress mapped onto a plausible RSSI range for the tooltip.
+const RSSI_MIN = -90;
+const RSSI_MAX = -40;
+
 function SignalScrollMeter() {
   const [activeIdx, setActiveIdx] = useState(0);
+  const [chapterProgress, setChapterProgress] = useState(0); // 0..1 within the active chapter
   const [hoverIdx, setHoverIdx] = useState(null);
   const [visible, setVisible] = useState(false);
 
@@ -38,14 +43,28 @@ function SignalScrollMeter() {
       const viewportH = window.innerHeight;
       const anchor = viewportH * 0.35; // "current section" is whatever crosses this line
 
+      const tops = CHAPTERS.map((c) => {
+        const el = document.getElementById(c.targetId);
+        return el ? el.getBoundingClientRect().top : Infinity;
+      });
+
       let currentIdx = 0;
       for (let i = 0; i < CHAPTERS.length; i += 1) {
-        const el = document.getElementById(CHAPTERS[i].targetId);
-        if (!el) continue;
-        const top = el.getBoundingClientRect().top;
-        if (top <= anchor) currentIdx = i;
+        if (tops[i] <= anchor) currentIdx = i;
       }
+
+      // How far through the current chapter the anchor line is. The last
+      // chapter ends at the bottom of the document.
+      const start = tops[currentIdx];
+      const end =
+        currentIdx + 1 < CHAPTERS.length
+          ? tops[currentIdx + 1]
+          : document.documentElement.scrollHeight - window.scrollY - viewportH * 0.65;
+      const span = end - start;
+      const frac = span > 0 ? (anchor - start) / span : 1;
+
       setActiveIdx(currentIdx);
+      setChapterProgress(Math.min(Math.max(frac, 0), 1));
       setVisible(window.scrollY > viewportH * 0.35);
     };
 
@@ -79,6 +98,8 @@ function SignalScrollMeter() {
   };
 
   const displayedIdx = hoverIdx ?? activeIdx;
+  const overall = (activeIdx + chapterProgress) / CHAPTERS.length;
+  const rssi = Math.round(RSSI_MIN + overall * (RSSI_MAX - RSSI_MIN));
 
   return (
     <nav
@@ -87,6 +108,9 @@ function SignalScrollMeter() {
     >
       <span className="signal-meter-tooltip" aria-hidden="true">
         {CHAPTERS[displayedIdx].label}
+        <span className="signal-meter-tooltip-rssi">
+          {displayedIdx + 1}/{CHAPTERS.length} · {rssi} dBm
+        </span>
       </span>
 
       <svg
@@ -97,12 +121,27 @@ function SignalScrollMeter() {
       >
         {RINGS.map((ring, i) => {
           const chapter = CHAPTERS[i];
-          const isLit = i <= activeIdx;
+          // Fully drawn when passed, partially drawn while active, hidden ahead.
+          const fill = i < activeIdx ? 1 : i === activeIdx ? chapterProgress : 0;
+          const isLit = fill > 0;
           const isActive = i === activeIdx;
           const isHovered = i === hoverIdx;
           const stateClass = `${isLit ? "is-lit" : ""} ${isActive ? "is-active" : ""} ${
             isHovered ? "is-hovered" : ""
           }`;
+          const hitProps = {
+            className: "signal-ring-hit",
+            role: "button",
+            tabIndex: 0,
+            "aria-label": `Jump to ${chapter.label} section`,
+            "aria-current": isActive ? "true" : undefined,
+            onClick: () => jumpTo(chapter.targetId),
+            onKeyDown: (e) => handleKeyDown(e, chapter.targetId),
+            onMouseEnter: () => setHoverIdx(i),
+            onMouseLeave: () => setHoverIdx(null),
+            onFocus: () => setHoverIdx(i),
+            onBlur: () => setHoverIdx(null),
+          };
 
           if (ring.type === "dot") {
             return (
@@ -114,50 +153,26 @@ function SignalScrollMeter() {
                   className={`signal-ring signal-ring-dot ${stateClass}`}
                   style={{ pointerEvents: "none", "--ring-color": ring.color }}
                 />
-                <circle
-                  cx={ring.cx}
-                  cy={ring.cy}
-                  r={3.2}
-                  fill="none"
-                  className="signal-ring-hit"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Jump to ${chapter.label} section`}
-                  aria-current={isActive ? "true" : undefined}
-                  onClick={() => jumpTo(chapter.targetId)}
-                  onKeyDown={(e) => handleKeyDown(e, chapter.targetId)}
-                  onMouseEnter={() => setHoverIdx(i)}
-                  onMouseLeave={() => setHoverIdx(null)}
-                  onFocus={() => setHoverIdx(i)}
-                  onBlur={() => setHoverIdx(null)}
-                />
+                <circle cx={ring.cx} cy={ring.cy} r={3.2} fill="none" {...hitProps} />
               </g>
             );
           }
 
           return (
             <g key={chapter.key}>
+              {/* ghost track, always visible */}
+              <path d={ring.d} className="signal-ring signal-ring-ghost" fill="none" />
+              {/* lit portion, drawn from the left end as the chapter is read */}
               <path
                 d={ring.d}
+                pathLength="1"
+                strokeDasharray="1"
+                strokeDashoffset={1 - fill}
                 className={`signal-ring signal-ring-arc ${stateClass}`}
                 fill="none"
                 style={{ pointerEvents: "none", "--ring-color": ring.color }}
               />
-              <path
-                d={ring.d}
-                className="signal-ring-hit"
-                fill="none"
-                role="button"
-                tabIndex={0}
-                aria-label={`Jump to ${chapter.label} section`}
-                aria-current={isActive ? "true" : undefined}
-                onClick={() => jumpTo(chapter.targetId)}
-                onKeyDown={(e) => handleKeyDown(e, chapter.targetId)}
-                onMouseEnter={() => setHoverIdx(i)}
-                onMouseLeave={() => setHoverIdx(null)}
-                onFocus={() => setHoverIdx(i)}
-                onBlur={() => setHoverIdx(null)}
-              />
+              <path d={ring.d} fill="none" {...hitProps} />
             </g>
           );
         })}

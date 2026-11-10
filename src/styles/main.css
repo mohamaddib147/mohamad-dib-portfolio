@@ -144,6 +144,7 @@ main { position: relative; z-index: 1; }
   justify-content: center;
   flex: 0 0 auto;
   z-index: 2;
+  touch-action: pan-y;
 }
 
 .divider__rf-matrix {
@@ -299,6 +300,42 @@ main { position: relative; z-index: 1; }
   50% { opacity: 1; }
 }
 
+/* NEXT ▸ SECTION jump tag, terminal-style, pinned to the divider's right edge */
+.divider__next {
+  position: absolute;
+  right: clamp(12px, 3vw, 32px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  padding: 3px 8px;
+  border: 1px solid var(--divider-soft);
+  border-radius: 3px;
+  background: rgba(3, 12, 28, 0.7);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: rgba(190, 245, 255, 0.6);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.divider__next:hover,
+.divider__next:focus-visible {
+  color: var(--divider-accent);
+  border-color: var(--divider-accent);
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .divider__next {
+    top: auto;
+    bottom: 4px;
+    right: 10px;
+    transform: none;
+  }
+}
+
 /* Result panel — revealed once the sync burst completes, showing the
    thesis's actual MSE numbers instead of leaving the moment silent. */
 .divider__burst-result {
@@ -365,6 +402,7 @@ main { position: relative; z-index: 1; }
   gap: 8px;
   cursor: crosshair;
   outline: none;
+  touch-action: pan-y; /* horizontal drag steers the readout, vertical still scrolls */
 }
 
 .divider-readout:focus-visible .divider-readout__panel {
@@ -429,6 +467,13 @@ main { position: relative; z-index: 1; }
 .divider-readout:focus-visible .divider-readout__caption,
 .divider-readout:focus-within .divider-readout__caption {
   opacity: 1;
+}
+
+/* No hover on touch devices, so the explanation must always be visible */
+@media (hover: none) {
+  .divider-readout__caption {
+    opacity: 1;
+  }
 }
 
 /* ── RSSI: signal bars ─────────────────────────────────── */
@@ -5216,11 +5261,23 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   stroke-width: 2;
   stroke-linecap: round;
   fill: none;
-  transition: stroke 0.25s ease, filter 0.25s ease;
+  transition: stroke 0.25s ease, filter 0.25s ease, stroke-dashoffset 0.2s ease-out;
+}
+
+/* Faint full track behind each arc so an unread chapter still reads as
+   "weak signal" rather than a missing piece of the icon. */
+.signal-ring-ghost {
+  stroke: rgba(56, 189, 248, 0.28);
+}
+
+/* The lit arc is drawn over the ghost; before it lights up it must not
+   add a second faint stroke on top. */
+.signal-ring-arc:not(.is-lit) {
+  stroke: transparent;
 }
 
 .signal-ring-dot {
-  fill: rgba(56, 189, 248, 0.20);
+  fill: rgba(56, 189, 248, 0.28);
   stroke: none;
   transition: fill 0.25s ease, filter 0.25s ease;
 }
@@ -5286,7 +5343,7 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
 .signal-ring-hit {
   fill: none;
   stroke: transparent;
-  stroke-width: 2.6;
+  stroke-width: 4;
   cursor: pointer;
   outline: none;
 }
@@ -5315,6 +5372,15 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.signal-meter-tooltip-rssi {
+  display: block;
+  margin-top: 2px;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: rgba(56, 189, 248, 0.85);
 }
 
 .signal-meter-tooltip::after {
