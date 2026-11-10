@@ -2051,18 +2051,24 @@ main { position: relative; z-index: 1; }
    Tool cards sit above the canvas spectrum animation.
    ========================================================= */
 
-.tech-spectrograph {
-  position: relative;
-  margin-bottom: 28px;
+.tech-kicker-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 6px;
 }
+.tech-kicker-row .section-kicker { margin: 0; }
 
-/* Canvas overlay for the scan-cursor and spectrum bars —
-   sits behind the tool-band cards via z-index layering */
-.tech-canvas-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
+.tech-live-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 700;
+  background: rgba(56,189,248,0.08);
+  border: 1px solid rgba(56,189,248,0.22);
+  color: #38bdf8;
+  letter-spacing: 0.08em;
 }
 
 .tech-bands-grid {
@@ -2072,7 +2078,7 @@ main { position: relative; z-index: 1; }
   width: 100%;
 }
 
-/* Each tool = one frequency band */
+/* Each tool = one cluster on the spectrum */
 .tech-band {
   display: flex;
   flex-direction: column;
@@ -2082,21 +2088,24 @@ main { position: relative; z-index: 1; }
   border-radius: 14px;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(56,189,248,0.10);
+  color: inherit;
+  font: inherit;
   cursor: default;
   transition: transform 0.22s ease, border-color 0.22s ease,
               background 0.22s ease, box-shadow 0.22s ease;
   position: relative;
-  z-index: 1;
 }
 
-.tech-band:hover {
+.tech-band:hover,
+.tech-band:focus-visible {
+  outline: none;
   transform: translateY(-6px);
   border-color: rgba(56,189,248,0.38);
   background: rgba(56,189,248,0.07);
   box-shadow: 0 0 24px rgba(56,189,248,0.14), 0 8px 22px rgba(0,0,0,0.18);
 }
 
-/* Animated frequency-bar indicator at base of each card */
+/* Frequency-bar indicator at base of each card */
 .tech-band::after {
   content: "";
   position: absolute;
@@ -2109,7 +2118,8 @@ main { position: relative; z-index: 1; }
   transition: background 0.22s ease, height 0.22s ease;
 }
 
-.tech-band:hover::after {
+.tech-band:hover::after,
+.tech-band:focus-visible::after {
   height: 5px;
   background: rgba(56,189,248,0.65);
   box-shadow: 0 0 8px rgba(56,189,248,0.4);
@@ -2119,38 +2129,13 @@ main { position: relative; z-index: 1; }
   width: 32px;
   height: 32px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.75;
-  transition: opacity 0.22s ease, filter 0.22s ease;
+  color: #38bdf8;
+  opacity: 0.85;
+  transition: opacity 0.22s ease;
 }
 
-.tech-band:hover .tech-band-logo {
-  opacity: 1;
-  filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(170deg);
-}
-
-/* Fallback icon for tools without Simple Icons */
-.tech-band-icon-fallback {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: rgba(56,189,248,0.08);
-  border: 1px solid rgba(56,189,248,0.15);
-  color: #7fd4ff;
-  font-size: 0.72rem;
-  font-weight: 700;
-  font-family: monospace;
-  letter-spacing: -0.03em;
-  transition: background 0.22s ease, border-color 0.22s ease;
-}
-
-.tech-band:hover .tech-band-icon-fallback {
-  background: rgba(56,189,248,0.14);
-  border-color: rgba(56,189,248,0.32);
-}
+.tech-band:hover .tech-band-logo,
+.tech-band:focus-visible .tech-band-logo { opacity: 1; }
 
 .tech-band-label {
   font-size: 0.78rem;
@@ -2161,33 +2146,24 @@ main { position: relative; z-index: 1; }
   transition: color 0.22s ease;
 }
 
-.tech-band:hover .tech-band-label { color: #d7f2ff; }
+.tech-band:hover .tech-band-label,
+.tech-band:focus-visible .tech-band-label { color: #d7f2ff; }
 
-/* Legacy .tech-grid + .tech-card kept for fallback */
-.tech-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
+.tech-axis-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 22px 4px 4px;
+  font-size: 0.68rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  color: rgba(56,189,248,0.38);
+  letter-spacing: 0.08em;
 }
 
-.tech-card {
-  padding: 19px 16px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.022));
-  border: 1px solid rgba(255,255,255,0.07);
-  text-align: center;
-  color: #d9ecfb;
-  font-weight: 600;
-  backdrop-filter: blur(8px);
-  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
-  position: relative;
-  z-index: 1;
-}
-
-.tech-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(127,212,255,0.16);
-  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+.tech-spectrum {
+  display: block;
+  width: 100%;
+  height: 170px;
+  opacity: 0.85;
 }
 
 /* =========================================================
@@ -3674,6 +3650,7 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   .site-header-inner { flex-wrap: wrap; justify-content: center; }
   .site-nav { width: 100%; justify-content: center; }
   .tech-bands-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
+  .tech-spectrum { height: 130px; }
   .edu-header { grid-template-columns: auto 1fr; }
   .edu-period { grid-column: 2 / 3; margin-top: -4px; }
   .skills-group-grid, .skill-section-grid, .project-data-grid, .contact-grid { grid-template-columns: 1fr; }
@@ -3698,10 +3675,11 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   .site-nav { gap: 12px; flex-wrap: wrap; justify-content: center; }
   .site-nav a { font-size: 0.88rem; }
   .site-header-cta { width: 100%; text-align: center; }
-  .about-summary-card, .edu-content-card, .skill-group-card, .tech-card,
+  .about-summary-card, .edu-content-card, .skill-group-card,
   .skill-section-card, .project-data-card, .contact-card, .hire-item, .hire-rssi-item { padding: 18px; }
   .skills-group-grid, .skill-section-grid { grid-template-columns: 1fr; }
   .tech-bands-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+  .tech-spectrum { height: 110px; }
   .telemetry-header { flex-direction: column; align-items: flex-start; gap: 8px; }
 
   /* Projects — critical fixes */
@@ -3738,7 +3716,7 @@ section:not(.hero-section):not(.about-section):not(.portfolio-data-section) li {
   .project-highlight-item { gap: 8px; }
   .project-highlight-item p { font-size: 0.88rem; }
   .project-tag { font-size: 0.76rem; padding: 4px 9px; }
-  .about-summary-card, .edu-content-card, .skill-group-card, .tech-card,
+  .about-summary-card, .edu-content-card, .skill-group-card,
   .skill-section-card, .contact-card, .hire-rssi-item { padding: 14px; }
   .skill-pill { font-size: 0.8rem; padding: 5px 10px; }
   .portfolio-data-section h2 { font-size: clamp(1.4rem, 7vw, 2rem); }
