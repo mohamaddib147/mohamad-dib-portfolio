@@ -10,7 +10,7 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xppzoarw";
 const languages = ["English", "Swedish", "Arabic"];
 
 const primaryContacts = [
-  { label: "Email", value: "mohammaddeeb147@gmail.com", href: "mailto:mohammaddeeb147@gmail.com", icon: Mail },
+  { label: "Email", value: "mohamaddib.eng@gmail.com", href: "mailto:mohamaddib.eng@gmail.com", icon: Mail },
   { label: "Phone", value: "+961 79 067 170", href: "tel:+96179067170", icon: Phone },
 ];
 
@@ -217,7 +217,7 @@ function EstablishLink() {
 
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         <motion.a
-          href="mailto:mohammaddeeb147@gmail.com"
+          href="mailto:mohamaddib.eng@gmail.com"
           whileHover={{ scale: 1.04, boxShadow: "0 0 20px rgba(56,189,248,0.4)" }}
           whileTap={{ scale: 0.97 }}
           onClick={() => setSent(true)}
@@ -365,7 +365,7 @@ function TransmitForm() {
           animate={{ opacity: 1, y: 0 }}
           className="tx-status-line tx-status-fail"
         >
-          ✗ Packet dropped — retry, or email directly at mohammaddeeb147@gmail.com
+          ✗ Packet dropped — retry, or email directly at mohamaddib.eng@gmail.com
         </motion.p>
       )}
     </form>

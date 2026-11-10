@@ -7,41 +7,37 @@ import { supabase } from "../lib/supabaseClient";
 // or the table is empty — the section should never render blank.
 const FALLBACK_SKILL_GROUPS = [
   {
-    title: "Wireless & Networking",
+    title: "Wireless & RF Engineering",
     items: [
-      "5G NR", "LTE", "3GPP Standards", "Beamforming", "MIMO", "RF Planning",
-      "Spectrum Analysis", "Wireless Performance Optimization", "Robust Network Design",
-      "TCP/IP", "DNS", "VPN", "Routing Protocols", "Network Administration", "Troubleshooting",
+      "5G NR", "LTE", "3GPP Standards", "MIMO", "Beamforming", "RF Planning & Analysis",
+      "Spectrum Analysis", "Over-the-Air Computation", "Physical-Layer Security",
+      "Signal Processing (MATLAB)", "Link Budget & Channel Modeling",
     ],
   },
   {
-    title: "Security",
+    title: "Networking & Security",
     items: [
-      "Network Security", "Wireless Network Security", "Secure System Design",
-      "Ethical Hacking Principles", "Vulnerability Assessment",
-      "Intrusion Detection / Prevention Concepts", "Security Auditing Fundamentals", "Data Privacy",
+      "TCP/IP", "OSPF / BGP", "VPNs (IPsec)", "Cisco", "Fortinet", "Zero Trust", "PKI",
+      "VANET Security", "Wireshark", "Secure Code Review", "Vulnerability Assessment",
     ],
   },
   {
     title: "Programming & Simulation",
     items: [
-      "Python", "Network Simulations", "Data Analysis", "Automation Scripts",
-      "MATLAB", "Signal Processing", "Algorithm Development", "C/C++ Basics",
+      "Python", "MATLAB", "C/C++", "Network & RF Simulations", "Data Analysis",
+      "Automation Scripts", "Arduino / Embedded",
     ],
   },
   {
-    title: "Engineering & Analysis",
+    title: "Full-Stack Development",
     items: [
-      "Systems Engineering Concepts", "Analytical Thinking",
-      "Complex Problem-Solving", "System Design & Modeling", "Technical Analysis",
+      "React", "Next.js", "TypeScript", "Node.js / Express", "FastAPI", "Django",
+      "PostgreSQL / Supabase", "MongoDB", "JWT & RBAC", "REST APIs", "CI/CD", "Git",
     ],
   },
   {
-    title: "Soft Skills",
-    items: [
-      "Teamwork & Collaboration", "Curiosity & Eagerness to Learn",
-      "Adaptability", "Communication", "Problem-Solving",
-    ],
+    title: "AI & Tooling",
+    items: ["LLM / RAG Integration", "Prompt Engineering", "Jest / Vitest", "Jira", "Cloud Deployment"],
   },
 ];
 

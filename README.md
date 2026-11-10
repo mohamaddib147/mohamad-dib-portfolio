@@ -220,7 +220,7 @@ KTH Royal Institute of Technology
 
 - GitHub: [github.com/mohamaddib147](https://github.com/mohamaddib147)
 - LinkedIn: [linkedin.com/in/mohamad-dib-eng](https://www.linkedin.com/in/mohamad-dib-eng)
-- Email: [mohammaddeeb147@gmail.com](mailto:mohammaddeeb147@gmail.com)
+- Email: [mohamaddib.eng@gmail.com](mailto:mohamaddib.eng@gmail.com)
 
 ---
 

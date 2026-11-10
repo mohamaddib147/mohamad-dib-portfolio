@@ -38,22 +38,27 @@ function Hero() {
           animate="show"
         >
           <motion.span className="hero-badge" variants={contentItem}>
-            Communication Engineer → Wireless Networking
+            Wireless Networking · Security · Full-Stack
           </motion.span>
 
-          <motion.div className="availability-pill" variants={contentItem}>
+          <motion.a href="#contact" className="availability-pill" variants={contentItem}>
             <span className="availability-dot" />
             <span className="availability-text">$ status --link</span>
-            <span className="availability-value">AVAILABLE FOR WORK</span>
-          </motion.div>
+            <span className="availability-value">OPEN TO FULL-TIME · REMOTE OR RELOCATION</span>
+          </motion.a>
 
           <motion.h1 className="hero-title" variants={contentItem}>
             Mohamad Dib
           </motion.h1>
 
           <motion.h2 className="hero-subtitle" variants={contentItem}>
-           Communication Engineer & Full-Stack Developer  
+            Wireless Networking Engineer &amp; Full-Stack Developer
           </motion.h2>
+
+          <motion.p className="hero-now" variants={contentItem}>
+            <span className="availability-text">$ now</span> Reviewing backend security for an
+            AI platform at Majlisync · building the Future Line Consulting website
+          </motion.p>
 
           <motion.p className="hero-description" variants={contentItem}>
             I build full-stack web applications  from React interfaces to Node/Next.js

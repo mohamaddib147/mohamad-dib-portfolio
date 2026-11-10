@@ -1263,6 +1263,8 @@ main { position: relative; z-index: 1; }
 }
 
 .availability-pill {
+  text-decoration: none;
+  color: inherit;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -1292,6 +1294,15 @@ main { position: relative; z-index: 1; }
 }
 
 .availability-text { color: rgba(134, 239, 172, 0.65); }
+
+.hero-now {
+  margin: 0 0 18px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.82rem;
+  color: rgba(226, 232, 240, 0.72);
+  line-height: 1.5;
+}
+.hero-now .availability-text { margin-right: 8px; }
 
 .availability-value { color: #86efac; font-weight: 700; }
 
