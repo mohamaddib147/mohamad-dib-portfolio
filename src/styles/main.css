@@ -6,7 +6,8 @@
 
 html { scroll-behavior: smooth; }
 
-section { scroll-margin-top: 110px; }
+section, [id^="project-"] { scroll-margin-top: 110px; }
+[id^="job-"] { scroll-margin-top: 150px; }
 
 body {
   font-family: Arial, sans-serif;
@@ -2188,18 +2189,84 @@ main { position: relative; z-index: 1; }
 }
 
 .skill-section-card:hover { transform: translateY(-4px); border-color: rgba(127,212,255,0.16); }
-.skill-section-card h3 { margin-bottom: 16px; color: #f4f9ff; font-size: 1.04rem; }
+.skill-section-card h3 { margin: 0 0 14px; color: #f4f9ff; font-size: 1.04rem; }
 
-.skill-section-tags { display: flex; flex-wrap: wrap; gap: 9px; }
+.skill-rows { list-style: none; margin: 0; padding: 0; }
 
-.skill-section-tag {
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 0.84rem;
-  background: rgba(56,189,248,0.08);
-  border: 1px solid rgba(56,189,248,0.16);
-  color: #c7e6fb;
+.skill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(56,189,248,0.1);
 }
+.skill-row:last-child { border-bottom: 0; }
+
+.skill-row-name { font-size: 0.88rem; color: #c7e6fb; }
+
+.skill-row-level {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.skill-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin: -6px 0 22px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  color: rgba(56,189,248,0.55);
+}
+.skill-legend > span { display: inline-flex; align-items: center; gap: 8px; }
+
+/* 5-bar RSSI meter — phone-signal style, bars grow left to right */
+.rssi-meter {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 20px;
+}
+.rssi-meter i {
+  display: block;
+  width: 4px;
+  border-radius: 1px;
+  background: rgba(56,189,248,0.14);
+  transform-origin: bottom;
+}
+.rssi-meter i.is-on {
+  background: #38bdf8;
+  box-shadow: 0 0 6px rgba(56,189,248,0.55);
+}
+
+.skill-card-evidence {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: rgba(199,230,251,0.6);
+}
+.skill-card-evidence span {
+  color: rgba(56,189,248,0.6);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-right: 6px;
+}
+.skill-card-evidence em { font-style: normal; }
+.skill-card-evidence a {
+  color: #9fdcff;
+  text-decoration: underline dotted rgba(56,189,248,0.5);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+.skill-card-evidence a:hover,
+.skill-card-evidence a:focus-visible { color: #d7f2ff; text-decoration-style: solid; }
 
 /* =========================================================
    PROJECTS SECTION

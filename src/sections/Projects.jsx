@@ -17,6 +17,7 @@ import {
 import SignalBackground from "../components/SignalBackground";
 import { supabase } from "../lib/supabaseClient";
 import { ICON_MAP } from "../data/projectPresets";
+import { slug } from "../lib/slug";
 
 // projectType drives the per-card SignalBackground motif inside each card
 // category drives the Full Stack / Engineering filter tabs
@@ -246,6 +247,7 @@ function ProjectCard({ project, index }) {
 
   return (
     <motion.article
+      id={`project-${slug(project.title)}`}
       className={`project-data-card refined-project-card project-card-unique ${project.accent} ${project.layout}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}

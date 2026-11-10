@@ -7,6 +7,7 @@ import Toast from "./Toast";
 const EMPTY_SKILL_FORM = {
   title: "",
   items: "",
+  evidence: "",
   sort_order: 0,
 };
 
@@ -61,6 +62,7 @@ function SkillsAdmin() {
     setForm({
       title: group.title ?? "",
       items: arrayToLines(group.items),
+      evidence: group.evidence ?? "",
       sort_order: group.sort_order ?? 0,
     });
   };
@@ -108,6 +110,7 @@ function SkillsAdmin() {
     const payload = {
       title: form.title,
       items: linesToArray(form.items),
+      evidence: form.evidence.trim() || null,
       sort_order: Number(form.sort_order) || 0,
     };
 
@@ -182,8 +185,13 @@ function SkillsAdmin() {
             </div>
 
             <div className="transmit-field">
-              <label className="contact-mini-label">Skills (one per line)</label>
-              <textarea rows={8} value={form.items} onChange={(e) => setForm({ ...form, items: e.target.value })} />
+              <label className="contact-mini-label">Skills (one per line, "Name | 1-5" for the signal meter)</label>
+              <textarea rows={8} value={form.items} onChange={(e) => setForm({ ...form, items: e.target.value })} placeholder={"5G NR / LTE | 5\nMIMO & Beamforming | 4"} />
+            </div>
+
+            <div className="transmit-field">
+              <label className="contact-mini-label">Applied in (optional; {"\"Label > #projects · Label > #experience\" makes links"})</label>
+              <input value={form.evidence} onChange={(e) => setForm({ ...form, evidence: e.target.value })} placeholder="Secure OAC thesis > #projects · Majlisync > #experience" />
             </div>
 
             {error && <p className="tx-status-line tx-status-fail">✗ {error}</p>}

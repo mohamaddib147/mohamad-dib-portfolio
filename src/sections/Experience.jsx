@@ -2,12 +2,23 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 import SignalBackground from "../components/SignalBackground";
+import { slug } from "../lib/slug";
 import { supabase } from "../lib/supabaseClient";
 
 // ── Data ─────────────────────────────────────────────────────────────────
 // Shown until the Supabase fetch resolves, and kept as a fallback if it fails
 // or the table is empty — the section should never render blank.
 const FALLBACK_EXPERIENCE = [
+  {
+    company: "Majlisync",
+    role: "Cybersecurity Engineer – Platform Security",
+    location: "Remote · Part-Time",
+    period: "Oct 2026 – Present",
+    highlights: [
+      "Review Python backend code of an AI-driven platform for security vulnerabilities, assessing risk and recommending fixes.",
+      "Track findings and remediation through Jira in an Agile team, verifying fixes with the development team.",
+    ],
+  },
   {
     company: "Bait Atfal Assomoud (NISCVT)",
     role: "Robotics Instructor",
@@ -106,6 +117,7 @@ function Experience() {
         <div className="education-timeline">
           {experience.map((job, i) => (
             <motion.div
+              id={`job-${slug(job.company)}`}
               className="education-item"
               key={job.id ?? i}
               initial={{ opacity: 0, y: 24 }}
